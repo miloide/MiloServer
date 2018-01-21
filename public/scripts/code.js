@@ -446,10 +446,9 @@ Code.runJS = function() {
   var code = Blockly.JavaScript.workspaceToCode(Code.workspace);
   Blockly.JavaScript.INFINITE_LOOP_TRAP = null;
   try {
-    var constants = ' var dl = deeplearn; \n var graph = new dl.Graph(); \n var math = new dl.NDArrayMathGPU(); \n var session=  new dl.Session(graph, math); \n';
-    var finalCode = constants + code;
-    console.log(finalCode);
-    eval(finalCode);
+    var setup =  DeepLearn.setup;
+    var jscode = setup + code;
+    eval(jscode);
   } catch (e) {
     alert(MSG['badCode'].replace('%1', e));
   }

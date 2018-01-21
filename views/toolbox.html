@@ -301,31 +301,63 @@
     <category name="%{BKY_CATVARIABLES}" colour="%{BKY_VARIABLES_HUE}" custom="VARIABLE"></category>
     <category name="%{BKY_CATFUNCTIONS}" colour="%{BKY_PROCEDURES_HUE}" custom="PROCEDURE"></category>
     <sep></sep>
-    <category name="%{BKY_CATML}" colour="%{BKY_ML_HUE}">
-      <block type="optimizer">
-        <field name="optimizer">SGD</field>
-      </block>
-      <block type="constant">
-        <field name="NUM">0</field>
-      </block>
-      <block type="mlparams">
-        <field name="paramters">learningRate</field>
-      </block>
-        <block type="dataset_1"></block>
-        <block type="linearregression"></block>
-      <block type="inputfile">
-        <field name="inputfile">input</field>
-      </block>
-      <block type="predict">
-        <field name="testX">0</field>
-      </block>
-      <!-- TODO(arjun): Replace InputFile block with button -->
-      <button id="add_dataset" text="Add DataSet..." callbackKey="ADD_DATASET" ></button>
-      <block type="createoptimizer">
-        <field name="optimizer">Adagrad</field>
-        <field name="rate">0</field>
-        <field name="numBatches">0</field>
-        <field name="batchSize">0</field>
-      </block>
+    <category name="%{BKY_CATML}" colour="%{BKY_ML_HUE}" expanded="true">
+      <category name="%{BKY_CATMATH}" colour="%{BKY_ML_HUE}">
+        <block type="dl_number"></block>
+        <block type="dl_get_scalar"></block>
+        <block type="dl_arithmetic">
+          <value name="A">
+            <shadow type="dl_number">
+              <field name="NUM">1</field>
+            </shadow>
+          </value>
+          <value name="B">
+            <shadow type="dl_number">
+              <field name="NUM">1</field>
+            </shadow>
+          </value>
+        </block>
+        <block type="text_log">
+            <value name="TEXT">
+                <shadow type="dl_get_scalar">
+                  <value name="NUM">
+                      <shadow type="dl_number">
+                          <field name="NUM">0</field>
+                        </shadow>
+                      </value>
+                  </shadow>
+            </value>
+          </block>
+      </category>
+      <category name="Miscellaneous" colour="%{BKY_ML_HUE}">
+        <block type="optimizer">
+          <field name="optimizer">SGD</field>
+        </block>
+        <block type="constant">
+          <field name="NUM">0</field>
+        </block>
+        <block type="mlparams">
+          <field name="paramters">learningRate</field>
+        </block>
+          <block type="dataset_1"></block>
+          <block type="linearregression"></block>
+        <block type="inputfile">
+          <field name="inputfile">input</field>
+        </block>
+        <block type="inputfile">
+          <field name="inputfile">input</field>
+        </block>
+        <block type="predict">
+          <field name="testX">0</field>
+        </block>
+        <!-- TODO(arjun): Replace InputFile block with button -->
+        <button id="add_dataset" text="Add DataSet..." callbackKey="ADD_DATASET" ></button>
+        <block type="createoptimizer">
+          <field name="optimizer">Adagrad</field>
+          <field name="rate">0</field>
+          <field name="numBatches">0</field>
+          <field name="batchSize">0</field>
+        </block>
+      </category>
   </category>
 </xml>
