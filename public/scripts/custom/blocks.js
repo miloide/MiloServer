@@ -4,52 +4,6 @@
 Blockly.HSV_SATURATION = 0.60;
 Blockly.HSV_VALUE = 0.75;
 
-Blockly.Blocks['deepadder'] = {
-	init: function() {
-        this.appendDummyInput()
-            .appendField("set")
-            .appendField(new Blockly.FieldTextInput("variable_name"), "varname")
-            .appendField("to")
-            .appendField(new Blockly.FieldNumber(0), "value");
-        this.setInputsInline(true);
-        this.setPreviousStatement(true, null);
-        this.setNextStatement(true, null);
-        this.setColour(Blockly.Msg.ML_HUE);
-        this.setTooltip("");
-        this.setHelpUrl("");
-    }
-};
-
-Blockly.Blocks['add'] = {
-    init: function() {
-        this.appendValueInput("NAME")
-                .setCheck(null)
-                .appendField("Add")
-                .appendField(new Blockly.FieldTextInput(""), "var1")
-                .appendField("to")
-                .appendField(new Blockly.FieldTextInput(""), "var2");
-        this.setOutput(true, "Number");
-        this.setColour(Blockly.Msg.ML_HUE);
-        this.setTooltip("");
-        this.setHelpUrl("");
-    }
-};
-
-Blockly.Blocks['sum'] = {
-    init: function() {
-        this.appendValueInput("summation")
-                .setCheck(null)
-                .appendField("set ")
-                .appendField(new Blockly.FieldTextInput("sum"), "sumVariable")
-                .appendField("to");
-        this.setNextStatement(true, null);
-        this.setPreviousStatement(true, null);
-        this.setColour(Blockly.Msg.ML_HUE);
-        this.setTooltip("");
-        this.setHelpUrl("");
-    }
-};
-
 Blockly.Blocks['constant'] = {
     init: function() {
         this.appendDummyInput()
@@ -62,11 +16,36 @@ Blockly.Blocks['constant'] = {
     }
 };
 
-Blockly.Blocks['optimizer'] = {
+Blockly.Blocks['dataset_1'] = {
+    init: function() {
+      this.appendDummyInput()
+          .appendField("Input Dataset - Iris");
+      this.setColour(230);
+      this.setPreviousStatement(true, null);
+      this.setNextStatement(true, null); 
+    this.setTooltip("");
+   this.setHelpUrl("");
+    }
+  };
+
+Blockly.Blocks['linearregression'] = {
+    init: function() {
+      this.appendDummyInput()
+          .appendField("LinearRegression");
+      this.setColour(230);
+      this.setPreviousStatement(true, null);
+      this.setNextStatement(true, null); 
+    this.setTooltip("");
+   this.setHelpUrl("");
+    }
+  };
+
+
+  Blockly.Blocks['optimizer'] = {
   init: function() {
     this.appendDummyInput()
         .appendField("Set Optimizer to")
-        .appendField(new Blockly.FieldDropdown([["SGD","SGD"], ["Adagrad","Adagrad"], ["Adamax","Adamax"], ["Adam","Adam"]]), "optimizer");
+        .appendField(new Blockly.FieldDropdown([["SGD","SGDOptimizer"], ["Adagrad","Adagrad"], ["Adamax","Adamax"], ["Adam","Adam"]]), "optimizer");
     this.setInputsInline(true);
     this.setNextStatement(true, null);
     Blockly.BlockSvg.START_HAT = true;
@@ -144,7 +123,7 @@ Blockly.Blocks['createoptimizer'] = {
   init: function() {
     this.appendDummyInput()
         .appendField("Set Optimizer to ")
-        .appendField(new Blockly.FieldDropdown([["Adagrad","Adagrad"], ["SGD","Sgd"], ["Adam","Adam"]]), "optimizer");
+        .appendField(new Blockly.FieldDropdown([["Adagrad","Adagrad"], ["SGD","SGDOptimizer"], ["Adam","Adam"]]), "optimizer");
     this.appendDummyInput()
         .appendField("with learning rate")
         .appendField(new Blockly.FieldNumber(0), "rate");
@@ -154,8 +133,6 @@ Blockly.Blocks['createoptimizer'] = {
     this.appendDummyInput()
         .appendField("batch size")
         .appendField(new Blockly.FieldNumber(0), "batchSize");
-    this.appendStatementInput("NAME")
-        .setCheck(null);
     this.setPreviousStatement(true, null);
     this.setNextStatement(true, null);
     this.setColour(Blockly.Msg.ML_HUE);
@@ -168,7 +145,7 @@ Blockly.Blocks['mlparams'] = {
     init: function() {
         this.appendValueInput("VALUE")
             .setCheck("Number")
-            .appendField(" Set parameter")
+            .appendField("Set parameter")
             .appendField(new Blockly.FieldDropdown([["Learning Rate","learningRate"], ["Batch size","batchSize"], ["Number of batches","numBatches"]]), "paramters")
             .appendField("to");
         this.setPreviousStatement(true, null);

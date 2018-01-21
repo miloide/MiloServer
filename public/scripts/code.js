@@ -133,6 +133,7 @@ Code.changeLanguage = function() {
       window.location.host + window.location.pathname + search;
 };
 
+
 /**
  * Bind a function to a button's click event.
  * On touch enabled browsers, ontouchend is treated as equivalent to onclick.
@@ -445,7 +446,10 @@ Code.runJS = function() {
   var code = Blockly.JavaScript.workspaceToCode(Code.workspace);
   Blockly.JavaScript.INFINITE_LOOP_TRAP = null;
   try {
-    eval(code);
+    var constants = ' var dl = deeplearn; \n var graph = new dl.Graph(); \n var math = new dl.NDArrayMathGPU(); \n var session=  new dl.Session(graph, math); \n';
+    var finalCode = constants + code;
+    console.log(finalCode);
+    eval(finalCode);
   } catch (e) {
     alert(MSG['badCode'].replace('%1', e));
   }
