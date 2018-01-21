@@ -36,7 +36,39 @@ Blockly.JavaScript['predict'] = function(block) {
     var test = ' var test =  dl.Array1D.new([' +number_testx+'])' +';';
     var code = 'const result = session.eval(outputTensor,[{tensor: inputTensor, data:test}]); result.data().then(data=> alert(data));';
     return test+code;
-  };
+};
+
+Blockly.JavaScript['dl_number'] = function(block) {
+    var arg0 = parseFloat(block.getFieldValue("NUM"));
+    var code = "dl.Scalar.new(" + arg0 +")";
+    return [code, Blockly.JavaScript.ORDER_ATOMIC];
+};
+
+Blockly.JavaScript['dl_get_scalar'] = function(block) {
+    var zero = "dl.Scalar.new(0)";
+    arg0 = Blockly.JavaScript.valueToCode(block, 'NUM', Blockly.JavaScript.ORDER_ATOMIC) || zero;
+    var code = arg0+".get()";
+    return [code, Blockly.JavaScript.ORDER_ATOMIC];
+};
+
+Blockly.JavaScript['dl_arithmetic'] = function(block) {
+    // Basic arithmetic operators, and power.
+    var OPERATORS = {
+      'ADD': ['math.add', Blockly.JavaScript.ORDER_ADDITION],
+      'MINUS': ['math.subtract', Blockly.JavaScript.ORDER_SUBTRACTION],
+      'MULTIPLY': ['math.multiply', Blockly.JavaScript.ORDER_MULTIPLICATION],
+      'DIVIDE': ['math.divide', Blockly.JavaScript.ORDER_DIVISION],
+    };
+    var tuple = OPERATORS[block.getFieldValue('OP')];
+    var operator = tuple[0];
+    var order = tuple[1];
+    var argument0 = Blockly.JavaScript.valueToCode(block, 'A', order) || '0';
+    var argument1 = Blockly.JavaScript.valueToCode(block, 'B', order) || '0';
+    var code;
+    code = operator+'(' + argument0 + ', ' + argument1 + ')';
+    return [code, Blockly.JavaScript.ORDER_FUNCTION_CALL];
+};
+
 
 //customize console.log
 console.webLog = (function (old_function,div_id) {
@@ -45,3 +77,5 @@ console.webLog = (function (old_function,div_id) {
         $(div_id).append('<pre class="block">' + text + '</pre>');
     };
 } (console.log.bind(console), "#console_javascript"));
+
+

@@ -4,25 +4,13 @@
 Blockly.HSV_SATURATION = 0.60;
 Blockly.HSV_VALUE = 0.75;
 
-Blockly.Blocks['constant'] = {
-    init: function() {
-        this.appendDummyInput()
-            .appendField("")
-            .appendField(new Blockly.FieldNumber(0), "NUM");
-        this.setColour(Blockly.Msg.ML_HUE);
-        this.setOutput(true, null);
-        this.setTooltip("");
-        this.setHelpUrl("");
-    }
-};
-
 Blockly.Blocks['dataset_1'] = {
     init: function() {
       this.appendDummyInput()
           .appendField("Input Dataset - Iris");
       this.setColour(230);
       this.setPreviousStatement(true, null);
-      this.setNextStatement(true, null); 
+      this.setNextStatement(true, null);
     this.setTooltip("");
    this.setHelpUrl("");
     }
@@ -34,7 +22,7 @@ Blockly.Blocks['linearregression'] = {
           .appendField("LinearRegression");
       this.setColour(230);
       this.setPreviousStatement(true, null);
-      this.setNextStatement(true, null); 
+      this.setNextStatement(true, null);
     this.setTooltip("");
    this.setHelpUrl("");
     }
@@ -180,5 +168,82 @@ Blockly.Blocks.text_log = {
             tooltip: Blockly.Msg.TEXT_PRINT_TOOLTIP,
             helpUrl: Blockly.Msg.TEXT_PRINT_HELPURL
         })
+    }
+};
+
+Blockly.defineBlocksWithJsonArray([  // BEGIN JSON EXTRACT
+    // Block for numeric value.
+    {
+      "type": "dl_number",
+      "message0": "%1",
+      "args0": [{
+        "type": "field_number",
+        "name": "NUM",
+        "value": 0
+      }],
+      "output": "DLnumber",
+      "colour": "%{BKY_ML_HUE}",
+      "helpUrl": "https://deeplearnjs.org/docs/api/classes/scalar.html",
+      "tooltip": "A Deeplearn.js scalar",
+      "extensions": ["parent_tooltip_when_inline"]
+    },
+    {
+        "type": "dl_get_scalar",
+        "message0": "ValueOf %1",
+        "args0": [{
+          "type": "input_value",
+          "name": "NUM",
+          "check": "DLnumber"
+        }],
+        "output": "Number",
+        "colour": "%{BKY_ML_HUE}",
+        "helpUrl": "https://deeplearnjs.org/docs/api/classes/ndarray.html#get",
+        "tooltip": "Get raw value ",
+        "extensions": ["parent_tooltip_when_inline"]
+      },
+
+    // Block for basic arithmetic operator.
+    {
+      "type": "dl_arithmetic",
+      "message0": "%1 %2 %3",
+      "args0": [
+        {
+          "type": "input_value",
+          "name": "A",
+          "check": "DLnumber"
+        },
+        {
+          "type": "field_dropdown",
+          "name": "OP",
+          "options": [
+            ["%{BKY_MATH_ADDITION_SYMBOL}", "ADD"],
+            ["%{BKY_MATH_SUBTRACTION_SYMBOL}", "MINUS"],
+            ["%{BKY_MATH_MULTIPLICATION_SYMBOL}", "MULTIPLY"],
+            ["%{BKY_MATH_DIVISION_SYMBOL}", "DIVIDE"]
+          ]
+        },
+        {
+          "type": "input_value",
+          "name": "B",
+          "check": "DLnumber"
+        }
+      ],
+      "inputsInline": true,
+      "output": "DLnumber",
+      "colour": "%{BKY_ML_HUE}",
+      "helpUrl": "https://deeplearnjs.org/docs/api/classes/ndarraymath.html",
+      "extensions": ["math_op_tooltip"]
+    }
+]);
+
+Blockly.Blocks['constant'] = {
+    init: function() {
+        this.appendDummyInput()
+            .appendField("")
+            .appendField(new Blockly.FieldNumber(0), "NUM");
+        this.setColour(Blockly.Msg.ML_HUE);
+        this.setOutput(true, null);
+        this.setTooltip("");
+        this.setHelpUrl("");
     }
 };
