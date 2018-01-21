@@ -1,0 +1,56 @@
+doctype html
+html
+  head
+    meta(charset="utf-8")
+    meta(name="google", value="notranslate")
+    title Milo:
+    link(rel="stylesheet", href="media/style.css")
+    script(src="scripts/storage.js")
+    script(src="scripts/blockly.js")
+    script(src="scripts/blocks.js")
+    script(src="scripts/javascript.js")
+    script(src="scripts/code.js")
+    script(src="scripts/jquery-2.2.4.js")
+    script(src="scripts/custom/blocks.js")
+    script(src="scripts/custom/codegen.js")
+  body
+    table(width="100%", height="100%")
+      tr
+        td
+          h1
+            | Milo‏ >
+            span#title ...
+        td.farSide
+          select#languageMenu
+      tr
+        td(colspan="2")
+          table(width="100%")
+            tr#tabRow(height="1em")
+              td#tab_blocks.tabon ...
+              td.tabmin  
+              td#tab_data.taboff Data Explorer
+              td.tabmin  
+              td#tab_javascript.taboff JavaScript
+              td.tabmin  
+              td#tab_xml.taboff XML
+              td.tabmax
+                button#trashButton.notext(title="...")
+                  img.trash.icon21(src="media/1x1.gif")
+                button#linkButton.notext(title="...")
+                  img.link.icon21(src="media/1x1.gif")
+                button#runButton.notext.primary(title="...")
+                  img.run.icon21(src="media/1x1.gif")
+      tr
+        td#content_area(height="99%", colspan="2")
+    #content_blocks.content
+    #content_data.content
+    #content_javascript.content
+      h3 Generated JS
+      pre#source_javascript.code.
+
+      br
+      hr
+      |     Console Output:
+      #console_javascript
+    textarea#content_xml.content(wrap="off")
+    include toolbox.html

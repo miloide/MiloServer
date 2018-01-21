@@ -7,10 +7,13 @@ var http = require('http');
 var https = require('https');
 var serveIndex = require('serve-index');
 
+app.set('views', './views');
+app.set('view engine', 'pug');
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.get('/', function(req, res){
-  res.sendFile(path.join(__dirname, 'public/index.html'));
+  //res.sendFile(path.join(__dirname, 'public/index.html'));
+  res.render('editor');
 });
 
 
