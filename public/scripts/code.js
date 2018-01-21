@@ -7,6 +7,21 @@
 var Code = {};
 
 /**
+ *  Create a namespace for the data explorer along with helper methods
+ */
+Code.datasets = {};
+
+/**
+ *  Add new dataset to the dataset library
+ */
+Code.datasets.add = function(button){
+  // TODO(arjun): Implement dataset library
+  Blockly.Variables.createVariable(button.getTargetWorkspace());
+}
+
+
+
+/**
  * Lookup for names of supported languages.  Keys should be in ISO 639 format.
  */
 Code.LANGUAGE_NAME = {
@@ -321,6 +336,11 @@ Code.init = function() {
   // Add to reserved word list: Local variables in execution environment (runJS)
   // and the infinite loop detection function.
   Blockly.JavaScript.addReservedWords('code,timeouts,checkTimeout');
+  // Register callbacks for buttons
+  // TODO(arjun): implement adddataset callback
+  Code.workspace.registerButtonCallback("ADD_DATASET",Code.datasets.add);
+  // Per https://groups.google.com/d/msg/blockly/Ux9OQuyJ9XE/8PvZt73aBgAJ need to update due to bug.
+  Code.workspace.updateToolbox(document.getElementById('toolbox'));
 
   Code.loadBlocks('');
 
@@ -357,6 +377,7 @@ Code.init = function() {
 
   // Lazy-load the syntax-highlighting.
   window.setTimeout(Code.importPrettify, 1);
+
 };
 
 /**
@@ -407,6 +428,8 @@ Code.initLanguage = function() {
 /**
  * Execute the user's code.
  * Just a quick and dirty eval.  Catch infinite loops.
+ * TODO(arjun): Replace with JS Interpretter from
+ *              https://developers.google.com/blockly/guides/app-integration/running-javascript
  */
 Code.runJS = function() {
   Code.selected = 'javascript';
@@ -453,3 +476,5 @@ document.write('<script src="msg/' + Code.LANG + '.js"></script>\n');
 document.write('<script src="msg/js/' + Code.LANG + '.js"></script>\n');
 
 window.addEventListener('load', Code.init);
+
+

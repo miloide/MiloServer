@@ -69,6 +69,7 @@ Blockly.Blocks['optimizer'] = {
         .appendField(new Blockly.FieldDropdown([["SGD","SGD"], ["Adagrad","Adagrad"], ["Adamax","Adamax"], ["Adam","Adam"]]), "optimizer");
     this.setInputsInline(true);
     this.setNextStatement(true, null);
+    Blockly.BlockSvg.START_HAT = true;
 	this.setPreviousStatement(true, null);
     this.setColour(Blockly.Msg.ML_HUE);
     this.setTooltip("Choose an optimizer");
