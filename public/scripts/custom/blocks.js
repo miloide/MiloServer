@@ -1,4 +1,8 @@
-// This file contains custom blocks for use with deeplearn.js
+// This file contains custom blocks and other customizations for Milo
+
+// To change global colour brightness - set HSV Saturation and Value between 0(inclusive) and 1(exclusive);
+Blockly.HSV_SATURATION = 0.60;
+Blockly.HSV_VALUE = 0.75;
 
 Blockly.Blocks['deepadder'] = {
 	init: function() {
