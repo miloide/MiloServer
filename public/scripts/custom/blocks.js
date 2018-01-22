@@ -117,8 +117,18 @@ Blockly.Blocks['getvalue'] = {
     this.setHelpUrl("");
   }
 };
-
-
+Blockly.Blocks['predict'] = {
+    init: function() {
+      this.appendDummyInput()
+          .appendField("Predict for")
+          .appendField(new Blockly.FieldNumber(0), "testX");
+      this.setPreviousStatement(true, null);
+      this.setNextStatement(true, null);
+      this.setColour(230);
+   this.setTooltip("");
+   this.setHelpUrl("");
+    }
+  };
 Blockly.Blocks['createoptimizer'] = {
   init: function() {
     this.appendDummyInput()

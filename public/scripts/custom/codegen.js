@@ -31,6 +31,13 @@ Blockly.JavaScript['linearregression'] = function(block){
         return code+code1+code2+code3+code4;
 };  
 
+Blockly.JavaScript['predict'] = function(block) {
+    var number_testx = parseFloat(block.getFieldValue('testX'));
+    var test = ' var test =  dl.Array1D.new([' +number_testx+'])' +';';
+    var code = 'const result = session.eval(outputTensor,[{tensor: inputTensor, data:test}]); result.data().then(data=> alert(data));';
+    return test+code;
+  };
+
 //customize console.log
 console.webLog = (function (old_function,div_id) {
     return function (text) {
