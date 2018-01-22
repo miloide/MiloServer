@@ -20,16 +20,16 @@ Blockly.JavaScript['dataset_1'] = function(block) {
         var code1 = '\n var noAttributes = 1; \n ';
         return code+code1;
   };
- 
+
 Blockly.JavaScript['linearregression'] = function(block){
-        
+
         var code = 'const inputShape = [noAttributes]; \n const inputTensor = graph.placeholder' + '(' + '\'input\'' + ',inputShape); \n ';
         var code1 = '\n const labelShape = [1]; \n const multiplier = graph.variable' + '(' + '\'multiplier\'' + ', dl.Array2D.randNormal([1, noAttributes])); \n const labelTensor = graph.placeholder ' + '(' + '\'label\''+ ', labelShape); \n const outputTensor = graph.matmul(multiplier, inputTensor);';
         var code2 = '\n const costTensor = graph.meanSquaredCost(outputTensor, labelTensor); \n var shuffledInputProviderBuilder = new dl.InCPUMemoryShuffledInputProviderBuilder([inputX, inputY]); \n var _a = shuffledInputProviderBuilder.getInputProviders(), inputProvider = _a[0], labelProvider = _a[1];';
         var code3 = '\n var FeedEntry = [{tensor: inputTensor, data: inputProvider},{tensor: labelTensor, data: labelProvider}];';
-        var code4 = ' \n for(let j=0;j<numBatches;j++)\n{ const cost = session.train(costTensor, FeedEntry, batchSize, optimizer, dl.CostReduction.MEAN); \n console.log(j,cost.getValues());}';      
+        var code4 = ' \n for(let j=0;j < numBatches;j++) \n { const cost = session.train(costTensor, FeedEntry, batchSize, optimizer, dl.CostReduction.MEAN); \n console.log(j,cost.getValues());}';
         return code+code1+code2+code3+code4;
-};  
+};
 
 Blockly.JavaScript['predict'] = function(block) {
     var number_testx = parseFloat(block.getFieldValue('testX'));
