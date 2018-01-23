@@ -336,7 +336,9 @@ Code.init = function() {
 
   // Add to reserved word list: Local variables in execution environment (runJS)
   // and the infinite loop detection function.
-  Blockly.JavaScript.addReservedWords('code,timeouts,checkTimeout');
+  Blockly.JavaScript.addReservedWords(
+    'code,jscode,setup,dl,graph,math,session,DeepLearn,Data,WebCam,SqueezeNet,timeouts,checkTimeout'
+  );
   // Register callbacks for buttons
   // TODO(arjun): implement adddataset callback
   Code.workspace.registerButtonCallback("ADD_DATASET",Code.datasets.add);
@@ -352,8 +354,10 @@ Code.init = function() {
 
   Code.tabClick(Code.selected);
 
-  Code.bindClick('trashButton',
-      function() {Code.discard(); Code.renderContent();});
+  Code.bindClick('trashButton',function() {
+        Code.discard();
+        Code.renderContent();
+  });
   Code.bindClick('runButton', Code.runJS);
   // TODO(arjun): Enable link button once Node JS server is setup with DB Store
   var linkButton = document.getElementById('linkButton');
@@ -449,6 +453,7 @@ Code.runJS = function() {
     var setup =  DeepLearn.setup;
     var jscode = setup + code;
     eval(jscode);
+    $("#console_holder").show();
   } catch (e) {
     alert(MSG['badCode'].replace('%1', e));
   }
@@ -458,18 +463,19 @@ Code.runJS = function() {
 
 
 /**
- * Discard all blocks from the workspace.
+ * Discard all blocks from the workspace and clean up any used references like webcam, etc.
  */
 Code.discard = function() {
   var count = Code.workspace.getAllBlocks().length;
   if (count < 2 ||
       window.confirm(Blockly.Msg.DELETE_ALL_BLOCKS.replace('%1', count))) {
     Code.workspace.clear();
-    // Clear webLog outputs if any
-    document.getElementById("console_javascript").innerHTML="";
     if (window.location.hash) {
       window.location.hash = '';
     }
+
+    // Clear run results
+    clearOutput();
   }
 };
 

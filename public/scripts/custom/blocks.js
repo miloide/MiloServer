@@ -233,7 +233,50 @@ Blockly.defineBlocksWithJsonArray([  // BEGIN JSON EXTRACT
       "colour": "%{BKY_ML_HUE}",
       "helpUrl": "https://deeplearnjs.org/docs/api/classes/ndarraymath.html",
       "extensions": ["math_op_tooltip"]
-    }
+    },
+    {
+    "type": "img_from_webcam",
+    "message0": "Image From WebCam",
+    "colour": "%{BKY_IMAGE_HUE}",
+    "helpUrl": "",
+    "output": "ImgDiv",
+    "tooltip": "Gets image from WebCam",
+    // "previousStatement": true,
+    // "nextStatement": true,
+    "extensions": ["parent_tooltip_when_inline"]
+    },
+    {
+    "type": "img_from_url",
+    "message0": "Image From URL %1",
+    "args0": [{
+        type: "input_value",
+        name: "TEXT"
+    }],
+    "colour": "%{BKY_IMAGE_HUE}",
+    "helpUrl": "",
+    "output": "ImgDiv",
+    "tooltip": "Gets image from URL",
+    // "previousStatement": true,
+    // "nextStatement": true,
+    "extensions": ["parent_tooltip_when_inline"]
+    },
+    {
+    "type": "squeezenet_label",
+    "message0": "Using SqueezeNet",
+    "message1": "Classify %1",
+    "args1": [{
+        "type": "input_value",
+        "name": "IMG",
+        "check": "ImgDiv"
+    }],
+    "colour": "%{BKY_ML_HUE}",
+    "helpUrl": "",
+    "previousStatement": true,
+    "nextStatement": true,
+    "tooltip": "Labels image using squeezenet Model",
+    "extensions": ["parent_tooltip_when_inline"]
+    },
+
 ]);
 
 Blockly.Blocks['constant'] = {

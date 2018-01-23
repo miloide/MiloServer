@@ -70,12 +70,24 @@ Blockly.JavaScript['dl_arithmetic'] = function(block) {
 };
 
 
-//customize console.log
-console.webLog = (function (old_function,div_id) {
-    return function (text) {
-        old_function(text);
-        $(div_id).append('<pre class="block">' + text + '</pre>');
-    };
-} (console.log.bind(console), "#console_javascript"));
+Blockly.JavaScript.img_from_url = function(block) {
+    var arg0 = Blockly.JavaScript.valueToCode(block, "TEXT", Blockly.JavaScript.ORDER_NONE) || "''";
+    var code = 'imgFromURL('+ arg0 +')';
+    return [code,Blockly.JavaScript.ORDER_FUNCTION_CALL];
+};
+
+Blockly.JavaScript.img_from_webcam = function(block) {
+    var code = 'WebCam.image';
+    return [code, Blockly.JavaScript.ORDER_FUNCTION_CALL];
+};
+
+Blockly.JavaScript.squeezenet_label = function(block) {
+    const zero = "";
+    var arg0 = Blockly.JavaScript.valueToCode(block, 'IMG', Blockly.JavaScript.ORDER_NONE) || zero;
+    if (arg0 == zero) return ["",Blockly.JavaScript.ORDER_ATOMIC];
+    var code = 'SqueezeNet.classify(\n\t'+ arg0 +'\n);\n';
+    return code;
+};
+
 
 
