@@ -359,5 +359,16 @@
           <field name="batchSize">0</field>
         </block>
       </category>
+      <category name="Image" colour="%{BKY_IMAGE_HUE}">
+          <block type="img_from_webcam"></block>
+          <block type="squeezenet_label"></block>
+          <block type="img_from_url">
+              <value name="TEXT">
+                  <shadow type="text">
+                    <field name="TEXT">https://storage.googleapis.com/learnjs-data/images/cat.jpeg</field>
+                  </shadow>
+                </value>
+          </block>
+      </category>
   </category>
 </xml>

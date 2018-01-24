@@ -425,3 +425,4 @@ goog.require('Blockly.Msg');
 /** @export */ Blockly.Msg.PROCEDURES_HUE = "290";
 /** @export */ Blockly.Msg.COLOUR_HUE = "20";
 /** @export */ Blockly.Msg.ML_HUE = "360";
+/** @export */ Blockly.Msg.IMAGE_HUE = "180";

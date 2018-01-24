@@ -21,8 +21,8 @@ html
               td#tab_javascript.taboff JavaScript
               td.tabmin  
               td#tab_xml.taboff XML
-              td.tabmin  
-              td#tab_graph.taboff Graph
+              td.tabmin
+                img#loadingDiv(style="display: none;width:50px;",src="media/loading.gif")
               td.tabmax
                 button#trashButton.notext(title="...")
                   img.trash.icon21(src="media/1x1.gif")
@@ -35,12 +35,18 @@ html
     #content_blocks.content
     #content_data.content
     #content_javascript.content
-      h3 Generated JS
-      pre#source_javascript.code.
-
-      br
-      hr
-      |     Console Output:
-      #console_javascript
+      .container(style="max-width:100%;width:100%").scroll
+        .row
+          .col-12-sm.col-6
+            h3 Generated JS
+            pre#source_javascript.code.scroll-x
+          .col-12-sm.col-6
+            .col-12
+              #graph_javascript
+            .col-12
+              #misc_javascript.col-12
+          #console_holder.col-12-sm(style="display: none")
+            h3 Console Output
+            #console_javascript
     textarea#content_xml.content(wrap="off")
     include toolbox.html
