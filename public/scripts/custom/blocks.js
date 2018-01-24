@@ -261,6 +261,21 @@ Blockly.defineBlocksWithJsonArray([  // BEGIN JSON EXTRACT
     "extensions": ["parent_tooltip_when_inline"]
     },
     {
+        "type": "img_show",
+        "message0": "Show %1",
+        "args0": [{
+            "type": "input_value",
+            "name": "IMG",
+            "check": "ImgDiv"
+        }],
+        "colour": "%{BKY_IMAGE_HUE}",
+        "helpUrl": "",
+        "previousStatement": true,
+        "nextStatement": true,
+        "tooltip": "Labels image using squeezenet Model",
+        "extensions": ["parent_tooltip_when_inline"]
+    },
+    {
     "type": "squeezenet_label",
     "message0": "Using SqueezeNet",
     "message1": "Classify %1",

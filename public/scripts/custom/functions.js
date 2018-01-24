@@ -81,9 +81,11 @@ function clearOutput() {
             track.stop();
         });
     }
+    WebCam.loaded = false;
     // Clear outputs if any
     document.getElementById("console_javascript").innerHTML="";
     $("#console_holder").hide();
+    $("#loadingDiv").hide();
     document.getElementById("misc_javascript").innerHTML="";
     document.getElementById("graph_javascript").innerHTML="";
 }
@@ -152,6 +154,23 @@ function imgFromURL(url){
     img.src = url;
     return img;
 }
+
+/**
+ * Render Image on UI
+ * @param {HTMLImageElement} <img> tag to render
+ */
+function imgShow(imgTag){
+    $('#loadingDiv').show();
+    if(typeof(imgTag)=="function"){
+        imgTag(imgShow);
+        return;
+    }
+    imgTag.setAttribute("class","videoframe");
+    $(imgTag).show();
+    $('#loadingDiv').hide();
+}
+
+
 
 /**
  * Create a NameSpace for SqueezeNet Model.

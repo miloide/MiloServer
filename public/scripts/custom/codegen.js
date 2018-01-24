@@ -89,5 +89,12 @@ Blockly.JavaScript.squeezenet_label = function(block) {
     return code;
 };
 
+Blockly.JavaScript.img_show = function(block) {
+    const zero = "";
+    var arg0 = Blockly.JavaScript.valueToCode(block, 'IMG', Blockly.JavaScript.ORDER_NONE) || zero;
+    if (arg0 == zero) return ["",Blockly.JavaScript.ORDER_ATOMIC];
+    var code = '\nimgShow('+ arg0 +');\n';
+    return code;
+};
 
 
