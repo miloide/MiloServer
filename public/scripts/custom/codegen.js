@@ -97,4 +97,91 @@ Blockly.JavaScript.img_show = function(block) {
     return code;
 };
 
+// TODO (arjun): Actual Plot Generation Code.
+Blockly.JavaScript['plot_scatter'] = function(block) {
+    var value_x = Blockly.JavaScript.valueToCode(block, 'X', Blockly.JavaScript.ORDER_ATOMIC);
+    var value_y = Blockly.JavaScript.valueToCode(block, 'Y', Blockly.JavaScript.ORDER_ATOMIC);
+    var value_name = Blockly.JavaScript.valueToCode(block, 'NAME', Blockly.JavaScript.ORDER_ATOMIC);
+    var colour_hue = block.getFieldValue('HUE');
+    var checkbox_connect = block.getFieldValue('Connect') == 'TRUE';
+    // TODO: Assemble JavaScript into code variable.
+    var code = '{\n'+
+        '"type":"scatter",\n'+
+        '"name":"'+ value_name +'"'+
+        ',\n"x":'+ value_x +
+        ',\n"y":'+ value_y +
+        ',\n"isLine":'+ checkbox_connect +
+        '\n},\n'
+    ;
+    return code;
+  };
 
+Blockly.JavaScript['plot_histogram'] = function(block) {
+var data = Blockly.JavaScript.valueToCode(block, 'DATA', Blockly.JavaScript.ORDER_ATOMIC);
+var value_name = Blockly.JavaScript.valueToCode(block, 'NAME', Blockly.JavaScript.ORDER_ATOMIC);
+var colour_hue = block.getFieldValue('HUE');
+// TODO: Assemble JavaScript into code variable.
+var code = '...;\n';
+return code;
+};
+
+Blockly.JavaScript['plot_title'] = function(block) {
+var text_name = block.getFieldValue('NAME');
+// TODO: Assemble JavaScript into code variable.
+var code = '{\n\t"type":"plot_title",\n\t"value":"'+text_name+'"\n},\n';
+return code;
+};
+
+Blockly.JavaScript['plot_x_title'] = function(block) {
+var text_name = block.getFieldValue('NAME');
+// TODO: Assemble JavaScript into code variable.
+var code = '{\n\t"type":"plot_xlabel",\n\t"value":"'+text_name+'"\n},\n';
+return code;
+};
+
+Blockly.JavaScript['plot_y_title'] = function(block) {
+var text_name = block.getFieldValue('NAME');
+// TODO: Assemble JavaScript into code variable.
+var code = '{\n\t"type":"plot_ylabel",\n\t"value":"'+text_name+'"\n},\n';
+return code;
+};
+
+Blockly.JavaScript['show_plot'] = function(block) {
+    var statements_data = Blockly.JavaScript.statementToCode(block, 'DATA');
+    var statements_options = Blockly.JavaScript.statementToCode(block, 'Options');
+    var plotVar = Blockly.JavaScript.variableDB_.getDistinctName(
+        'plot', Blockly.Variables.NAME_TYPE);
+
+    var newPlot = "var "+ plotVar +" = new Plot();";
+    var setData = plotVar +".setData([\n"+statements_data+"\n]);";
+    var setOptions = statements_options.length!=0?plotVar +".setOptions([\n"+statements_options+"\n]);":"";
+    var showPlot = plotVar +".show()";
+    var code = [newPlot,setData,setOptions,showPlot].join("\n");
+    return code;
+  };
+
+
+//TODO: (Arjun) Generate Math List
+Blockly.JavaScript['lists_split_math'] = function(block) {
+    // Block for splitting text into a list of numbers
+    var input = Blockly.JavaScript.valueToCode(block, 'INPUT',
+        Blockly.JavaScript.ORDER_MEMBER);
+    var delimiter = Blockly.JavaScript.valueToCode(block, 'DELIM',
+        Blockly.JavaScript.ORDER_NONE) || '\'\'';
+    var mode = block.getFieldValue('MODE');
+    if (mode == 'SPLIT') {
+    if (!input) {
+        input = '\'\'';
+    }
+    var functionName = 'split';
+    } else if (mode == 'JOIN') {
+    if (!input) {
+        input = '[]';
+    }
+    var functionName = 'join';
+    } else {
+    throw 'Unknown mode: ' + mode;
+    }
+    var code = input + '.' + functionName + '(' + delimiter + ')';
+    return [code, Blockly.JavaScript.ORDER_FUNCTION_CALL];
+};
