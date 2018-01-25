@@ -6,6 +6,7 @@ var WebCam = {};
 // Holder for HTMLVideoElement
 WebCam.video = null;
 WebCam.loaded = false;
+WebCam.exists = true;
 
 /**
  * Setup Webcam HTML Div and define methods for handling video stream
@@ -18,15 +19,6 @@ WebCam.init = function(callback) {
        return;
     }
 
-    var video = document.querySelector("video");
-    if(video == undefined){
-        video = document.createElement("video");
-        $("#misc_javascript").prepend(video);
-    }
-    video.setAttribute("id","videoElement");
-    video.setAttribute("autoplay","true");
-
-
     navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia || navigator.oGetUserMedia;
 
     if (navigator.getUserMedia) {
@@ -36,36 +28,46 @@ WebCam.init = function(callback) {
     }
 
     function handleVideo(stream) {
+        WebCam.exists = true;
+        var video = document.querySelector("video");
+        if(video == undefined){
+            video = document.createElement("video");
+            $("#misc_javascript").prepend(video);
+        }
+
+        video.setAttribute("id","videoElement");
+        video.setAttribute("autoplay","true");
         WebCam.stream = stream;
         video.src = window.URL.createObjectURL(stream);
+
+        var canvas = getImageCanvas();
+        // Get a handle on the 2d context of the canvas element
+        var context = canvas.getContext("2d");
+        // Define some vars required later
+        var w, h;
+        WebCam.video = video;
+        // Add a listener to wait for the 'loadedmetadata' state so the video's dimensions can be read
+        WebCam.video.addEventListener("loadedmetadata", function() {
+            WebCam.loaded = true;
+            w = 227;
+            h = 227;
+            canvas.width = w;
+            canvas.height = h;
+            if (typeof(callback) == "function"){
+                setTimeout(function(){
+                    callback(WebCam.capture_());
+                }, 800);
+            }
+        }, false);
     }
 
     function videoError(e) {
-        // do something
-    }
-
-    // Get handles on the video and canvas elements
-    video = document.querySelector("video");
-    var canvas = getImageCanvas();
-    // Get a handle on the 2d context of the canvas element
-    var context = canvas.getContext("2d");
-    // Define some vars required later
-    var w, h;
-    WebCam.video = video;
-    // Add a listener to wait for the 'loadedmetadata' state so the video's dimensions can be read
-    WebCam.video.addEventListener("loadedmetadata", function() {
-        WebCam.loaded = true;
-        w = 227;
-        h = 227;
-        canvas.width = w;
-        canvas.height = h;
+        WebCam.exists = false;
+        // Fail Gracefully
         if (typeof(callback) == "function"){
-            setTimeout(function(){
-                callback(WebCam.capture_());
-            }, 800);
-
+            imgShow(imgFromURL("media/nocamera.jpg"));
         }
-    }, false);
+    }
 };
 
 /**
@@ -95,7 +97,14 @@ function clearOutput() {
  * @returns {HTMLImageElement}
  */
 WebCam.image = function(callback){
-    if(WebCam.loaded) {
+    if (WebCam.exists == false) {
+        // Gracefully fall back to image
+        $(WebCam.video).hide();
+        imgShow(imgFromURL("media/nocamera.jpg"));
+
+    }
+
+    if (WebCam.loaded) {
         if(typeof(callback)=="function"){
             callback(WebCam.capture_());
         } else {

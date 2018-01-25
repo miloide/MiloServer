@@ -250,7 +250,8 @@ Blockly.defineBlocksWithJsonArray([  // BEGIN JSON EXTRACT
     "message0": "Image From URL %1",
     "args0": [{
         type: "input_value",
-        name: "TEXT"
+        name: "TEXT",
+        check: "String"
     }],
     "colour": "%{BKY_IMAGE_HUE}",
     "helpUrl": "",
