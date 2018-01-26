@@ -37,13 +37,15 @@ html
       .container(style="max-width:100%;width:100%;").scroll
         .row
           .col-12-sm.col-4
-            h3 Dataset
-            //- TODO: Change to more structured function based on dropdown
-            button(onclick="Datasets.importBuiltIn('iris');") Import Dataset
+            h3 Datasets
+            p Select built-in dataset and click import or upload csv file.
+            select#builtInDropdown
+            button(onclick="Datasets.importBuiltIn();") Import
             button Upload
+            br
             button#dataset_save(style='display:none') Save
             .col-12
-              h4 Loaded Datasets
+              h4 Loaded Datasets (click to view)
               ul#dataset_list
           .col-12-sm.col-8.scroll
             .col-12

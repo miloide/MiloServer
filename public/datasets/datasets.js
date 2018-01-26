@@ -3,12 +3,14 @@
  */
 var Datasets = {};
 Datasets.convert = {};
+Datasets.imported = {};
 
 /**
  * Tracks built-in datasets that have been imported
  */
 Datasets.loaded = {
     "iris":false,
+    "california_housing":false
 };
 
 
@@ -20,23 +22,96 @@ Datasets.loaded = {
 Datasets.flyoutCallback = function(workspace) {
     // Returns dataset blocks
     var xmlList = [];
-    if (Blockly.Blocks['iris_get'] && Datasets.loaded.iris == true) {
-        var blockText = '<xml>' +
-            '<block type="iris_get">' +
-            '</block>' +
-            '</xml>';
-        var block = Blockly.Xml.textToDom(blockText).firstChild;
-        xmlList.push(block);
-    }
+    var datasetList = Object.keys(Datasets.loaded);
+    for (var index in datasetList){
+        var name = datasetList[index];
+        console.log(Datasets.loaded);
+        if (Datasets.loaded[name] == true) {
+            if (Blockly.JavaScript[name+"_get"] == undefined)
+            { 
+              // console.log(name);
+               Datasets.generateBlock(name);
+               console.log(name+"defined");
+            }
+            var blockText = '<xml>' +
+                '<block type="'+name+'_get">' +
+                '</block>' +
+                '</xml>';
+            var block = Blockly.Xml.textToDom(blockText).firstChild;
+            xmlList.push(block);
+        }
+    }   
     return xmlList;
-  };
+};
+
+/**
+ * Defines dataset blocks dynamically
+ * @param name - name of loaded dataset
+ */
+Datasets.generateBlock = function(name){
+    
+    if(Blockly.JavaScript[name+"_get"] == undefined)
+    {
+        if(Datasets.imported[name]==undefined)
+        {
+            Datasets.imported[name] = Datasets.convert.rowsToMap(Datasets[name]);
+        }
+        var keys = Object.keys(Datasets.imported[name]);
+        Datasets.imported[name]["options"] = [];
+        console.log(this.imported[name]);
+        for(var index in keys){
+            var option = keys[index];
+            var optionname = keys[index];
+            Datasets.imported[name]["options"].push([option,optionname]);
+        }
+        Datasets.generateBlockDefinition(name);
+        Blockly.JavaScript[name+"_get"] = Datasets.codegenTemplate(name);
+        console.log(name+" being generated");
+    }
+}
+
+Datasets.generateBlockDefinition = function(name){
+    if(Datasets.imported[name]!=undefined){
+        Blockly.defineBlocksWithJsonArray([{
+            "type": name+"_get",
+            "message0": "get %1 from " + name,
+            "args0": [
+                {
+                "type": "field_dropdown",
+                "name": "index",
+                "options": Datasets.imported[name].options,
+                }
+            ],
+            "output": "Array",
+            "colour": Blockly.Msg.HISTOGRAM_HUE,
+            "tooltip": "Get chosen attribute from " + name + "dataset",
+            "helpUrl": ""
+        }]);
+    }
+};
+
+/**
+ * Generates codegenerator dynamically for dataset blocks
+ * @param 
+ */
+Datasets.codegenTemplate = function (name) {
+    return function (block) {
+        var dropdown_index = block.getFieldValue('index');
+        // TODO: Assemble JavaScript into code variable.
+        var code = 'Datasets.imported["' + name + '"]["'+dropdown_index+'"]';
+        // TODO: Change ORDER_NONE to the correct strength.
+        return [code, Blockly.JavaScript.ORDER_ATOMIC];        
+    };
+};
 
 
 /**
  * Imports dataset given as parameter
  * @param {string} name
  */
-Datasets.importBuiltIn = function(name){
+
+Datasets.importBuiltIn = function(){
+    var name = $("#builtInDropdown").val();
     if (name == undefined) return;
     if (Datasets.loaded[name]== undefined || Datasets.loaded[name]) return;
     var scriptElement = document.createElement("script");
@@ -44,7 +119,6 @@ Datasets.importBuiltIn = function(name){
     scriptElement.src = "datasets/"+name+".js";
     scriptElement.onload = function () {
         Datasets.loaded[name] = true;
-        //console.log("Loaded " + name + " dataset with " + Datasets[name].rows.length +" rows.");
         $("#dataset_list").append(
             '<li><button class="button-none" onclick="Datasets.show(\''+name+'\')">'+name+'</button></li>'
         );
@@ -66,7 +140,7 @@ Datasets.show = function(name){
         colWidths.push(100);
     }
     $('#dataset_output').jexcel({data:data,colWidths:colWidths});
-    $('#dataset_save').append(' ' + name);
+    $('#dataset_save').html('Save ' + name);
     $('#dataset_save').show();
     $('#dataset_save').on('click',function(){
         Datasets[name].rows = $("#dataset_output").jexcel('getData');

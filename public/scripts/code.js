@@ -252,6 +252,11 @@ Code.renderContent = function() {
     }
   } else if (content.id == 'content_data') {
       //$('#table').jexcel({ data:Dataset.exceldata, colHeaders: ["1","2"], colWidths: [ 300, 80, 100 ] });
+      var defaultDatasets = Object.keys(Datasets.loaded);
+      $("#builtInDropdown").empty();
+      for (var index in defaultDatasets){
+        $("#builtInDropdown").append('<option value="'+defaultDatasets[index]+'">'+ defaultDatasets[index]+' Dataset </option>');
+      }
   }
 };
 
