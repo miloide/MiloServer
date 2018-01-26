@@ -34,15 +34,20 @@ html
         td#content_area(height="99%", colspan="2")
     #content_blocks.content
     #content_data.content
-      .container(style="max-width:100%;width:100%").scroll
+      .container(style="max-width:100%;width:100%;").scroll
         .row
           .col-12-sm.col-4
             h3 Dataset
-            <button type="importDataset">Import Dataset</button>
-            <button type="Upload">Upload</button>
+            //- TODO: Change to more structured function based on dropdown
+            button(onclick="Datasets.importBuiltIn('iris');") Import Dataset
+            button Upload
+            button#dataset_save(style='display:none') Save
+            .col-12
+              h4 Loaded Datasets
+              ul#dataset_list
           .col-12-sm.col-8.scroll
             .col-12
-              #table
+              #dataset_output
     #content_javascript.content
       .container(style="max-width:100%;width:100%").scroll
         .row
@@ -50,6 +55,7 @@ html
             h3 Generated JS
             pre#source_javascript.code.scroll-x
           .col-12-sm.col-6
+            h3 Data
             .col-12
               #graph_output(style="display: none")
             .col-12

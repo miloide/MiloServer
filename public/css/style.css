@@ -194,7 +194,11 @@ button {
 .run {
   background-position: -42px 0px;
 }
-
+.button-none{
+    border: none;
+    background: none;
+    text-decoration: underline;
+}
 
 .loader,
 .loader:after {

@@ -7,21 +7,6 @@
 var Code = {};
 
 /**
- *  Create a namespace for the data explorer along with helper methods
- */
-Code.datasets = {};
-
-/**
- *  Add new dataset to the dataset library
- */
-Code.datasets.add = function(button){
-  // TODO(arjun): Implement dataset library
-  Blockly.Variables.createVariable(button.getTargetWorkspace());
-}
-
-
-
-/**
  * Lookup for names of supported languages.  Keys should be in ISO 639 format.
  */
 Code.LANGUAGE_NAME = {
@@ -266,8 +251,7 @@ Code.renderContent = function() {
       sourceElement.innerHTML = code;
     }
   } else if (content.id == 'content_data') {
-      //content.innerHTML = '<h3> Dataset </h3> <div id ="table"></div>';
-      $('#table').jexcel({ data:Dataset.exceldata, colHeaders: ["1","2"], colWidths: [ 300, 80, 100 ] });
+      //$('#table').jexcel({ data:Dataset.exceldata, colHeaders: ["1","2"], colWidths: [ 300, 80, 100 ] });
   }
 };
 
@@ -342,7 +326,7 @@ Code.init = function() {
   );
   // Register callbacks for buttons
   // TODO(arjun): implement adddataset callback
-  Code.workspace.registerButtonCallback("ADD_DATASET",Code.datasets.add);
+  Code.workspace.registerToolboxCategoryCallback('DATASETS',Datasets.flyoutCallback);
   // Per https://groups.google.com/d/msg/blockly/Ux9OQuyJ9XE/8PvZt73aBgAJ need to update due to bug.
   Code.workspace.updateToolbox(document.getElementById('toolbox'));
 
@@ -450,7 +434,6 @@ Code.runJS = function() {
   };
   var code = Blockly.JavaScript.workspaceToCode(Code.workspace);
   Blockly.JavaScript.INFINITE_LOOP_TRAP = null;
-
   try {
     var setup =  DeepLearn.setup;
     var jscode = setup + code;

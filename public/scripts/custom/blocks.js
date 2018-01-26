@@ -13,7 +13,7 @@ Blockly.Blocks['dataset_1'] = {
       this.setNextStatement(true, null);
     this.setTooltip("");
    this.setHelpUrl("");
-   
+
     }
   };
 
@@ -529,5 +529,23 @@ Blockly.Blocks['lists_split_math'] = {
    */
   domToMutation: function(xmlElement) {
     this.updateType_(xmlElement.getAttribute('mode'));
+  }
+};
+
+
+Blockly.Blocks['iris_get'] = {
+  init: function() {
+    this.setColour(Blockly.Msg.ML_HUE);
+    this.appendDummyInput()
+        .appendField("get")
+        .appendField(new Blockly.FieldDropdown([
+          ["Sepal length","Sepal length"],
+          ["Sepal width","Sepal width"],
+          ["Petal length","Petal length"],
+          ["Petal width","Petal width"],
+          ["Class","Class"]
+        ]), 'GET')
+    this.setInputsInline(false);
+    this.setOutput(true, "Array");
   }
 };

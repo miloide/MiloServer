@@ -1,5 +1,5 @@
 var MSG = {
-  title: "Proof of Concept",
+  title: " IDE",
   blocks: "Blocks",
   linkTooltip: "Save and link to blocks.",
   runTooltip: "Run the program defined by the blocks in the workspace.",

@@ -1,3 +1,4 @@
+var excledata=[];
 Blockly.JavaScript.text_log = function(a) {
     return "console.webLog(" + (Blockly.JavaScript.valueToCode(a, "TEXT", Blockly.JavaScript.ORDER_NONE) || "''") + ");\n"
 };
