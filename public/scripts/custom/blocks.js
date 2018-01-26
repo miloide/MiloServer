@@ -251,7 +251,8 @@ Blockly.defineBlocksWithJsonArray([  // BEGIN JSON EXTRACT
     "message0": "Image From URL %1",
     "args0": [{
         type: "input_value",
-        name: "TEXT"
+        name: "TEXT",
+        check: "String"
     }],
     "colour": "%{BKY_IMAGE_HUE}",
     "helpUrl": "",
@@ -293,6 +294,161 @@ Blockly.defineBlocksWithJsonArray([  // BEGIN JSON EXTRACT
     "extensions": ["parent_tooltip_when_inline"]
     },
 
+    //TODO (arjun): Make colors as Blockly.Msg constants
+    {
+        "type": "plot_scatter",
+        "lastDummyAlign0": "RIGHT",
+        "message0": "Scatter %1 X %2 Y %3 Label %4 Color %5 %6 Draw Line %7",
+        "args0": [
+          {
+            "type": "input_dummy"
+          },
+          {
+            "type": "input_value",
+            "name": "X",
+            "check": "Array",
+            "align": "RIGHT"
+          },
+          {
+            "type": "input_value",
+            "name": "Y",
+            "check": "Array",
+            "align": "RIGHT"
+          },
+          {
+            "type": "input_value",
+            "name": "NAME",
+            "check": "String",
+            "align": "RIGHT"
+          },
+          {
+            "type": "field_colour",
+            "name": "HUE",
+            "colour": "#ffffff"
+          },
+          {
+            "type": "input_dummy",
+            "align": "RIGHT"
+          },
+          {
+            "type": "field_checkbox",
+            "name": "Connect",
+            "checked": true
+          }
+        ],
+        "inputsInline": false,
+        "previousStatement": "Scatter",
+        "nextStatement": "Scatter",
+        "colour": "%{BKY_SCATTER_HUE}",
+        "tooltip": "Set plot options",
+        "helpUrl": ""
+      },
+      {
+        "type": "plot_histogram",
+        "lastDummyAlign0": "RIGHT",
+        "message0": "Histogram Plot %1 X %2 Label %3 Color %4",
+        "args0": [
+          {
+            "type": "input_dummy"
+          },
+          {
+            "type": "input_value",
+            "name": "DATA",
+            "check": "Array",
+            "align": "RIGHT"
+          },
+          {
+            "type": "input_value",
+            "name": "NAME",
+            "check": "String",
+            "align": "RIGHT"
+          },
+          {
+            "type": "field_colour",
+            "name": "HUE",
+            "colour": "#ffffff"
+          }
+        ],
+        "inputsInline": false,
+        "previousStatement": "Histogram",
+        "nextStatement": "Histogram",
+        "colour": "%{BKY_HISTOGRAM_HUE}",
+        "tooltip": "Histogram",
+        "helpUrl": ""
+      },
+      {
+        "type": "plot_title",
+        "message0": "Set Plot Title %1",
+        "args0": [
+          {
+            "type": "field_input",
+            "name": "NAME",
+            "text": "My Plot"
+          }
+        ],
+        "previousStatement": "PlotConfig",
+        "nextStatement": "PlotConfig",
+        "colour": "%{BKY_PLOT_HUE}",
+        "tooltip": "",
+        "helpUrl": ""
+      },
+      {
+        "type": "plot_x_title",
+        "message0": "Set X Axis Label %1",
+        "args0": [
+          {
+            "type": "field_input",
+            "name": "NAME",
+            "text": "My Plot"
+          }
+        ],
+        "previousStatement": "PlotConfig",
+        "nextStatement": "PlotConfig",
+        "colour": "%{BKY_PLOT_HUE}",
+        "tooltip": "",
+        "helpUrl": ""
+      },
+      {
+        "type": "plot_y_title",
+        "message0": "Set Y Axis Label %1",
+        "args0": [
+          {
+            "type": "field_input",
+            "name": "NAME",
+            "text": "My Plot"
+          }
+        ],
+        "previousStatement": "PlotConfig",
+        "nextStatement": "PlotConfig",
+        "colour": "%{BKY_PLOT_HUE}",
+        "tooltip": "",
+        "helpUrl": ""
+      },
+      {
+        "type": "show_plot",
+        "message0": "Plot %1 Options %2",
+        "args0": [
+          {
+            "type": "input_statement",
+            "name": "DATA",
+            "check": [
+              "Scatter",
+              "Histogram"
+            ],
+            "align": "RIGHT"
+          },
+          {
+            "type": "input_statement",
+            "name": "Options",
+            "check": "PlotConfig"
+          }
+        ],
+        "previousStatement":null,
+        "colour": "%{BKY_PLOT_HUE}",
+        "tooltip": "",
+        "helpUrl": ""
+      }
+
 ]);
 
 Blockly.Blocks['constant'] = {
@@ -305,4 +461,73 @@ Blockly.Blocks['constant'] = {
         this.setTooltip("");
         this.setHelpUrl("");
     }
+};
+
+Blockly.Blocks['lists_split_math'] = {
+  /**
+   * Block for splitting text into a list, or joining a list into text.
+   * @this Blockly.Block
+   */
+  init: function() {
+    // Assign 'this' to a variable for use in the closures below.
+    var thisBlock = this;
+    var dropdown = new Blockly.FieldDropdown(
+        [[Blockly.Msg.LISTS_SPLIT_LIST_FROM_TEXT, 'SPLIT'],
+         [Blockly.Msg.LISTS_SPLIT_TEXT_FROM_LIST, 'JOIN']],
+        function(newMode) {
+          thisBlock.updateType_(newMode);
+        });
+    this.setHelpUrl(Blockly.Msg.LISTS_SPLIT_HELPURL);
+    this.setColour(Blockly.Blocks.lists.HUE);
+    this.appendValueInput('INPUT')
+        .setCheck('String')
+        .appendField(dropdown, 'MODE');
+    this.appendValueInput('DELIM')
+        .setCheck('String')
+        .appendField(Blockly.Msg.LISTS_SPLIT_WITH_DELIMITER);
+    this.setInputsInline(true);
+    this.setOutput(true, 'Array');
+    this.setTooltip(function() {
+      var mode = thisBlock.getFieldValue('MODE');
+      if (mode == 'SPLIT') {
+        return Blockly.Msg.LISTS_SPLIT_TOOLTIP_SPLIT;
+      } else if (mode == 'JOIN') {
+        return Blockly.Msg.LISTS_SPLIT_TOOLTIP_JOIN;
+      }
+      throw 'Unknown mode: ' + mode;
+    });
+  },
+  /**
+   * Modify this block to have the correct input and output types.
+   * @param {string} newMode Either 'SPLIT' or 'JOIN'.
+   * @private
+   * @this Blockly.Block
+   */
+  updateType_: function(newMode) {
+    if (newMode == 'SPLIT') {
+      this.outputConnection.setCheck('Array');
+      this.getInput('INPUT').setCheck('String');
+    } else {
+      this.outputConnection.setCheck('String');
+      this.getInput('INPUT').setCheck('Array');
+    }
+  },
+    /**
+   * Create XML to represent the input and output types.
+   * @return {!Element} XML storage element.
+   * @this Blockly.Block
+   */
+  mutationToDom: function() {
+    var container = document.createElement('mutation');
+    container.setAttribute('mode', this.getFieldValue('MODE'));
+    return container;
+  },
+  /**
+   * Parse XML to restore the input and output types.
+   * @param {!Element} xmlElement XML storage element.
+   * @this Blockly.Block
+   */
+  domToMutation: function(xmlElement) {
+    this.updateType_(xmlElement.getAttribute('mode'));
+  }
 };
