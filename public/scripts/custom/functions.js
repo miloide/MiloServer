@@ -1,6 +1,13 @@
 /**
+ * Create a NameSpace for dataset
+*/
+var Dataset = {};
+Dataset.exceldata = [];
+
+/**
  * Create a NameSpace for WebCam Operations
  */
+
 var WebCam = {};
 
 // Holder for HTMLVideoElement

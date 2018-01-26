@@ -16,6 +16,13 @@ Blockly.JavaScript.createoptimizer = function(block){
 };
 
 Blockly.JavaScript['dataset_1'] = function(block) {
+
+        for(var i=0;i<10;i++)
+        {
+            var row = [i,i*2];
+            Dataset.exceldata.push(row);
+        }
+        console.log(Dataset.exceldata);
         var code = 'var inputX = []; \n var inputY = []; \n for(var i=0;i<1000;i++) \n { const arrX = dl.Array1D.new([i]); const arrY = dl.Array1D.new([i*2]); \n inputX.push(arrX);\n inputY.push(arrY); \n }';
         var code1 = '\n var noAttributes = 1; \n ';
         return code+code1;

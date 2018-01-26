@@ -15,11 +15,11 @@ html
           table(width="100%")
             tr#tabRow(height="1em")
               td#tab_blocks.tabon ...
-              td.tabmin  
+              td.tabmin
               td#tab_data.taboff Data Explorer
-              td.tabmin  
+              td.tabmin
               td#tab_javascript.taboff JavaScript
-              td.tabmin  
+              td.tabmin
               td#tab_xml.taboff XML
               td.tabmin
                 img#loadingDiv(style="display: none;width:50px;",src="media/loading.gif")
@@ -34,6 +34,15 @@ html
         td#content_area(height="99%", colspan="2")
     #content_blocks.content
     #content_data.content
+      .container(style="max-width:100%;width:100%").scroll
+        .row
+          .col-12-sm.col-4
+            h3 Dataset
+            <button type="importDataset">Import Dataset</button>
+            <button type="Upload">Upload</button>
+          .col-12-sm.col-8.scroll
+            .col-12
+              #table
     #content_javascript.content
       .container(style="max-width:100%;width:100%").scroll
         .row
