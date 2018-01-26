@@ -162,12 +162,12 @@ function getImageCanvas(){
 function imgFromURL(url){
     const w = 227,h = 227;
     var img = new Image(w,h);
-    img.crossOrigin = "Anonymous";
+    img.setAttribute("crossorigin","anonymous");
     img.style="display:none;";
     img.onload = function() {
         $("#misc_output").append(img);
     };
-    img.src = url;
+    img.src = "https://cors-anywhere.herokuapp.com/"+url;
     return img;
 }
 
