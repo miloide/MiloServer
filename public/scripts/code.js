@@ -266,7 +266,7 @@ Code.renderContent = function() {
       sourceElement.innerHTML = code;
     }
   } else if (content.id == 'content_data') {
-      content.innerHTML = "placeholder for data explorer";
+      content.innerHTML = "Dataset";
   }
 };
 
@@ -449,9 +449,11 @@ Code.runJS = function() {
   };
   var code = Blockly.JavaScript.workspaceToCode(Code.workspace);
   Blockly.JavaScript.INFINITE_LOOP_TRAP = null;
+  $('#mytable').jexcel({ data:exceldata, colWidths: [ 300, 80, 100 ] });
   try {
     var setup =  DeepLearn.setup;
     var jscode = setup + code;
+
     eval(jscode);
     $("#console_holder").show();
   } catch (e) {
