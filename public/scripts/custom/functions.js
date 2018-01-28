@@ -107,7 +107,7 @@ WebCam.image = function(callback){
     if (WebCam.exists == false) {
         // Gracefully fall back to image
         $(WebCam.video).hide();
-        imgShow(imgFromURL("media/nocamera.jpg"));
+        imgShow(imgFromURL("media/nocamera.jpg",true));
 
     }
 
@@ -136,7 +136,7 @@ WebCam.capture_ = function(){
     // Grab the image from the video
     context.drawImage(WebCam.video, 0, 0, w, h);
     const url = canvas.toDataURL();
-    return imgFromURL(url);
+    return imgFromURL(url,true);
 };
 
 /**
@@ -159,7 +159,7 @@ function getImageCanvas(){
  * @param {string} url Url for src attribute of generated <img> tag
  * @returns {HTMLImageElement}
  */
-function imgFromURL(url){
+function imgFromURL(url,isWebCam){
     const w = 227,h = 227;
     var img = new Image(w,h);
     img.setAttribute("crossorigin","anonymous");
@@ -167,7 +167,10 @@ function imgFromURL(url){
     img.onload = function() {
         $("#misc_output").append(img);
     };
-    img.src = "https://cors-anywhere.herokuapp.com/"+url;
+    if(isWebCam != true)
+        img.src = "https://cors-anywhere.herokuapp.com/"+url;
+    else
+        img.src = url;
     return img;
 }
 
@@ -301,6 +304,7 @@ function Plot() {
         title:'Untitled Plot',
         xaxis:{},
         yaxis:{},
+
     };
 
     /**
@@ -372,7 +376,7 @@ Plot.prototype.show = function() {
     Plotly.newPlot(this.div_,this.data_, this.layout_);
     console.log(this);
     //Add the Plotly div to the canvas
-    $(this.canvas_).append(this.div_);
+    $(this.canvas_).prepend(this.div_);
     $("#graph_output").show();
 };
 

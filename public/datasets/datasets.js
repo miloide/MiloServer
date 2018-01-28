@@ -23,6 +23,9 @@ Datasets.flyoutCallback = function(workspace) {
     // Returns dataset blocks
     var xmlList = [];
     var datasetList = Object.keys(Datasets.loaded);
+    var labelText = '<xml><label text="Import datasets from the Data Explorer"></label></xml>';
+    var label = Blockly.Xml.textToDom(labelText).firstChild;
+    xmlList.push(label);
     for (var index in datasetList){
         var name = datasetList[index];
         if (Datasets.loaded[name] == true) {
