@@ -304,6 +304,7 @@
     <category name="%{BKY_CATML}" colour="%{BKY_ML_HUE}" expanded="true">
       <category name="%{BKY_CATMATH}" colour="%{BKY_ML_HUE}">
         <block type="dl_number"></block>
+        <block type="dl_array1d"></block>
         <block type="dl_get_scalar"></block>
         <block type="dl_arithmetic">
           <value name="A">
@@ -317,15 +318,24 @@
             </shadow>
           </value>
         </block>
+        <block type="lists_split_math">
+          <value name="INPUT">
+            <shadow type="text">
+              <field name="TEXT">1,2,3</field>
+            </shadow>
+          </value>
+          <value name="DELIM">
+            <shadow type="text">
+              <field name="TEXT">,</field>
+            </shadow>
+          </value>
+        </block>
         <block type="text_log">
             <value name="TEXT">
-                <shadow type="dl_get_scalar">
+                <block type="dl_get_scalar">
                   <value name="NUM">
-                      <shadow type="dl_number">
-                          <field name="NUM">0</field>
-                        </shadow>
-                      </value>
-                  </shadow>
+                  </value>
+                </block>
             </value>
           </block>
       </category>

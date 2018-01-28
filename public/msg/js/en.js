@@ -167,6 +167,7 @@ goog.require('Blockly.Msg');
 /** @export */ Blockly.Msg.LISTS_SORT_TYPE_TEXT = "alphabetic";
 /** @export */ Blockly.Msg.LISTS_SPLIT_HELPURL = "https://github.com/google/blockly/wiki/Lists#splitting-strings-and-joining-lists";
 /** @export */ Blockly.Msg.LISTS_SPLIT_LIST_FROM_TEXT = "make list from text";
+/** @export */ Blockly.Msg.LISTS_SPLIT_ARRAY_FROM_TEXT = "make array from text";
 /** @export */ Blockly.Msg.LISTS_SPLIT_TEXT_FROM_LIST = "make text from list";
 /** @export */ Blockly.Msg.LISTS_SPLIT_TOOLTIP_JOIN = "Join a list of texts into one text, separated by a delimiter.";
 /** @export */ Blockly.Msg.LISTS_SPLIT_TOOLTIP_SPLIT = "Split text into a list of texts, breaking at each delimiter.";

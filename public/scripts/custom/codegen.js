@@ -52,10 +52,16 @@ Blockly.JavaScript['dl_number'] = function(block) {
     return [code, Blockly.JavaScript.ORDER_ATOMIC];
 };
 
+Blockly.JavaScript['dl_array1d'] = function(block) {
+    var arg0 = Blockly.JavaScript.valueToCode(block, "NUM", Blockly.JavaScript.ORDER_FUNCTION_CALL);
+    var code = "dl.Array1D.new(" + arg0 +")";
+    return [code, Blockly.JavaScript.ORDER_ATOMIC];
+};
+
 Blockly.JavaScript['dl_get_scalar'] = function(block) {
     var zero = "dl.Scalar.new(0)";
     arg0 = Blockly.JavaScript.valueToCode(block, 'NUM', Blockly.JavaScript.ORDER_ATOMIC) || zero;
-    var code = arg0+".get()";
+    var code = arg0+".dataSync()";
     return [code, Blockly.JavaScript.ORDER_ATOMIC];
 };
 
@@ -118,6 +124,7 @@ Blockly.JavaScript['plot_scatter'] = function(block) {
         '"name":"'+ value_name +'"'+
         ',\n"x":'+ value_x +
         ',\n"y":'+ value_y +
+        ',\n"marker": {"color":"'+ colour_hue +'"}'+
         ',\n"isLine":'+ checkbox_connect +
         '\n},\n'
     ;
@@ -125,12 +132,18 @@ Blockly.JavaScript['plot_scatter'] = function(block) {
   };
 
 Blockly.JavaScript['plot_histogram'] = function(block) {
-var data = Blockly.JavaScript.valueToCode(block, 'DATA', Blockly.JavaScript.ORDER_ATOMIC);
-var value_name = Blockly.JavaScript.valueToCode(block, 'NAME', Blockly.JavaScript.ORDER_ATOMIC);
-var colour_hue = block.getFieldValue('HUE');
-// TODO: Assemble JavaScript into code variable.
-var code = '...;\n';
-return code;
+    var value_x = Blockly.JavaScript.valueToCode(block, 'X', Blockly.JavaScript.ORDER_ATOMIC);
+    var value_name = Blockly.JavaScript.valueToCode(block, 'NAME', Blockly.JavaScript.ORDER_ATOMIC);
+    var colour_hue = block.getFieldValue('HUE');
+    // TODO: Assemble JavaScript into code variable.
+    var code = '{\n'+
+        '"type":"histogram",\n'+
+        '"name":"'+ value_name +'"'+
+        ',\n"x":'+ value_x +
+        ',\n"marker": {"color":"'+ colour_hue +'"},'+
+        '\n},\n'
+    ;
+    return code;
 };
 
 Blockly.JavaScript['plot_title'] = function(block) {
@@ -176,20 +189,10 @@ Blockly.JavaScript['lists_split_math'] = function(block) {
         Blockly.JavaScript.ORDER_MEMBER);
     var delimiter = Blockly.JavaScript.valueToCode(block, 'DELIM',
         Blockly.JavaScript.ORDER_NONE) || '\'\'';
-    var mode = block.getFieldValue('MODE');
-    if (mode == 'SPLIT') {
     if (!input) {
         input = '\'\'';
     }
     var functionName = 'split';
-    } else if (mode == 'JOIN') {
-    if (!input) {
-        input = '[]';
-    }
-    var functionName = 'join';
-    } else {
-    throw 'Unknown mode: ' + mode;
-    }
-    var code = input + '.' + functionName + '(' + delimiter + ')';
+    var code = input + '.' + functionName + '(' + delimiter + ').map(Number)';
     return [code, Blockly.JavaScript.ORDER_FUNCTION_CALL];
 };
