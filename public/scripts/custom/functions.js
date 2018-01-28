@@ -320,10 +320,16 @@ function Plot() {
  * @param {string} data.isLine - whether to draw line through points or not
  */
 Plot.prototype.addDataItem = function(data) {
-    if(data.x == undefined){alert("Not enough data to plot!"); return;}
-    if (data.type == "scatter") {
-        if(data.x == undefined || data.y == undefined) alert("Not enough data");
+    if(data.x == undefined){
+        alert("Not enough data to plot!");
         return;
+    }
+    if (data.type == "scatter") {
+        if(data.x == undefined || data.y == undefined)
+        {
+          alert("Not enough data");
+          return;
+        }
     }
     data.marker["symbol"] = "circle";
     if (data.marker["color"] == "#ffffff") data.marker["color"] = undefined;
@@ -364,6 +370,7 @@ Plot.prototype.setYLabel= function(label) {
  */
 Plot.prototype.show = function() {
     Plotly.newPlot(this.div_,this.data_, this.layout_);
+    console.log(this);
     //Add the Plotly div to the canvas
     $(this.canvas_).append(this.div_);
     $("#graph_output").show();

@@ -25,13 +25,10 @@ Datasets.flyoutCallback = function(workspace) {
     var datasetList = Object.keys(Datasets.loaded);
     for (var index in datasetList){
         var name = datasetList[index];
-        console.log(Datasets.loaded);
         if (Datasets.loaded[name] == true) {
             if (Blockly.JavaScript[name+"_get"] == undefined)
-            { 
-              // console.log(name);
+            {
                Datasets.generateBlock(name);
-               console.log(name+"defined");
             }
             var blockText = '<xml>' +
                 '<block type="'+name+'_get">' +
@@ -40,7 +37,7 @@ Datasets.flyoutCallback = function(workspace) {
             var block = Blockly.Xml.textToDom(blockText).firstChild;
             xmlList.push(block);
         }
-    }   
+    }
     return xmlList;
 };
 
@@ -49,7 +46,7 @@ Datasets.flyoutCallback = function(workspace) {
  * @param name - name of loaded dataset
  */
 Datasets.generateBlock = function(name){
-    
+
     if(Blockly.JavaScript[name+"_get"] == undefined)
     {
         if(Datasets.imported[name]==undefined)
@@ -58,7 +55,6 @@ Datasets.generateBlock = function(name){
         }
         var keys = Object.keys(Datasets.imported[name]);
         Datasets.imported[name]["options"] = [];
-        console.log(this.imported[name]);
         for(var index in keys){
             var option = keys[index];
             var optionname = keys[index];
@@ -66,7 +62,6 @@ Datasets.generateBlock = function(name){
         }
         Datasets.generateBlockDefinition(name);
         Blockly.JavaScript[name+"_get"] = Datasets.codegenTemplate(name);
-        console.log(name+" being generated");
     }
 }
 
@@ -92,7 +87,7 @@ Datasets.generateBlockDefinition = function(name){
 
 /**
  * Generates codegenerator dynamically for dataset blocks
- * @param 
+ * @param
  */
 Datasets.codegenTemplate = function (name) {
     return function (block) {
@@ -100,7 +95,7 @@ Datasets.codegenTemplate = function (name) {
         // TODO: Assemble JavaScript into code variable.
         var code = 'Datasets.imported["' + name + '"]["'+dropdown_index+'"]';
         // TODO: Change ORDER_NONE to the correct strength.
-        return [code, Blockly.JavaScript.ORDER_ATOMIC];        
+        return [code, Blockly.JavaScript.ORDER_ATOMIC];
     };
 };
 
