@@ -258,7 +258,7 @@ console.webLog = (function (old_function,div_id) {
             var values = Object.values(JSON.parse(JSON.stringify(val)));
             if (values.length == 1) values = values[0];
             old_function(JSON.parse(JSON.stringify(values)));
-            $(div_id).append('<pre class="block">' + JSON.stringify(values,null,0) + '</pre>');
+            $(div_id).append('<pre class="block">' + JSON.stringify(values,null,1) + '</pre>');
         });
     };
 } (console.log.bind(console), "#console_javascript"));
