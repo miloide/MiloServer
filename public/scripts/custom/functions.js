@@ -255,8 +255,10 @@ console.webLog = (function (old_function,div_id) {
     return function (value) {
         //See https://developer.mozilla.org/en-US/docs/Web/API/Console/log
         Promise.resolve(value).then(function(val){
-            old_function(JSON.parse(JSON.stringify(val)));
-            $(div_id).append('<pre class="block">' + JSON.stringify(val,null,2) + '</pre>');
+            var values = Object.values(JSON.parse(JSON.stringify(val)));
+            if (values.length == 1) values = values[0];
+            old_function(JSON.parse(JSON.stringify(values)));
+            $(div_id).append('<pre class="block">' + JSON.stringify(values,null,0) + '</pre>');
         });
     };
 } (console.log.bind(console), "#console_javascript"));
@@ -271,6 +273,9 @@ console.webLog = (function (old_function,div_id) {
 function Plot() {
 
     this.div_ = document.createElement("div");
+    var divId = Blockly.JavaScript.variableDB_.getDistinctName(
+        'plotDiv', Blockly.Variables.NAME_TYPE);
+    this.div_.setAttribute("id",divId);
     /**
      * @member {Object[]} data_ stores a list of data objects, each containining x,y  coordinates for plotting
      * Sample Data object:
@@ -297,14 +302,12 @@ function Plot() {
         xaxis:{},
         yaxis:{},
     };
+
+    /**
+     * canvas_ stores the parent div for plot outputs
+     */
+    this.canvas_ = document.getElementById("graph_output");
 }
-
-/**
- * canvas_ stores the parent div for plot outputs
- */
-Plot.prototype.canvas_ = document.getElementById("graph_output");
-
-
 
 /**
  * Add a dataset object to Plot.data_
@@ -314,21 +317,17 @@ Plot.prototype.canvas_ = document.getElementById("graph_output");
  * @param {string} data.type - scatter,or histogram,etc - default is scatter
  * @param {string} data.name - data label
  * @param {string} data.color - color for use while plotting
- * @param {string} data.symbol - marker symbol - default is circle
+ * @param {string} data.isLine - whether to draw line through points or not
  */
 Plot.prototype.addDataItem = function(data) {
-    console.log(data);
-    if (data.x == undefined || data.y == undefined) return false;
-    if (data.type == undefined) data.type = "scatter";
-    for(var i in data.x){
-        data.x[i] = parseFloat(data.x[i]);
+    if(data.x == undefined){alert("Not enough data to plot!"); return;}
+    if (data.type == "scatter") {
+        if(data.x == undefined || data.y == undefined) alert("Not enough data");
+        return;
     }
-    for(var i in data.y){
-        data.y[i] = parseFloat(data.y[i]);
-    }
-    data.marker = data.symbol==undefined?{symbol:"circle"}:{symbol:data.symbol};
-    data.symbol = undefined;
-    data.mode = data.isLine?"markers+lines":"markers";
+    data.marker["symbol"] = "circle";
+    if (data.marker["color"] == "#ffffff") data.marker["color"] = undefined;
+    if (data.type == "scatter") data.mode = data.isLine?"markers+lines":"markers";
     this.data_.push(data);
     return true;
 };
@@ -364,10 +363,9 @@ Plot.prototype.setYLabel= function(label) {
  * TODO (arjun): Add checks for ensuring data existence
  */
 Plot.prototype.show = function() {
-    Plotly.newPlot("graph_output",this.data_, this.layout_);
-    console.log(this);
+    Plotly.newPlot(this.div_,this.data_, this.layout_);
     //Add the Plotly div to the canvas
-    // $(this.canvas_).append(this.div_);
+    $(this.canvas_).append(this.div_);
     $("#graph_output").show();
 };
 
@@ -376,7 +374,6 @@ Plot.prototype.show = function() {
  * @param {Object[]} data
  */
 Plot.prototype.setData = function(data){
-    console.log(data);
     for (var index in data){
         this.addDataItem(data[index]);
     }

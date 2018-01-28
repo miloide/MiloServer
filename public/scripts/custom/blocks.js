@@ -189,15 +189,30 @@ Blockly.defineBlocksWithJsonArray([  // BEGIN JSON EXTRACT
       "extensions": ["parent_tooltip_when_inline"]
     },
     {
+      "type": "dl_array1d",
+      "message0": "Vector from %1",
+      "args0": [{
+        "type": "input_value",
+        "name": "NUM",
+        "check": "Array"
+      }],
+      "inputsInline": true,
+      "output": "DLnumber",
+      "colour": "%{BKY_ML_HUE}",
+      "helpUrl": "https://deeplearnjs.org/docs/api/classes/array1d.html",
+      "tooltip": "A Deeplearn.js Array1D",
+      "extensions": ["parent_tooltip_when_inline"]
+    },
+    {
         "type": "dl_get_scalar",
-        "message0": "ValueOf %1",
+        "message0": "Get Value %1",
         "args0": [{
           "type": "input_value",
           "name": "NUM",
           "check": "DLnumber"
         }],
         "output": "Number",
-        "colour": "%{BKY_ML_HUE}",
+        "colour": "%{BKY_HISTOGRAM_HUE}",
         "helpUrl": "https://deeplearnjs.org/docs/api/classes/ndarray.html#get",
         "tooltip": "Get raw value ",
         "extensions": ["parent_tooltip_when_inline"]
@@ -206,30 +221,47 @@ Blockly.defineBlocksWithJsonArray([  // BEGIN JSON EXTRACT
     // Block for basic arithmetic operator.
     {
       "type": "dl_arithmetic",
-      "message0": "%1 %2 %3",
+      "message0": "A %1 %2 %3 B %4",
       "args0": [
         {
           "type": "input_value",
           "name": "A",
-          "check": "DLnumber"
+          "check": "DLnumber",
+          "align": "RIGHT"
         },
         {
           "type": "field_dropdown",
           "name": "OP",
           "options": [
-            ["%{BKY_MATH_ADDITION_SYMBOL}", "ADD"],
-            ["%{BKY_MATH_SUBTRACTION_SYMBOL}", "MINUS"],
-            ["%{BKY_MATH_MULTIPLICATION_SYMBOL}", "MULTIPLY"],
-            ["%{BKY_MATH_DIVISION_SYMBOL}", "DIVIDE"]
+            [
+              "+",
+              "ADD"
+            ],
+            [
+              "-",
+              "MINUS"
+            ],
+            [
+              "×",
+              "MULTIPLY"
+            ],
+            [
+              "÷",
+              "DIVIDE"
+            ]
           ]
+        },
+        {
+          "type": "input_dummy"
         },
         {
           "type": "input_value",
           "name": "B",
-          "check": "DLnumber"
+          "check": "DLnumber",
+          "align": "RIGHT"
         }
       ],
-      "inputsInline": true,
+      "inputsInline": false,
       "output": "DLnumber",
       "colour": "%{BKY_ML_HUE}",
       "helpUrl": "https://deeplearnjs.org/docs/api/classes/ndarraymath.html",
@@ -353,7 +385,7 @@ Blockly.defineBlocksWithJsonArray([  // BEGIN JSON EXTRACT
           },
           {
             "type": "input_value",
-            "name": "DATA",
+            "name": "X",
             "check": "Array",
             "align": "RIGHT"
           },
@@ -465,70 +497,21 @@ Blockly.Blocks['constant'] = {
 
 Blockly.Blocks['lists_split_math'] = {
   /**
-   * Block for splitting text into a list, or joining a list into text.
+   * Block for splitting text into a list, parsing values into Numbers
    * @this Blockly.Block
    */
   init: function() {
-    // Assign 'this' to a variable for use in the closures below.
-    var thisBlock = this;
-    var dropdown = new Blockly.FieldDropdown(
-        [[Blockly.Msg.LISTS_SPLIT_LIST_FROM_TEXT, 'SPLIT'],
-         [Blockly.Msg.LISTS_SPLIT_TEXT_FROM_LIST, 'JOIN']],
-        function(newMode) {
-          thisBlock.updateType_(newMode);
-        });
     this.setHelpUrl(Blockly.Msg.LISTS_SPLIT_HELPURL);
-    this.setColour(Blockly.Blocks.lists.HUE);
+    this.setColour(Blockly.Msg.LISTS_HUE);
     this.appendValueInput('INPUT')
         .setCheck('String')
-        .appendField(dropdown, 'MODE');
+        .appendField(Blockly.Msg.LISTS_SPLIT_ARRAY_FROM_TEXT);
     this.appendValueInput('DELIM')
         .setCheck('String')
         .appendField(Blockly.Msg.LISTS_SPLIT_WITH_DELIMITER);
     this.setInputsInline(true);
     this.setOutput(true, 'Array');
-    this.setTooltip(function() {
-      var mode = thisBlock.getFieldValue('MODE');
-      if (mode == 'SPLIT') {
-        return Blockly.Msg.LISTS_SPLIT_TOOLTIP_SPLIT;
-      } else if (mode == 'JOIN') {
-        return Blockly.Msg.LISTS_SPLIT_TOOLTIP_JOIN;
-      }
-      throw 'Unknown mode: ' + mode;
-    });
-  },
-  /**
-   * Modify this block to have the correct input and output types.
-   * @param {string} newMode Either 'SPLIT' or 'JOIN'.
-   * @private
-   * @this Blockly.Block
-   */
-  updateType_: function(newMode) {
-    if (newMode == 'SPLIT') {
-      this.outputConnection.setCheck('Array');
-      this.getInput('INPUT').setCheck('String');
-    } else {
-      this.outputConnection.setCheck('String');
-      this.getInput('INPUT').setCheck('Array');
-    }
-  },
-    /**
-   * Create XML to represent the input and output types.
-   * @return {!Element} XML storage element.
-   * @this Blockly.Block
-   */
-  mutationToDom: function() {
-    var container = document.createElement('mutation');
-    container.setAttribute('mode', this.getFieldValue('MODE'));
-    return container;
-  },
-  /**
-   * Parse XML to restore the input and output types.
-   * @param {!Element} xmlElement XML storage element.
-   * @this Blockly.Block
-   */
-  domToMutation: function(xmlElement) {
-    this.updateType_(xmlElement.getAttribute('mode'));
+    this.setTooltip("");
   }
 };
 
