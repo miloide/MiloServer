@@ -4,6 +4,7 @@
 var Datasets = {};
 Datasets.convert = {};
 Datasets.imported = {};
+Datasets.uploadedDataset = {};
 
 /**
  * Tracks built-in datasets that have been imported
@@ -23,6 +24,9 @@ Datasets.flyoutCallback = function(workspace) {
     // Returns dataset blocks
     var xmlList = [];
     var datasetList = Object.keys(Datasets.loaded);
+    var labelText = '<xml><label text="Import datasets from the Data Explorer"></label></xml>';
+    var label = Blockly.Xml.textToDom(labelText).firstChild;
+    xmlList.push(label);
     for (var index in datasetList){
         var name = datasetList[index];
         if (Datasets.loaded[name] == true) {
@@ -84,6 +88,52 @@ Datasets.generateBlockDefinition = function(name){
         }]);
     }
 };
+/**
+ * Triggers a click for input element fileLoader 
+ */
+
+Datasets.triggerClick = function(){
+    $("#fileLoader").click();
+}
+/**
+ * Reads csv file selected by user
+ * @param event - File Input event 
+ */
+
+Datasets.uploadDataset= function(event){
+    var reader = new FileReader();
+    var file = event.target.files[0];
+    reader.onload = function(){
+        if(Datasets.uploadDataset[file.name].length > 0)
+            Datasets.uploadDataset[file.name] = [];
+        var data = String(reader.result).split("\n");
+        var nrows = data.length;
+        var noAttributes;
+        var colWidths = [];
+        if(data[0]!=undefined){
+            noAttributes = data[0].split(",").length;
+            for(let i = 0; i < noAttributes; i++)
+                colWidths.push(100);
+        }
+        for(let i = 0 ;i < nrows-1; i++)
+        {
+            var rowElements = data[i].split(",");
+            var rowToString = [];
+            for(let j = 0; j < noAttributes; j++)
+                rowToString.push(String(rowElements[j]));
+            Datasets.uploadDataset[file.name].push(rowToString);
+        }
+        console.log(Datasets.uploadDataset);
+        Datasets.show(Datasets.uploadDataset);  
+    }
+    if(file.type == "text/csv")
+    {
+        reader.readAsText(file);
+        Datasets.uploadDataset[file.name] = [];
+    }
+    else   
+        alert("Only csv files supported");    
+}
 
 /**
  * Generates codegenerator dynamically for dataset blocks

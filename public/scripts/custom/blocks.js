@@ -66,34 +66,6 @@ Blockly.Blocks['inputfile'] = {
     }
 };
 
-var openFile = function(event) {
-  var input = event.target;
-  console.log(event);
-  var reader = new FileReader();
-  reader.onload = function(){
-    var text =String(reader.result).split("\n");
-    console.log(text);
-    nrows = text.length;
-    if(text[0]!=null)
-      noAttributes = text[0].split(",").length;
-  var input_x = [];
-  for(var i=0;i<nrows;i++)
-  {
-      var textArray =text[i].split(",");
-      var intArray = [];
-      for(var j=0;j<textArray.length;j++)
-      {
-          intArray[j] = parseInt(textArray[j]);
-      }
-     input_x.push(intArray);
-  }
-  inputs = input_x;
-  console.log("Result:",inputs,noAttributes);
-  return [input_x,noAttributes];
-  };
-
-  reader.readAsText(input.files[0]);
-};
 
 
 Blockly.Blocks['getvalue'] = {
