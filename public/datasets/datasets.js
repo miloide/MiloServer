@@ -4,7 +4,6 @@
 var Datasets = {};
 Datasets.convert = {};
 Datasets.imported = {};
-Datasets.uploadedDataset = {};
 
 /**
  * Tracks built-in datasets that have been imported
@@ -103,17 +102,19 @@ Datasets.triggerClick = function(){
 Datasets.uploadDataset= function(event){
     var reader = new FileReader();
     var file = event.target.files[0];
+    var fileName = file.name.replace(".csv","");
     reader.onload = function(){
-        if(Datasets.uploadDataset[file.name].length > 0)
-            Datasets.uploadDataset[file.name] = [];
+        if(Datasets.fileName == undefined)
+        {
+            Datasets[fileName] = {};
+            Datasets[fileName].header = false;
+            Datasets[fileName].rows = [];
+        }
         var data = String(reader.result).split("\n");
         var nrows = data.length;
         var noAttributes;
-        var colWidths = [];
         if(data[0]!=undefined){
             noAttributes = data[0].split(",").length;
-            for(let i = 0; i < noAttributes; i++)
-                colWidths.push(100);
         }
         for(let i = 0 ;i < nrows-1; i++)
         {
@@ -121,15 +122,17 @@ Datasets.uploadDataset= function(event){
             var rowToString = [];
             for(let j = 0; j < noAttributes; j++)
                 rowToString.push(String(rowElements[j]));
-            Datasets.uploadDataset[file.name].push(rowToString);
+            Datasets[fileName].rows.push(rowToString);
         }
-        console.log(Datasets.uploadDataset);
-        Datasets.show(Datasets.uploadDataset);  
+        Datasets.loaded[fileName] = true;
+        $("#dataset_list").append(
+            '<li><button class="button-none" onclick="Datasets.show(\''+fileName+'\')">'+fileName+'</button></li>'
+        );
+        console.log(Datasets[fileName]);
+        Datasets.show(fileName);  
     }
-    if(file.type == "text/csv")
-    {
+    if(file.type == "text/csv"){
         reader.readAsText(file);
-        Datasets.uploadDataset[file.name] = [];
     }
     else   
         alert("Only csv files supported");    
@@ -176,7 +179,8 @@ Datasets.importBuiltIn = function(){
  * @param {string} name
  */
 Datasets.show = function(name){
-    if (Datasets.loaded[name]== undefined || Datasets.loaded[name]==false) return;
+    console.log(name);
+    if (Datasets.loaded[name] == undefined || Datasets.loaded[name]==false) return;
     var data = Datasets[name].rows;
     var colWidths = [];
     var headerRow = data[0];
@@ -211,9 +215,11 @@ Datasets.convert.rowsToMap = function(data){
     var dataLength = data.rows.length;
     var rowCount = 0;
     var dataDictionary = {};
+    var headers = data.rows[0];
     if(data.header)
     {
-        var headers = data.rows[0];
+        
+        console.log(headers)
         rowCount++;
         for(let i = 0;i < headers.length; i++)
         {
