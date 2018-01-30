@@ -7,21 +7,6 @@
 var Code = {};
 
 /**
- *  Create a namespace for the data explorer along with helper methods
- */
-Code.datasets = {};
-
-/**
- *  Add new dataset to the dataset library
- */
-Code.datasets.add = function(button){
-  // TODO(arjun): Implement dataset library
-  Blockly.Variables.createVariable(button.getTargetWorkspace());
-}
-
-
-
-/**
  * Lookup for names of supported languages.  Keys should be in ISO 639 format.
  */
 Code.LANGUAGE_NAME = {
@@ -132,6 +117,7 @@ Code.changeLanguage = function() {
   window.location = window.location.protocol + '//' +
       window.location.host + window.location.pathname + search;
 };
+
 
 /**
  * Bind a function to a button's click event.
@@ -248,6 +234,9 @@ Code.tabClick = function(clickedName) {
  */
 Code.renderContent = function() {
   var content = document.getElementById('content_' + Code.selected);
+  if (content.id != "content_javascript") {
+    $("#graph_output").hide();
+  }
   // Initialize the pane.
   if (content.id == 'content_xml') {
     var xmlTextarea = document.getElementById('content_xml');
@@ -256,6 +245,7 @@ Code.renderContent = function() {
     xmlTextarea.value = xmlText;
     xmlTextarea.focus();
   } else if (content.id == 'content_javascript') {
+    $("#graph_output").show();
     var code = Blockly.JavaScript.workspaceToCode(Code.workspace);
     var sourceElement = document.getElementById("source_javascript");
     sourceElement.textContent = code;
@@ -265,7 +255,12 @@ Code.renderContent = function() {
       sourceElement.innerHTML = code;
     }
   } else if (content.id == 'content_data') {
-      content.innerHTML = "placeholder for data explorer";
+      //$('#table').jexcel({ data:Dataset.exceldata, colHeaders: ["1","2"], colWidths: [ 300, 80, 100 ] });
+      var defaultDatasets = Object.keys(Datasets.loaded);
+      $("#builtInDropdown").empty();
+      for (var index in defaultDatasets){
+        $("#builtInDropdown").append('<option value="'+defaultDatasets[index]+'">'+ defaultDatasets[index]+' Dataset </option>');
+      }
   }
 };
 
@@ -335,10 +330,12 @@ Code.init = function() {
 
   // Add to reserved word list: Local variables in execution environment (runJS)
   // and the infinite loop detection function.
-  Blockly.JavaScript.addReservedWords('code,timeouts,checkTimeout');
+  Blockly.JavaScript.addReservedWords(
+    'code,jscode,setup,dl,graph,math,session,DeepLearn,Data,WebCam,SqueezeNet,timeouts,checkTimeout'
+  );
   // Register callbacks for buttons
   // TODO(arjun): implement adddataset callback
-  Code.workspace.registerButtonCallback("ADD_DATASET",Code.datasets.add);
+  Code.workspace.registerToolboxCategoryCallback('DATASETS',Datasets.flyoutCallback);
   // Per https://groups.google.com/d/msg/blockly/Ux9OQuyJ9XE/8PvZt73aBgAJ need to update due to bug.
   Code.workspace.updateToolbox(document.getElementById('toolbox'));
 
@@ -351,8 +348,10 @@ Code.init = function() {
 
   Code.tabClick(Code.selected);
 
-  Code.bindClick('trashButton',
-      function() {Code.discard(); Code.renderContent();});
+  Code.bindClick('trashButton',function() {
+        Code.discard();
+        Code.renderContent();
+  });
   Code.bindClick('runButton', Code.runJS);
   // TODO(arjun): Enable link button once Node JS server is setup with DB Store
   var linkButton = document.getElementById('linkButton');
@@ -434,6 +433,7 @@ Code.initLanguage = function() {
 Code.runJS = function() {
   Code.selected = 'javascript';
   Code.tabClick(Code.selected);
+  document.getElementById("graph_output").innerHTML="";
 
   Blockly.JavaScript.INFINITE_LOOP_TRAP = '  checkTimeout();\n';
   var timeouts = 0;
@@ -445,7 +445,10 @@ Code.runJS = function() {
   var code = Blockly.JavaScript.workspaceToCode(Code.workspace);
   Blockly.JavaScript.INFINITE_LOOP_TRAP = null;
   try {
-    eval(code);
+    var setup =  DeepLearn.setup;
+    var jscode = setup + code;
+    eval(jscode);
+    $("#console_holder").show();
   } catch (e) {
     alert(MSG['badCode'].replace('%1', e));
   }
@@ -455,18 +458,19 @@ Code.runJS = function() {
 
 
 /**
- * Discard all blocks from the workspace.
+ * Discard all blocks from the workspace and clean up any used references like webcam, etc.
  */
 Code.discard = function() {
   var count = Code.workspace.getAllBlocks().length;
   if (count < 2 ||
       window.confirm(Blockly.Msg.DELETE_ALL_BLOCKS.replace('%1', count))) {
     Code.workspace.clear();
-    // Clear webLog outputs if any
-    document.getElementById("console_javascript").innerHTML="";
     if (window.location.hash) {
       window.location.hash = '';
     }
+
+    // Clear run results
+    clearOutput();
   }
 };
 

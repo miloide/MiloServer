@@ -1,18 +1,6 @@
 doctype html
 html
-  head
-    meta(charset="utf-8")
-    meta(name="google", value="notranslate")
-    title Milo:
-    link(rel="stylesheet", href="media/style.css")
-    script(src="scripts/storage.js")
-    script(src="scripts/blockly.js")
-    script(src="scripts/blocks.js")
-    script(src="scripts/javascript.js")
-    script(src="scripts/code.js")
-    script(src="scripts/jquery-2.2.4.js")
-    script(src="scripts/custom/blocks.js")
-    script(src="scripts/custom/codegen.js")
+  include head.pug
   body
     table(width="100%", height="100%")
       tr
@@ -27,12 +15,14 @@ html
           table(width="100%")
             tr#tabRow(height="1em")
               td#tab_blocks.tabon ...
-              td.tabmin  
+              td.tabmin
               td#tab_data.taboff Data Explorer
-              td.tabmin  
+              td.tabmin
               td#tab_javascript.taboff JavaScript
-              td.tabmin  
+              td.tabmin
               td#tab_xml.taboff XML
+              td.tabmin
+                img#loadingDiv(style="display: none;width:50px;",src="media/loading.gif")
               td.tabmax
                 button#trashButton.notext(title="...")
                   img.trash.icon21(src="media/1x1.gif")
@@ -44,13 +34,36 @@ html
         td#content_area(height="99%", colspan="2")
     #content_blocks.content
     #content_data.content
+      .container(style="max-width:100%;width:100%;").scroll
+        .row
+          .col-12-sm.col-4
+            h3 Datasets
+            p Select built-in dataset and click import or upload csv file.
+            select#builtInDropdown
+            button(onclick="Datasets.importBuiltIn();") Import
+            button Upload
+            br
+            button#dataset_save(style='display:none') Save
+            .col-12
+              h4 Loaded Datasets (click to view)
+              ul#dataset_list
+          .col-12-sm.col-8.scroll
+            .col-12
+              #dataset_output
     #content_javascript.content
-      h3 Generated JS
-      pre#source_javascript.code.
-
-      br
-      hr
-      |     Console Output:
-      #console_javascript
+      .container(style="max-width:100%;width:100%").scroll
+        .row
+          .col-12-sm.col-6
+            h3 Generated JS
+            pre#source_javascript.code.scroll-x
+          .col-12-sm.col-6
+            h3 Output
+            .col-12
+              #graph_output(style="display: none")
+            .col-12
+              #misc_output.col-12
+          #console_holder.col-12-sm(style="display: none")
+            h3 Console Output
+            #console_javascript
     textarea#content_xml.content(wrap="off")
     include toolbox.html

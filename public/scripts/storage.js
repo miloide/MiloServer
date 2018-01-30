@@ -60,6 +60,7 @@ BlocklyStorage.restoreBlocks = function(opt_workspace) {
   if ('localStorage' in window && window.localStorage[url]) {
     var workspace = opt_workspace || Blockly.getMainWorkspace();
     var xml = Blockly.Xml.textToDom(window.localStorage[url]);
+    xml = BlocklyStorage.pruneUndefined(xml);
     Blockly.Xml.domToWorkspace(xml, workspace);
   }
 };
@@ -181,6 +182,7 @@ BlocklyStorage.loadXml_ = function(xml, workspace) {
   }
   // Clear the workspace to avoid merge.
   workspace.clear();
+  xml = BlocklyStorage.pruneUndefined(xml);
   Blockly.Xml.domToWorkspace(xml, workspace);
 };
 
@@ -192,3 +194,22 @@ BlocklyStorage.loadXml_ = function(xml, workspace) {
 BlocklyStorage.alert = function(message) {
   window.alert(message);
 };
+
+/**
+ * Removes blocks which aren't currently defined
+ * @param {XMLDomElement} xml
+ */
+BlocklyStorage.pruneUndefined = function(xml){
+  var jqueryXml = $(xml);
+  var toRemove = [];
+  jqueryXml.find("block[type$='_get']").each(function(i,e) {
+    if (Blockly.JavaScript[e.getAttribute("type")] == undefined){
+      toRemove.push(e.getAttribute("type"));
+    }
+  });
+  toRemove.forEach(function(val,i){
+    jqueryXml.find("block[type='"+val+"']").remove();
+  });
+  return jqueryXml[0];
+}
+
