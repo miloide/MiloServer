@@ -94,6 +94,7 @@ goog.require('Blockly.Msg');
 /** @export */ Blockly.Msg.LISTS_CREATE_WITH_CONTAINER_TOOLTIP = "Add, remove, or reorder sections to reconfigure this list block.";
 /** @export */ Blockly.Msg.LISTS_CREATE_WITH_HELPURL = "https://github.com/google/blockly/wiki/Lists#create-list-with";
 /** @export */ Blockly.Msg.LISTS_CREATE_WITH_INPUT_WITH = "create list with";
+/** @export */ Blockly.Msg.LISTS_ZIP_INPUT_WITH = "Zip lists";
 /** @export */ Blockly.Msg.LISTS_CREATE_WITH_ITEM_TOOLTIP = "Add an item to the list.";
 /** @export */ Blockly.Msg.LISTS_CREATE_WITH_TOOLTIP = "Create a list with any number of items.";
 /** @export */ Blockly.Msg.LISTS_GET_INDEX_FIRST = "first";

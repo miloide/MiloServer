@@ -257,11 +257,18 @@ SqueezeNet.classify_ = async function(imgTag) {  // jshint ignore:line
 console.webLog = (function (old_function,div_id) {
     return function (value) {
         //See https://developer.mozilla.org/en-US/docs/Web/API/Console/log
+        console.log(value);
         Promise.resolve(value).then(function(val){
-            var values = Object.values(JSON.parse(JSON.stringify(val)));
-            if (values.length == 1) values = values[0];
-            old_function(JSON.parse(JSON.stringify(values)));
-            $(div_id).append('<pre class="block">' + JSON.stringify(values,null,1) + '</pre>');
+            try{
+                var values = Object.values(JSON.parse(JSON.stringify(val)));
+                if (values.length == 1) values = values[0];
+                old_function(JSON.parse(JSON.stringify(values)));
+                $(div_id).append('<pre class="block">' + JSON.stringify(values,null,1) + '</pre>');
+            } catch (e){
+                old_function(val);
+                $(div_id).append('<pre class="block">' + val + '</pre>');
+            }
+
         });
     };
 } (console.log.bind(console), "#console_javascript"));
@@ -433,7 +440,8 @@ console.save = function(data, filename){
 
     a.download = filename
     a.href = window.URL.createObjectURL(blob)
-    a.dataset.downloadurl =  ['text/json', a.download, a.href].join(':')
+    a.dataset.downloadurl =  ['text/json', a.download, a.href].join(':');
     e.initMouseEvent('click', true, false, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null)
     a.dispatchEvent(e)
  };
+

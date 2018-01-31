@@ -450,6 +450,7 @@ Code.runJS = function() {
     eval(jscode);
     $("#console_holder").show();
   } catch (e) {
+    console.log(jscode);
     alert(MSG['badCode'].replace('%1', e));
   }
 };

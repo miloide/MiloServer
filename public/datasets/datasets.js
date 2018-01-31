@@ -88,15 +88,11 @@ Datasets.generateBlockDefinition = function(name){
     }
 };
 /**
- * Triggers a click for input element fileLoader 
- */
-
 Datasets.triggerClick = function(){
-    $("#fileLoader").click();
 }
 /**
  * Reads csv file selected by user
- * @param event - File Input event 
+ * @param event - File Input event
  */
 
 Datasets.uploadDataset= function(event){
@@ -129,13 +125,13 @@ Datasets.uploadDataset= function(event){
             '<li><button class="button-none" onclick="Datasets.show(\''+fileName+'\')">'+fileName+'</button></li>'
         );
         console.log(Datasets[fileName]);
-        Datasets.show(fileName);  
+        Datasets.show(fileName);
     }
     if(file.type == "text/csv"){
         reader.readAsText(file);
     }
-    else   
-        alert("Only csv files supported");    
+    else
+        alert("Only csv files supported");
 }
 
 /**
@@ -218,7 +214,6 @@ Datasets.convert.rowsToMap = function(data){
     var headers = data.rows[0];
     if(data.header)
     {
-        
         console.log(headers)
         rowCount++;
         for(let i = 0;i < headers.length; i++)
@@ -277,3 +272,12 @@ Datasets.convert.mapToRows = function(dataDictionary){
     return rows;
 }
 
+/**
+ * Equivalent of python's zip function
+ * @param {*} arrays
+ * Converts ([1,2][a,b][x,y]..) to [[1,a,x],[2,b,y]...]
+ */
+Datasets.zip = function(...arrays){
+    const length = Math.min(...arrays.map(arr => arr.length));
+    return Array.from({ length }, (value, index) => arrays.map((array => array[index])));
+};
