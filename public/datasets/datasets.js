@@ -23,6 +23,9 @@ Datasets.flyoutCallback = function(workspace) {
     // Returns dataset blocks
     var xmlList = [];
     var datasetList = Object.keys(Datasets.loaded);
+    var labelText = '<xml><label text="Import datasets from the Data Explorer"></label></xml>';
+    var label = Blockly.Xml.textToDom(labelText).firstChild;
+    xmlList.push(label);
     for (var index in datasetList){
         var name = datasetList[index];
         if (Datasets.loaded[name] == true) {
@@ -84,6 +87,56 @@ Datasets.generateBlockDefinition = function(name){
         }]);
     }
 };
+/**
+ * Triggers a click for input element fileLoader
+ */
+
+Datasets.triggerClick = function(){
+    $("#fileLoader").click();
+}
+/**
+ * Reads csv file selected by user
+ * @param event - File Input event
+ */
+
+Datasets.uploadDataset= function(event){
+    var reader = new FileReader();
+    var file = event.target.files[0];
+    var fileName = file.name.replace(".csv","");
+    reader.onload = function(){
+        if(Datasets.fileName == undefined)
+        {
+            Datasets[fileName] = {};
+            Datasets[fileName].header = false;
+            Datasets[fileName].rows = [];
+        }
+        var data = String(reader.result).split("\n");
+        var nrows = data.length;
+        var noAttributes;
+        if(data[0]!=undefined){
+            noAttributes = data[0].split(",").length;
+        }
+        for(let i = 0 ;i < nrows-1; i++)
+        {
+            var rowElements = data[i].split(",");
+            var rowToString = [];
+            for(let j = 0; j < noAttributes; j++)
+                rowToString.push(String(rowElements[j]));
+            Datasets[fileName].rows.push(rowToString);
+        }
+        Datasets.loaded[fileName] = true;
+        $("#dataset_list").append(
+            '<li><button class="button-none" onclick="Datasets.show(\''+fileName+'\')">'+fileName+'</button></li>'
+        );
+        console.log(Datasets[fileName]);
+        Datasets.show(fileName);
+    }
+    if(file.type == "text/csv"){
+        reader.readAsText(file);
+    }
+    else
+        alert("Only csv files supported");
+}
 
 /**
  * Generates codegenerator dynamically for dataset blocks
@@ -126,7 +179,8 @@ Datasets.importBuiltIn = function(){
  * @param {string} name
  */
 Datasets.show = function(name){
-    if (Datasets.loaded[name]== undefined || Datasets.loaded[name]==false) return;
+    console.log(name);
+    if (Datasets.loaded[name] == undefined || Datasets.loaded[name]==false) return;
     var data = Datasets[name].rows;
     var colWidths = [];
     var headerRow = data[0];
@@ -161,9 +215,11 @@ Datasets.convert.rowsToMap = function(data){
     var dataLength = data.rows.length;
     var rowCount = 0;
     var dataDictionary = {};
+    var headers = data.rows[0];
     if(data.header)
     {
-        var headers = data.rows[0];
+
+        console.log(headers)
         rowCount++;
         for(let i = 0;i < headers.length; i++)
         {
@@ -221,3 +277,12 @@ Datasets.convert.mapToRows = function(dataDictionary){
     return rows;
 }
 
+/**
+ * Equivalent of python's zip function
+ * @param {*} arrays
+ * Converts ([1,2][a,b][x,y]..) to [[1,a,x],[2,b,y]...]
+ */
+Datasets.zip = function(...arrays){
+    const length = Math.min(...arrays.map(arr => arr.length));
+    return Array.from({ length }, (value, index) => arrays.map((array => array[index])));
+};

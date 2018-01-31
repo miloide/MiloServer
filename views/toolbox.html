@@ -213,6 +213,7 @@
         <mutation items="0"></mutation>
       </block>
       <block type="lists_create_with"></block>
+      <block type="lists_zip_with"></block>
       <block type="lists_repeat">
         <value name="NUM">
           <shadow type="math_number">
@@ -343,22 +344,16 @@
         <block type="optimizer">
           <field name="optimizer">SGD</field>
         </block>
-        <block type="constant">
-          <field name="NUM">0</field>
-        </block>
         <block type="mlparams">
           <field name="paramters">learningRate</field>
         </block>
           <block type="dataset_1"></block>
           <block type="linearregression"></block>
-        <block type="inputfile">
-          <field name="inputfile">input</field>
-        </block>
-        <block type="inputfile">
-          <field name="inputfile">input</field>
-        </block>
-        <block type="predict">
-          <field name="testX">0</field>
+          <block type="train"></block>
+          <block type="dataconfiguration"></block>
+          <block type="predict"></block>
+        <block type="linearregression1">
+          <field name="costFunction">MEAN</field>
         </block>
         <!-- TODO(arjun): Replace InputFile block with button -->
         <button id="add_dataset" text="Add DataSet..." callbackKey="ADD_DATASET" ></button>

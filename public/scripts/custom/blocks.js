@@ -17,6 +17,17 @@ Blockly.Blocks['dataset_1'] = {
     }
   };
 
+Blockly.Blocks['train'] = {
+  init: function() {
+    this.appendDummyInput()
+        .appendField("Train");
+    this.setPreviousStatement(true, null);
+    this.setNextStatement(true, null);
+    this.setColour(230);
+ this.setTooltip("");
+ this.setHelpUrl("");
+  }
+};
 Blockly.Blocks['linearregression'] = {
     init: function() {
       this.appendDummyInput()
@@ -28,8 +39,26 @@ Blockly.Blocks['linearregression'] = {
    this.setHelpUrl("");
     }
   };
-
-
+  Blockly.Blocks['linearregression1'] = {
+    init: function() {
+      this.appendDummyInput()
+          .appendField("");
+      this.appendValueInput("inuptX")
+          .setCheck(null)
+          .appendField("Set inputX to");
+      this.appendValueInput("inputY")
+          .setCheck(null)
+          .appendField("Set inputY to");
+      this.appendDummyInput()
+          .appendField("costFunction")
+          .appendField(new Blockly.FieldDropdown([["Mean","MEAN"], ["Sum","SUM"], ["None","NONE"]]), "costFunction");
+      this.setPreviousStatement(true, null);
+      this.setNextStatement(true, null);
+      this.setColour(230);
+   this.setTooltip("");
+   this.setHelpUrl("");
+    }
+  };
   Blockly.Blocks['optimizer'] = {
   init: function() {
     this.appendDummyInput()
@@ -45,79 +74,6 @@ Blockly.Blocks['linearregression'] = {
   }
 };
 
-var counter =0;
-Blockly.Blocks['inputfile'] = {
-  init: function() {
-    this.setOnChange(function(event){
-        if(event.type=="ui"){
-            counter++;
-            if(counter>2){
-        console.log(event);
-        //reader(event);
-        $("#files").trigger("click");
-            }
-        }
-    });
-    this.appendDummyInput()
-        .appendField("Click to Select input file");
-    this.setColour(Blockly.Msg.ML_HUE);
-    this.setTooltip("");
-    this.setHelpUrl("");
-    }
-};
-
-var openFile = function(event) {
-  var input = event.target;
-  console.log(event);
-  var reader = new FileReader();
-  reader.onload = function(){
-    var text =String(reader.result).split("\n");
-    console.log(text);
-    nrows = text.length;
-    if(text[0]!=null)
-      noAttributes = text[0].split(",").length;
-  var input_x = [];
-  for(var i=0;i<nrows;i++)
-  {
-      var textArray =text[i].split(",");
-      var intArray = [];
-      for(var j=0;j<textArray.length;j++)
-      {
-          intArray[j] = parseInt(textArray[j]);
-      }
-     input_x.push(intArray);
-  }
-  inputs = input_x;
-  console.log("Result:",inputs,noAttributes);
-  return [input_x,noAttributes];
-  };
-
-  reader.readAsText(input.files[0]);
-};
-
-
-Blockly.Blocks['getvalue'] = {
-  init: function() {
-    this.appendDummyInput()
-        .appendField(new Blockly.FieldNumber(0), "value");
-    this.setOutput(true, null);
-    this.setColour(Blockly.Msg.ML_HUE);
-    this.setTooltip("");
-    this.setHelpUrl("");
-  }
-};
-Blockly.Blocks['predict'] = {
-    init: function() {
-      this.appendDummyInput()
-          .appendField("Predict for")
-          .appendField(new Blockly.FieldNumber(0), "testX");
-      this.setPreviousStatement(true, null);
-      this.setNextStatement(true, null);
-      this.setColour(230);
-   this.setTooltip("");
-   this.setHelpUrl("");
-    }
-  };
 Blockly.Blocks['createoptimizer'] = {
   init: function() {
     this.appendDummyInput()
@@ -191,6 +147,21 @@ Blockly.defineBlocksWithJsonArray([  // BEGIN JSON EXTRACT
     {
       "type": "dl_array1d",
       "message0": "Vector from %1",
+      "args0": [{
+        "type": "input_value",
+        "name": "NUM",
+        "check": "Array"
+      }],
+      "inputsInline": true,
+      "output": "DLnumber",
+      "colour": "%{BKY_ML_HUE}",
+      "helpUrl": "https://deeplearnjs.org/docs/api/classes/array1d.html",
+      "tooltip": "A Deeplearn.js Array1D",
+      "extensions": ["parent_tooltip_when_inline"]
+    },
+    {
+      "type": "predict",
+      "message0": "Predict label for %1",
       "args0": [{
         "type": "input_value",
         "name": "NUM",
@@ -483,6 +454,21 @@ Blockly.defineBlocksWithJsonArray([  // BEGIN JSON EXTRACT
 
 ]);
 
+Blockly.Blocks['dataconfiguration'] = {
+  init: function() {
+    this.appendValueInput("noAttributes")
+        .setCheck("Number")
+        .appendField("Number of Attributes");
+    this.appendValueInput("labelShape")
+        .setCheck("Number")
+        .appendField("Label Shape ");
+    this.setPreviousStatement(true, null);
+    this.setNextStatement(true, null);
+    this.setColour(230);
+ this.setTooltip("");
+ this.setHelpUrl("");
+}};
+
 Blockly.Blocks['constant'] = {
     init: function() {
         this.appendDummyInput()
@@ -512,5 +498,130 @@ Blockly.Blocks['lists_split_math'] = {
     this.setInputsInline(true);
     this.setOutput(true, 'Array');
     this.setTooltip("");
+  }
+};
+
+
+Blockly.Blocks['lists_zip_with'] = {
+  /**
+   * Block for creating a list with any number of elements of any type.
+   * @this Blockly.Block
+   */
+  init: function() {
+    this.setHelpUrl(Blockly.Msg.LISTS_CREATE_WITH_HELPURL);
+    this.setColour(Blockly.Blocks.lists.HUE);
+    this.itemCount_ = 3;
+    this.updateShape_();
+    this.setOutput(true, 'Array');
+    this.setMutator(new Blockly.Mutator(['lists_zip_with_item']));
+    this.setTooltip(Blockly.Msg.LISTS_CREATE_WITH_TOOLTIP);
+  },
+  /**
+   * Create XML to represent list inputs.
+   * @return {!Element} XML storage element.
+   * @this Blockly.Block
+   */
+  mutationToDom: function() {
+    var container = document.createElement('mutation');
+    container.setAttribute('items', this.itemCount_);
+    return container;
+  },
+  /**
+   * Parse XML to restore the list inputs.
+   * @param {!Element} xmlElement XML storage element.
+   * @this Blockly.Block
+   */
+  domToMutation: function(xmlElement) {
+    this.itemCount_ = parseInt(xmlElement.getAttribute('items'), 10);
+    this.updateShape_();
+  },
+  /**
+   * Populate the mutator's dialog with this block's components.
+   * @param {!Blockly.Workspace} workspace Mutator's workspace.
+   * @return {!Blockly.Block} Root block in mutator.
+   * @this Blockly.Block
+   */
+  decompose: function(workspace) {
+    var containerBlock = workspace.newBlock('lists_create_with_container');
+    containerBlock.initSvg();
+    var connection = containerBlock.getInput('STACK').connection;
+    for (var i = 0; i < this.itemCount_; i++) {
+      var itemBlock = workspace.newBlock('lists_create_with_item');
+      itemBlock.initSvg();
+      connection.connect(itemBlock.previousConnection);
+      connection = itemBlock.nextConnection;
+    }
+    return containerBlock;
+  },
+  /**
+   * Reconfigure this block based on the mutator dialog's components.
+   * @param {!Blockly.Block} containerBlock Root block in mutator.
+   * @this Blockly.Block
+   */
+  compose: function(containerBlock) {
+    var itemBlock = containerBlock.getInputTargetBlock('STACK');
+    // Count number of inputs.
+    var connections = [];
+    while (itemBlock) {
+      connections.push(itemBlock.valueConnection_);
+      itemBlock = itemBlock.nextConnection &&
+          itemBlock.nextConnection.targetBlock();
+    }
+    // Disconnect any children that don't belong.
+    for (var i = 0; i < this.itemCount_; i++) {
+      var connection = this.getInput('ADD' + i).connection.targetConnection;
+      if (connection && connections.indexOf(connection) == -1) {
+        connection.disconnect();
+      }
+    }
+    this.itemCount_ = connections.length;
+    this.updateShape_();
+    // Reconnect any child blocks.
+    for (var i = 0; i < this.itemCount_; i++) {
+      Blockly.Mutator.reconnect(connections[i], this, 'ADD' + i);
+    }
+  },
+  /**
+   * Store pointers to any connected child blocks.
+   * @param {!Blockly.Block} containerBlock Root block in mutator.
+   * @this Blockly.Block
+   */
+  saveConnections: function(containerBlock) {
+    var itemBlock = containerBlock.getInputTargetBlock('STACK');
+    var i = 0;
+    while (itemBlock) {
+      var input = this.getInput('ADD' + i);
+      itemBlock.valueConnection_ = input && input.connection.targetConnection;
+      i++;
+      itemBlock = itemBlock.nextConnection &&
+          itemBlock.nextConnection.targetBlock();
+    }
+  },
+  /**
+   * Modify this block to have the correct number of inputs.
+   * @private
+   * @this Blockly.Block
+   */
+  updateShape_: function() {
+    if (this.itemCount_ && this.getInput('EMPTY')) {
+      this.removeInput('EMPTY');
+    } else if (!this.itemCount_ && !this.getInput('EMPTY')) {
+      this.appendDummyInput('EMPTY')
+          .appendField(Blockly.Msg.LISTS_CREATE_EMPTY_TITLE);
+    }
+    // Add new inputs.
+    for (var i = 0; i < this.itemCount_; i++) {
+      if (!this.getInput('ADD' + i)) {
+        var input = this.appendValueInput('ADD' + i);
+        if (i == 0) {
+          input.appendField(Blockly.Msg.LISTS_ZIP_INPUT_WITH);
+        }
+      }
+    }
+    // Remove deleted inputs.
+    while (this.getInput('ADD' + i)) {
+      this.removeInput('ADD' + i);
+      i++;
+    }
   }
 };

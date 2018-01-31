@@ -41,7 +41,8 @@ html
             p Select built-in dataset and click import or upload csv file.
             select#builtInDropdown
             button(onclick="Datasets.importBuiltIn();") Import
-            button Upload
+            button(onclick="Datasets.triggerClick();") Upload
+            input#fileLoader(type="file", name="files", onchange= "Datasets.uploadDataset(event)",style = "display : none")
             br
             button#dataset_save(style='display:none') Save
             .col-12

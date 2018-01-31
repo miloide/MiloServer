@@ -12,7 +12,7 @@ Blockly.JavaScript.createoptimizer = function(block){
     var rate = parseFloat(block.getFieldValue('rate'));
     var numBatches = parseInt(block.getFieldValue('numBatches'));
     var batchSize = parseInt(block.getFieldValue('batchSize'));
-    var code =  'const rate = '+ rate +';' +'const optimizer = '+ 'new dl.'+optimizer+'(rate)' + ';'  + '\n' + 'const numBatches = '+ numBatches+';' +'\n'+ 'const batchSize = ' + batchSize+';' + '\n' ;
+    var code =  '\n const rate = '+ rate +';' +'\n const optimizer = '+ 'new dl.'+optimizer+'(rate)' + ';'  + '\n' + '\n const numBatches = '+ numBatches+';' +'\n'+ '\n const batchSize = ' + batchSize+';' + '\n' ;
     return code;
 };
 
@@ -29,21 +29,20 @@ Blockly.JavaScript['dataset_1'] = function(block) {
         return code+code1;
   };
 
-Blockly.JavaScript['linearregression'] = function(block){
-        //TODO(Ayush): Split this into native blocks as much as possible
-        var code = 'const inputShape = [noAttributes]; \n const inputTensor = graph.placeholder' + '(' + '\'input\'' + ',inputShape); \n ';
-        var code1 = '\n const labelShape = [1]; \n const multiplier = graph.variable' + '(' + '\'multiplier\'' + ', dl.Array2D.randNormal([1, noAttributes])); \n const labelTensor = graph.placeholder ' + '(' + '\'label\''+ ', labelShape); \n const outputTensor = graph.matmul(multiplier, inputTensor);';
-        var code2 = '\n const costTensor = graph.meanSquaredCost(outputTensor, labelTensor); \n var shuffledInputProviderBuilder = new dl.InCPUMemoryShuffledInputProviderBuilder([inputX, inputY]); \n var _a = shuffledInputProviderBuilder.getInputProviders(), inputProvider = _a[0], labelProvider = _a[1];';
-        var code3 = '\n var FeedEntry = [{tensor: inputTensor, data: inputProvider},{tensor: labelTensor, data: labelProvider}];';
-        var code4 = ' \n for(let j=0;j < numBatches;j++) \n { const cost = session.train(costTensor, FeedEntry, batchSize, optimizer, dl.CostReduction.MEAN); \n console.log(j,cost.getValues());}';
-        return code+code1+code2+code3+code4;
-};
+// Blockly.JavaScript['linearregression'] = function(block){
+//         //TODO(Ayush): Split this into native blocks as much as possible
+//         var code = 'const inputShape = [noAttributes]; \n const inputTensor = graph.placeholder' + '(' + '\'input\'' + ',inputShape); \n ';
+//         var code1 = '\n const labelShape = [1]; \n const multiplier = graph.variable' + '(' + '\'multiplier\'' + ', dl.Array2D.randNormal([1, noAttributes])); \n const labelTensor = graph.placeholder ' + '(' + '\'label\''+ ', labelShape); \n const outputTensor = graph.matmul(multiplier, inputTensor);';
+//         var code2 = '\n const costTensor = graph.meanSquaredCost(outputTensor, labelTensor); \n var shuffledInputProviderBuilder = new dl.InCPUMemoryShuffledInputProviderBuilder([inputX, inputY]); \n var _a = shuffledInputProviderBuilder.getInputProviders(), inputProvider = _a[0], labelProvider = _a[1];';
+//         var code3 = '\n var FeedEntry = [{tensor: inputTensor, data: inputProvider},{tensor: labelTensor, data: labelProvider}];';
+//         var code4 = ' \n for(let j=0;j < numBatches;j++) \n { const cost = session.train(costTensor, FeedEntry, batchSize, optimizer, dl.CostReduction.MEAN); \n console.log(j,cost.getValues());}';
+//         return code+code1+code2+code3+code4;
+// };
 
 Blockly.JavaScript['predict'] = function(block) {
-    var number_testx = parseFloat(block.getFieldValue('testX'));
-    var test = ' var test =  dl.Array1D.new([' +number_testx+'])' +';';
-    var code = 'const result = session.eval(outputTensor,[{tensor: inputTensor, data:test}]); result.data().then(data=> alert(data));';
-    return test+code;
+    var number_testx = Blockly.JavaScript.valueToCode(block, "NUM", Blockly.JavaScript.ORDER_FUNCTION_CALL);
+    var code = 'session.eval(outputTensor,[{tensor: inputTensor, data: dl.Array1D.new('+number_testx+')}])';
+    return [code, Blockly.JavaScript.ORDER_ATOMIC];
 };
 
 Blockly.JavaScript['dl_number'] = function(block) {
@@ -181,6 +180,36 @@ Blockly.JavaScript['show_plot'] = function(block) {
     return code;
   };
 
+Blockly.JavaScript['dataconfiguration'] = function(block) {
+    var value_noattributes = Blockly.JavaScript.valueToCode(block, 'noAttributes', Blockly.JavaScript.ORDER_ATOMIC);
+    var value_labelshape = Blockly.JavaScript.valueToCode(block, 'labelShape', Blockly.JavaScript.ORDER_ATOMIC);
+    var inputTensor = '\n var inputTensor = graph.placeholder(\'input\',[' +  value_noattributes  + ']);';
+    var multiplier = '\n var multiplier = graph.variable(\'multiplier\', dl.Array2D.randNormal([1,' +value_noattributes+']));';
+    var labelTensor = '\n var labelTensor =  graph.placeholder(\'label\','+ value_labelshape+');';
+    var outputTensor = '\n var outputTensor = graph.matmul(multiplier, inputTensor);';
+    var costTensor = '\n var costTensor = graph.meanSquaredCost(outputTensor, labelTensor);';
+    var code = inputTensor+multiplier+labelTensor+outputTensor+costTensor;
+    return code;
+  };
+
+Blockly.JavaScript['linearregression1'] = function(block) {
+    var value_inuptx = Blockly.JavaScript.valueToCode(block, 'inuptX', Blockly.JavaScript.ORDER_ATOMIC);
+    var value_inputy = Blockly.JavaScript.valueToCode(block, 'inputY', Blockly.JavaScript.ORDER_ATOMIC);
+    var dropdown_costfunction = block.getFieldValue('costFunction');
+    // TODO: Assemble JavaScript into code variable.
+    var costFunction = '\nvar costFunction = dl.CostReduction.' + dropdown_costfunction +';';
+    var shuffledInputProviderBuilder =  '\nvar shuffledInputProviderBuilder = new dl.InCPUMemoryShuffledInputProviderBuilder([' + value_inuptx + ','+  value_inputy +']);';
+    var _a = '\nvar _a = shuffledInputProviderBuilder.getInputProviders(), inputProvider = _a[0], labelProvider = _a[1];';
+    var FeedEntry = '\nvar FeedEntry = [{tensor: inputTensor, data: inputProvider},{tensor: labelTensor, data: labelProvider}];\n';
+    var code = costFunction + shuffledInputProviderBuilder + _a + FeedEntry;
+    return code;
+  };
+
+  Blockly.JavaScript['train'] = function(block) {
+    // TODO: Assemble JavaScript into code variable.
+    var code = 'var cost = session.train(costTensor, FeedEntry, batchSize, optimizer, costFunction);\n';
+    return code;
+  };
 
 //TODO: (Arjun) Generate Math List
 Blockly.JavaScript['lists_split_math'] = function(block) {
@@ -196,3 +225,14 @@ Blockly.JavaScript['lists_split_math'] = function(block) {
     var code = input + '.' + functionName + '(' + delimiter + ').map(Number)';
     return [code, Blockly.JavaScript.ORDER_FUNCTION_CALL];
 };
+
+Blockly.JavaScript['lists_zip_with'] = function(block) {
+    // Create a list with any number of elements of any type.
+    var elements = new Array(block.itemCount_);
+    for (var i = 0; i < block.itemCount_; i++) {
+      elements[i] = Blockly.JavaScript.valueToCode(block, 'ADD' + i,
+          Blockly.JavaScript.ORDER_COMMA) || 'null';
+    }
+    var code = 'Datasets.zip(' + elements.join(', ') + ')';
+    return [code, Blockly.JavaScript.ORDER_ATOMIC];
+  };

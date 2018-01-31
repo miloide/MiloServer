@@ -234,6 +234,9 @@ Code.tabClick = function(clickedName) {
  */
 Code.renderContent = function() {
   var content = document.getElementById('content_' + Code.selected);
+  if (content.id != "content_javascript") {
+    $("#graph_output").hide();
+  }
   // Initialize the pane.
   if (content.id == 'content_xml') {
     var xmlTextarea = document.getElementById('content_xml');
@@ -242,6 +245,7 @@ Code.renderContent = function() {
     xmlTextarea.value = xmlText;
     xmlTextarea.focus();
   } else if (content.id == 'content_javascript') {
+    $("#graph_output").show();
     var code = Blockly.JavaScript.workspaceToCode(Code.workspace);
     var sourceElement = document.getElementById("source_javascript");
     sourceElement.textContent = code;
@@ -429,6 +433,7 @@ Code.initLanguage = function() {
 Code.runJS = function() {
   Code.selected = 'javascript';
   Code.tabClick(Code.selected);
+  document.getElementById("graph_output").innerHTML="";
 
   Blockly.JavaScript.INFINITE_LOOP_TRAP = '  checkTimeout();\n';
   var timeouts = 0;
@@ -445,6 +450,7 @@ Code.runJS = function() {
     eval(jscode);
     $("#console_holder").show();
   } catch (e) {
+    console.log(jscode);
     alert(MSG['badCode'].replace('%1', e));
   }
 };

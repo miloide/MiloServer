@@ -1,0 +1,300 @@
+<xml xmlns="http://www.w3.org/1999/xhtml">
+  <variables>
+    <variable type="" id="@k/P0K]k[gp~LeJq?_Co">inputX</variable>
+    <variable type="" id="|jW(g/F5p@@/;4km^7zD">inputY</variable>
+    <variable type="" id="Yq_|*Gk05zsoM}KNt|Os">inputShape</variable>
+    <variable type="" id="SP#A,H4N=cVkGFu1bZkx">labelShape</variable>
+    <variable type="" id="sF.wVSb0r1uc)Q?o0]p0">i</variable>
+    <variable type="" id="iX`}I*;dF2(J*U}Ip-OD">labels</variable>
+    <variable type="" id="W$Z|g/h6KTMjMq!V8puT">inputs</variable>
+    <variable type="" id="DY@#wMjzdXGi~$bq6iyU">features</variable>
+    <variable type="" id="u%TKFH]A)6~Zu}%4T``}">x</variable>
+    <variable type="" id="lI_yN;1@+)Q~at][H%Vh">target</variable>
+    <variable type="" id="b`FL|3B7MbXsm4^J:_5c">input</variable>
+    <variable type="" id="|.5lVKO{q1q4XBGg*{BB">output</variable>
+    <variable type="" id="OeQcro[(Q[Az`5|yuT*!">y</variable>
+    <variable type="" id="49nt)[36l45p=r@c7h;z">text_list</variable>
+  </variables>
+  <block type="variables_set" id="!Y_l,$z}Mj]cUi_A(D92" x="-513" y="-137">
+    <field name="VAR" id="DY@#wMjzdXGi~$bq6iyU" variabletype="">features</field>
+    <value name="VALUE">
+      <block type="lists_zip_with" id="b,qsD_{[#)D{[xR:4pB6">
+        <mutation items="3"></mutation>
+        <comment pinned="false" h="80" w="160">Combines multiple features into one list that can be passed as a  list of training vectors</comment>
+        <value name="ADD0">
+          <block type="iris_get" id="pGSN3RHtZ*aU$IBANQ)E">
+            <field name="index">Sepal length</field>
+          </block>
+        </value>
+        <value name="ADD1">
+          <block type="iris_get" id="v~By{FjA6-%%r3dMgM2^">
+            <field name="index">Sepal width</field>
+          </block>
+        </value>
+        <value name="ADD2">
+          <block type="iris_get" id="9|V:|29}MHo0w{tS)jx$">
+            <field name="index">Petal width</field>
+          </block>
+        </value>
+      </block>
+    </value>
+    <next>
+      <block type="procedures_callnoreturn" id="29ku9IP[z/!#~pYH%F^*">
+        <mutation name="create_training_vectors">
+          <arg name="x"></arg>
+          <arg name="y"></arg>
+        </mutation>
+        <value name="ARG0">
+          <block type="variables_get" id="X,]v=T:0Kw_088txn43e">
+            <field name="VAR" id="DY@#wMjzdXGi~$bq6iyU" variabletype="">features</field>
+          </block>
+        </value>
+        <value name="ARG1">
+          <block type="iris_get" id="_jQ7A+Uuo-`/Br`RtV!q">
+            <field name="index">Petal length</field>
+          </block>
+        </value>
+        <next>
+          <block type="dataconfiguration" id="_MWedt]QM_C!MpicsDRC">
+            <comment pinned="false" h="80" w="160">Defines the dimensionality of training data</comment>
+            <value name="noAttributes">
+              <block type="variables_get" id="~6Kqh@tsY9`]_~9[/7#a">
+                <field name="VAR" id="Yq_|*Gk05zsoM}KNt|Os" variabletype="">inputShape</field>
+              </block>
+            </value>
+            <value name="labelShape">
+              <block type="variables_get" id="XUVKZ.|[Y1ZY3)bJ@QHo">
+                <field name="VAR" id="SP#A,H4N=cVkGFu1bZkx" variabletype="">labelShape</field>
+              </block>
+            </value>
+            <next>
+              <block type="createoptimizer" id="0z0l;^}(xs$1k,^5}Ro2">
+                <field name="optimizer">SGDOptimizer</field>
+                <field name="rate">0.00001</field>
+                <field name="numBatches">150</field>
+                <field name="batchSize">1</field>
+                <next>
+                  <block type="linearregression1" id="kB@zpel25/m8%JjwkT{s">
+                    <field name="costFunction">MEAN</field>
+                    <comment pinned="false" h="121.43746948242188" w="212.29013061523438">Using the above mentioned hyperparameters, we define the cost function to be Mean Squared Error</comment>
+                    <value name="inuptX">
+                      <block type="variables_get" id="RNR/B{Sko.46nrIssvxG">
+                        <field name="VAR" id="@k/P0K]k[gp~LeJq?_Co" variabletype="">inputX</field>
+                      </block>
+                    </value>
+                    <value name="inputY">
+                      <block type="variables_get" id="-?Y$NXRrxQ9^!tn*dI5E">
+                        <field name="VAR" id="|jW(g/F5p@@/;4km^7zD" variabletype="">inputY</field>
+                      </block>
+                    </value>
+                    <next>
+                      <block type="controls_repeat_ext" id="!^v1Z3n+,qm_(`u;GvLg">
+                        <comment pinned="false" h="97.7589111328125" w="221.1695556640625">The model is trained for 150 iterations, using different batches of data as given by the input feeder called FeedEntry</comment>
+                        <value name="TIMES">
+                          <shadow type="math_number" id="Zd2O;4_bu*uCqP}O]^~t">
+                            <field name="NUM">150</field>
+                          </shadow>
+                        </value>
+                        <statement name="DO">
+                          <block type="train" id="qg;Y^GsZJJtz*Ik^kb_+"></block>
+                        </statement>
+                        <next>
+                          <block type="procedures_callnoreturn" id="8@iG1o9xwlGM}}l!|}#1">
+                            <mutation name="predict_target_for">
+                              <arg name="text_list"></arg>
+                            </mutation>
+                            <value name="ARG0">
+                              <block type="text" id="vQiZ7OQdz]{mK|Q/O):M">
+                                <field name="TEXT">5.4,3.5,0.2</field>
+                              </block>
+                            </value>
+                          </block>
+                        </next>
+                      </block>
+                    </next>
+                  </block>
+                </next>
+              </block>
+            </next>
+          </block>
+        </next>
+      </block>
+    </next>
+  </block>
+  <block type="procedures_defnoreturn" id="s5:wH-,7s.=L}9j@3^6?" x="388" y="-137">
+    <mutation>
+      <arg name="x"></arg>
+      <arg name="y"></arg>
+    </mutation>
+    <field name="NAME">create_training_vectors</field>
+    <comment pinned="false" h="80" w="160">Creates training vectors from given attribute list, and class/target list</comment>
+    <statement name="STACK">
+      <block type="variables_set" id="P6:)w_eyWNi1b-cFcly]">
+        <field name="VAR" id="W$Z|g/h6KTMjMq!V8puT" variabletype="">inputs</field>
+        <value name="VALUE">
+          <block type="lists_create_with" id="(Q${Xcn~)Vp3::%/$8TS">
+            <mutation items="0"></mutation>
+          </block>
+        </value>
+        <next>
+          <block type="variables_set" id="(W3/zT=I.j?zt~l*lIHE">
+            <field name="VAR" id="iX`}I*;dF2(J*U}Ip-OD" variabletype="">labels</field>
+            <value name="VALUE">
+              <block type="lists_create_with" id=",z%+V)Y]S7`jJC*65r*P">
+                <mutation items="0"></mutation>
+              </block>
+            </value>
+            <next>
+              <block type="controls_forEach" id=")#ALgtMVF_BDfV:TC|3c">
+                <field name="VAR" id="sF.wVSb0r1uc)Q?o0]p0" variabletype="">i</field>
+                <value name="LIST">
+                  <block type="variables_get" id="d]AOZNAi8Qydf|(W,vbn">
+                    <field name="VAR" id="u%TKFH]A)6~Zu}%4T``}" variabletype="">x</field>
+                  </block>
+                </value>
+                <statement name="DO">
+                  <block type="lists_setIndex" id="okw_wvot{3-U8E:DAx79">
+                    <mutation at="false"></mutation>
+                    <field name="MODE">INSERT</field>
+                    <field name="WHERE">LAST</field>
+                    <value name="LIST">
+                      <block type="variables_get" id="*gXFj0cF,nVZDh2$z?f`">
+                        <field name="VAR" id="W$Z|g/h6KTMjMq!V8puT" variabletype="">inputs</field>
+                      </block>
+                    </value>
+                    <value name="TO">
+                      <block type="dl_array1d" id="b)2$93se0EG5D6W9J$yr">
+                        <value name="NUM">
+                          <block type="variables_get" id="NxMVh,%E1QFTg,:|SHK:">
+                            <field name="VAR" id="sF.wVSb0r1uc)Q?o0]p0" variabletype="">i</field>
+                          </block>
+                        </value>
+                      </block>
+                    </value>
+                  </block>
+                </statement>
+                <next>
+                  <block type="controls_forEach" id="9g0cMD1){grki89sikX|">
+                    <field name="VAR" id="sF.wVSb0r1uc)Q?o0]p0" variabletype="">i</field>
+                    <value name="LIST">
+                      <block type="variables_get" id="gfsv_Tj:;ho_z,hxXiy6">
+                        <field name="VAR" id="OeQcro[(Q[Az`5|yuT*!" variabletype="">y</field>
+                      </block>
+                    </value>
+                    <statement name="DO">
+                      <block type="lists_setIndex" id="MEOX|:zB+pQMIhrqoSOA">
+                        <mutation at="false"></mutation>
+                        <field name="MODE">INSERT</field>
+                        <field name="WHERE">LAST</field>
+                        <value name="LIST">
+                          <block type="variables_get" id="Ey35)VJZWP:;`t2qN/c;">
+                            <field name="VAR" id="iX`}I*;dF2(J*U}Ip-OD" variabletype="">labels</field>
+                          </block>
+                        </value>
+                        <value name="TO">
+                          <block type="dl_array1d" id="Dxi.FeqpHyQD(HlPG^i:">
+                            <value name="NUM">
+                              <block type="lists_create_with" id="Av9R1#A@ywaN3jrSIVb%">
+                                <mutation items="1"></mutation>
+                                <value name="ADD0">
+                                  <block type="variables_get" id="2-^BN84|FTw(;5}uA]3p">
+                                    <field name="VAR" id="sF.wVSb0r1uc)Q?o0]p0" variabletype="">i</field>
+                                  </block>
+                                </value>
+                              </block>
+                            </value>
+                          </block>
+                        </value>
+                      </block>
+                    </statement>
+                    <next>
+                      <block type="variables_set" id=":nI!6ia}sG}?+~cRP40:">
+                        <field name="VAR" id="@k/P0K]k[gp~LeJq?_Co" variabletype="">inputX</field>
+                        <value name="VALUE">
+                          <block type="variables_get" id="WL7bWWt)c^oJNB*}:+@V">
+                            <field name="VAR" id="W$Z|g/h6KTMjMq!V8puT" variabletype="">inputs</field>
+                          </block>
+                        </value>
+                        <next>
+                          <block type="variables_set" id="t6/)UM?Q6g7dnSqa*)`D">
+                            <field name="VAR" id="|jW(g/F5p@@/;4km^7zD" variabletype="">inputY</field>
+                            <value name="VALUE">
+                              <block type="variables_get" id="_XpHtDyRG?kst.YPTcAE">
+                                <field name="VAR" id="iX`}I*;dF2(J*U}Ip-OD" variabletype="">labels</field>
+                              </block>
+                            </value>
+                            <next>
+                              <block type="variables_set" id="9y^kj@80oP[=A,E2LoqC">
+                                <field name="VAR" id="Yq_|*Gk05zsoM}KNt|Os" variabletype="">inputShape</field>
+                                <value name="VALUE">
+                                  <block type="math_number" id="D7o%BZ=A}GiDAK1B65p-">
+                                    <field name="NUM">3</field>
+                                  </block>
+                                </value>
+                                <next>
+                                  <block type="variables_set" id="=_m2m+ED$YH,@Hq+wJZ7">
+                                    <field name="VAR" id="SP#A,H4N=cVkGFu1bZkx" variabletype="">labelShape</field>
+                                    <value name="VALUE">
+                                      <block type="lists_create_with" id="gddNFXG@[Op_x{+tPbs|">
+                                        <mutation items="1"></mutation>
+                                        <value name="ADD0">
+                                          <block type="math_number" id=".BiiM25HbU(X*+|k;jv^">
+                                            <field name="NUM">1</field>
+                                          </block>
+                                        </value>
+                                      </block>
+                                    </value>
+                                  </block>
+                                </next>
+                              </block>
+                            </next>
+                          </block>
+                        </next>
+                      </block>
+                    </next>
+                  </block>
+                </next>
+              </block>
+            </next>
+          </block>
+        </next>
+      </block>
+    </statement>
+  </block>
+  <block type="procedures_defnoreturn" id="j[(Po@w57D.={ExpxTz0" x="413" y="262">
+    <mutation>
+      <arg name="text_list"></arg>
+    </mutation>
+    <field name="NAME">predict_target_for</field>
+    <comment pinned="false" h="80" w="160">Given a comma separated input, predicts the target from given input using the trained model</comment>
+    <statement name="STACK">
+      <block type="text_log" id="_JYN?WG!g-ZT?Yze9`C#">
+        <value name="TEXT">
+          <block type="dl_get_scalar" id="_sA*TBpBZ@cZDWVvWKta">
+            <value name="NUM">
+              <block type="predict" id="o3AI!xm:_0SWE`9=#yvH">
+                <value name="NUM">
+                  <block type="lists_split_math" id="x]|c`wX0K^`!H+MeP^1I">
+                    <value name="INPUT">
+                      <shadow type="text" id="r8WZ/+]h=H]hC$}5t4+`">
+                        <field name="TEXT">5,3,1</field>
+                      </shadow>
+                      <block type="variables_get" id="IbLVE~r=NY~:Jl[dBQ*M">
+                        <field name="VAR" id="49nt)[36l45p=r@c7h;z" variabletype="">text_list</field>
+                      </block>
+                    </value>
+                    <value name="DELIM">
+                      <shadow type="text" id="8qX^%+[P^`bFxCY/1:;2">
+                        <field name="TEXT">,</field>
+                      </shadow>
+                    </value>
+                  </block>
+                </value>
+              </block>
+            </value>
+          </block>
+        </value>
+      </block>
+    </statement>
+  </block>
+</xml>
