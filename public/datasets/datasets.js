@@ -219,7 +219,7 @@ Datasets.convert.rowsToMap = function(data){
     var headers = data.rows[0];
     if(data.header)
     {
-        console.log(headers);
+        //console.log(headers);
         rowCount++;
         for(let i = 0;i < headers.length; i++)
         {
