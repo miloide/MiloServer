@@ -88,8 +88,13 @@ Datasets.generateBlockDefinition = function(name){
     }
 };
 /**
+ * Triggers a click for input element fileLoader
+ */
+
 Datasets.triggerClick = function(){
-}
+    $("#fileLoader").click();
+};
+
 /**
  * Reads csv file selected by user
  * @param event - File Input event
@@ -214,6 +219,10 @@ Datasets.convert.rowsToMap = function(data){
     var headers = data.rows[0];
     if(data.header)
     {
+<<<<<<< HEAD
+=======
+
+>>>>>>> linear-regression-fix
         console.log(headers)
         rowCount++;
         for(let i = 0;i < headers.length; i++)
