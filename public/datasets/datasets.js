@@ -88,8 +88,13 @@ Datasets.generateBlockDefinition = function(name){
     }
 };
 /**
+ * Triggers a click for input element fileLoader
+ */
+
 Datasets.triggerClick = function(){
-}
+    $("#fileLoader").click();
+};
+
 /**
  * Reads csv file selected by user
  * @param event - File Input event
