@@ -132,11 +132,29 @@ Datasets.uploadDataset= function(event){
         console.log(Datasets[fileName]);
         Datasets.show(fileName);
     }
-    if(file.type == "text/csv"){
+    if(file.type == "text/csv" || file.type == "application/vnd.ms-excel"){
+        $("#modalConfirm").click();
+        Datasets.confirmHeader(file.name);
         reader.readAsText(file);
     }
     else
         alert("Only csv files supported");
+}
+
+/**
+ * Custom confirm Template
+ * @param fileName - name of uploaded file
+ */
+Datasets.confirmHeader = function(fileName){
+    $('#modalBodyConfirm').html("Does the first row of file contain features name? If not default features names will be used!")
+    $('#ModalBtnYes').on("click",function(){
+       Datasets[name].header = true;
+       $('confirmModal').modal('hide');
+    });
+    $('#ModalBtnNo').on("click",function(){
+       Datasets[name].header = false;
+       $('confirmModal').modal('hide');
+    });
 }
 
 /**
@@ -216,12 +234,15 @@ Datasets.convert.rowsToMap = function(data){
     var dataLength = data.rows.length;
     var rowCount = 0;
     var dataDictionary = {};
-    var headers = data.rows[0];
+    var headers, rowLength;
+    if(data.rows[0]!=undefined)
+        rowLength = data.rows[0].length;
+    if(data.header)
+        headers = data.rows[0];
     if(data.header)
     {
-        //console.log(headers);
         rowCount++;
-        for(let i = 0;i < headers.length; i++)
+        for(let i = 0;i < rowLength; i++)
         {
             var key = headers[i];
             dataDictionary[key] = [];
@@ -229,8 +250,10 @@ Datasets.convert.rowsToMap = function(data){
     }
     else
     {
-        for(let i = 0;i < headers.length; i++)
+        headers = [];
+        for(let i = 0;i < rowLength; i++)
         {
+            headers.append(i);
             dataDictionary[i] = [];
         }
     }

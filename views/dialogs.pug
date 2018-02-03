@@ -1,0 +1,22 @@
+#myModal.modal.fade(role='dialog', style="display:none")
+  .modal-dialog.modal-sm
+    .modal-content
+      .modal-header
+        h4#modalHeader.modal-title
+      .modal-body
+        p#modalBody
+      .modal-footer
+        button.btn.btn-default(type='button', data-dismiss='modal') Ok
+
+#confirmModal.modal.fade(tabindex='-1', role='dialog', aria-labelledby='mySmallModalLabel', aria-hidden='true')
+  .modal-dialog.modal-sm
+    .modal-content
+      .modal-header
+        button.close(type='button', data-dismiss='modal', aria-label='Close')
+          span(aria-hidden='true') ×
+        h4#myModalLabel.modal-title Header Row Included?
+      .model-body
+        h5#modalBodyConfirm  
+      .modal-footer
+        button#modalBtnYes.btn.btn-default(type='button', data-dismiss='modal') Yes
+        button#modalBtnNo.btn.btn-primary(type='button', data-dismiss='modal') No
