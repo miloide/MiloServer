@@ -213,6 +213,7 @@
         <mutation items="0"></mutation>
       </block>
       <block type="lists_create_with"></block>
+      <block type="lists_zip_with"></block>
       <block type="lists_repeat">
         <value name="NUM">
           <shadow type="math_number">
@@ -301,33 +302,99 @@
     <category name="%{BKY_CATVARIABLES}" colour="%{BKY_VARIABLES_HUE}" custom="VARIABLE"></category>
     <category name="%{BKY_CATFUNCTIONS}" colour="%{BKY_PROCEDURES_HUE}" custom="PROCEDURE"></category>
     <sep></sep>
-    <category name="%{BKY_CATML}" colour="%{BKY_ML_HUE}">
-      <block type="optimizer">
-        <field name="optimizer">SGD</field>
-      </block>
-      <block type="constant">
-        <field name="NUM">0</field>
-      </block>
-      <block type="mlparams">
-        <field name="paramters">learningRate</field>
-      </block>
-      <block type="inputfile">
-        <field name="inputfile">input</field>
-      </block>
-      <block type="inputfile">
-        <field name="inputfile">input</field>
-      </block>
-      <!-- TODO(arjun): Replace InputFile block with button -->
-      <button id="add_dataset" text="Add DataSet..." callbackKey="ADD_DATASET" ></button>
-      <block type="createoptimizer">
-        <field name="optimizer">Adagrad</field>
-        <field name="rate">0</field>
-        <field name="numBatches">0</field>
-        <field name="batchSize">0</field>
-      </block>
-      <block type="deepadder">
-        <field name="varname">variable_name</field>
-        <field name="value">0</field>
-      </block>
+    <category name="%{BKY_CATML}" colour="%{BKY_ML_HUE}" expanded="true">
+      <category name="%{BKY_CATMATH}" colour="%{BKY_ML_HUE}">
+        <block type="dl_number"></block>
+        <block type="dl_array1d"></block>
+        <block type="dl_get_scalar"></block>
+        <block type="dl_arithmetic">
+          <value name="A">
+            <shadow type="dl_number">
+              <field name="NUM">1</field>
+            </shadow>
+          </value>
+          <value name="B">
+            <shadow type="dl_number">
+              <field name="NUM">1</field>
+            </shadow>
+          </value>
+        </block>
+        <block type="lists_split_math">
+          <value name="INPUT">
+            <shadow type="text">
+              <field name="TEXT">1,2,3</field>
+            </shadow>
+          </value>
+          <value name="DELIM">
+            <shadow type="text">
+              <field name="TEXT">,</field>
+            </shadow>
+          </value>
+        </block>
+        <block type="text_log">
+            <value name="TEXT">
+                <block type="dl_get_scalar">
+                  <value name="NUM">
+                  </value>
+                </block>
+            </value>
+          </block>
+      </category>
+      <category name="Miscellaneous" colour="%{BKY_ML_HUE}">
+        <block type="optimizer">
+          <field name="optimizer">SGD</field>
+        </block>
+        <block type="mlparams">
+          <field name="paramters">learningRate</field>
+        </block>
+          <block type="dataset_1"></block>
+          <block type="linearregression"></block>
+          <block type="train"></block>
+          <block type="dataconfiguration"></block>
+          <block type="predict"></block>
+        <block type="linearregression1">
+          <field name="costFunction">MEAN</field>
+        </block>
+        <!-- TODO(arjun): Replace InputFile block with button -->
+        <button id="add_dataset" text="Add DataSet..." callbackKey="ADD_DATASET" ></button>
+        <block type="createoptimizer">
+          <field name="optimizer">Adagrad</field>
+          <field name="rate">0</field>
+          <field name="numBatches">0</field>
+          <field name="batchSize">0</field>
+        </block>
+      </category>
+      <category name="Image" colour="%{BKY_IMAGE_HUE}">
+          <block type="img_from_webcam"></block>
+          <block type="squeezenet_label"></block>
+          <block type="img_show"></block>
+          <block type="img_from_url">
+              <value name="TEXT">
+                  <shadow type="text">
+                    <field name="TEXT">https://storage.googleapis.com/learnjs-data/images/cat.jpeg</field>
+                  </shadow>
+                </value>
+          </block>
+      </category>
+      <category name="Plot"  colour="%{BKY_PLOT_HUE}">
+        <block type="plot_scatter">
+          <field name="HUE">#ffffff</field>
+          <field name="Connect">TRUE</field>
+        </block>
+        <block type="plot_histogram">
+          <field name="HUE">#ffffff</field>
+        </block>
+        <block type="plot_title">
+          <field name="NAME">My Plot</field>
+        </block>
+        <block type="show_plot"></block>
+        <block type="plot_x_title">
+          <field name="NAME">My Plot</field>
+        </block>
+        <block type="plot_y_title">
+          <field name="NAME">My Plot</field>
+        </block>
+      </category>
+      <category name="Datasets" colour="%{BKY_HISTOGRAM_HUE}" custom="DATASETS"></category>
   </category>
 </xml>
