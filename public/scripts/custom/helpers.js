@@ -5,17 +5,19 @@ var internetConnection = {};
 internetConnection.isOnline = window.navigator.onLine;
 internetConnection.showOfflineAlert = function(){
     internetConnection.isOnline = false;
-    $('#modalHeader').html("Internet Disconnected");
-    $('#modalBody').html("Looks like you arent connected to the internet. Some features may not work as expected!");
-    $('#modalAlert').click();
+    $('#alertHeader').html("Internet Disconnected");
+    $('#alertBody').html("Looks like you arent connected to the internet.<br>Some features may not work as expected!");
+    $('#alertModalTrigger').click();
 
-}
+};
+
 internetConnection.showOnlineAlert = function(){
     internetConnection.isOnline = true;
-    $('#modalHeader').innerHTML = "Internet Connection Restored";
-    $('#modalBody').innerHTML = "Looks like you are back online";
-    $('#modalAlert').click();
-}
+    $('#alertHeader').html("Internet Connection Restored");
+    $('#alertBody').html("You are back online!<br>Everything should work fine now.");
+    $('#alertModalTrigger').click();
+};
+
 /**
  * Event listeners for window
  */

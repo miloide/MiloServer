@@ -101,16 +101,34 @@ Datasets.triggerClick = function(){
  */
 
 Datasets.uploadDataset= function(event){
-    var reader = new FileReader();
     var file = event.target.files[0];
     var fileName = file.name.replace(".csv","");
+
+    if(file.type == "text/csv" || file.type == "application/vnd.ms-excel"){
+        $("#confirmModalTrigger").click();
+        Datasets.confirmHeader(file);
+    }
+    else{
+        alert("Only csv files supported");
+    }
+};
+
+/**
+ * Custom confirm Template
+ * @param fileName - name of uploaded file
+ */
+Datasets.confirmHeader = function(file){
+    var fileName = file.name;
+    var reader = new FileReader();
+    $('#confirmBody').html(" Is the first row a header row?" +
+                            "<br>If not default column headers will be used.");
+    if(Datasets.fileName == undefined)
+    {
+        Datasets[fileName] = {};
+        Datasets[fileName].header = false;
+        Datasets[fileName].rows = [];
+    }
     reader.onload = function(){
-        if(Datasets.fileName == undefined)
-        {
-            Datasets[fileName] = {};
-            Datasets[fileName].header = false;
-            Datasets[fileName].rows = [];
-        }
         var data = String(reader.result).split("\n");
         var nrows = data.length;
         var noAttributes;
@@ -129,36 +147,24 @@ Datasets.uploadDataset= function(event){
         $("#dataset_list").append(
             '<li><button class="button-none" onclick="Datasets.show(\''+fileName+'\')">'+fileName+'</button></li>'
         );
-        console.log(Datasets[fileName]);
+        // console.log(Datasets[fileName]);
         Datasets.show(fileName);
-    }
-    if(file.type == "text/csv" || file.type == "application/vnd.ms-excel"){
-        $("#modalConfirm").click();
-        Datasets.confirmHeader(file.name);
-        reader.readAsText(file);
-    }
-    else
-        alert("Only csv files supported");
-}
+    };
 
-/**
- * Custom confirm Template
- * @param fileName - name of uploaded file
- */
-Datasets.confirmHeader = function(fileName){
-    $('#modalBodyConfirm').html("Does the first row of file contain features name? If not default features names will be used!")
-    $('#ModalBtnYes').on("click",function(){
-       Datasets[name].header = true;
+    $('#confirmBtnYes').on("click",function(){
+       Datasets[fileName].header = true;
+       reader.readAsText(file);
        $('confirmModal').modal('hide');
     });
-    $('#ModalBtnNo').on("click",function(){
-       Datasets[name].header = false;
+    $('#confirmBtnNo').on("click",function(){
+       Datasets[fileName].header = false;
+       reader.readAsText(file);
        $('confirmModal').modal('hide');
     });
-}
+};
 
 /**
- * Generates codegenerator dynamically for dataset blocks
+ * Generates code generator dynamically for dataset blocks
  * @param
  */
 Datasets.codegenTemplate = function (name) {
@@ -198,7 +204,7 @@ Datasets.importBuiltIn = function(){
  * @param {string} name
  */
 Datasets.show = function(name){
-    console.log(name);
+    // console.log(name);
     if (Datasets.loaded[name] == undefined || Datasets.loaded[name]==false) return;
     var data = Datasets[name].rows;
     var colWidths = [];
@@ -238,9 +244,8 @@ Datasets.convert.rowsToMap = function(data){
     if(data.rows[0]!=undefined)
         rowLength = data.rows[0].length;
     if(data.header)
-        headers = data.rows[0];
-    if(data.header)
     {
+        headers = data.rows[0];
         rowCount++;
         for(let i = 0;i < rowLength; i++)
         {
@@ -253,11 +258,11 @@ Datasets.convert.rowsToMap = function(data){
         headers = [];
         for(let i = 0;i < rowLength; i++)
         {
-            headers.append(i);
+            headers.push(i);
             dataDictionary[i] = [];
         }
     }
-    var headers = Object.keys(dataDictionary);
+    headers = Object.keys(dataDictionary);
     for(let i = rowCount; i < dataLength; i++)
     {
         var row = data.rows[i];

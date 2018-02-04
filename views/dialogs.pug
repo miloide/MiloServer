@@ -1,10 +1,10 @@
-#myModal.modal.fade(role='dialog', style="display:none")
+#alertModal.modal.fade(role='dialog', style="display:none")
   .modal-dialog.modal-sm
     .modal-content
       .modal-header
-        h4#modalHeader.modal-title
+        h4#alertHeader.modal-title
       .modal-body
-        p#modalBody
+        p#alertBody(style="margin-left: 2px")
       .modal-footer
         button.btn.btn-default(type='button', data-dismiss='modal') Ok
 
@@ -12,11 +12,9 @@
   .modal-dialog.modal-sm
     .modal-content
       .modal-header
-        button.close(type='button', data-dismiss='modal', aria-label='Close')
-          span(aria-hidden='true') ×
-        h4#myModalLabel.modal-title Header Row Included?
-      .model-body
-        h5#modalBodyConfirm  
+        h4#confirmHeader.modal-title Header Row Included?
+      .modal-body
+        p#confirmBody(style="margin-left: 2px")
       .modal-footer
-        button#modalBtnYes.btn.btn-default(type='button', data-dismiss='modal') Yes
-        button#modalBtnNo.btn.btn-primary(type='button', data-dismiss='modal') No
+        button#confirmBtnYes.btn.btn-default(type='button', data-dismiss='modal') Yes
+        button#confirmBtnNo.btn.btn-primary(type='button', data-dismiss='modal') No

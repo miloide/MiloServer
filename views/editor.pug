@@ -46,8 +46,8 @@ html
 						input#fileLoader(type="file", name="files", onchange= "Datasets.uploadDataset(event)",style = "display : none")
 						br
 						button#dataset_save(style='display:none') Save
-						button#modalAlert(data-toggle="modal", data-target="#myModal", style="display:none")
-						button#modalConfirm(data-toggle="modal", data-target="#confirmModal", style="display:none")
+						button#alertModalTrigger(data-toggle="modal", data-target="#alertModal", style="display:none")
+						button#confirmModalTrigger(data-toggle="modal", data-target="#confirmModal", style="display:none")
 						.col-12
 							h4 Loaded Datasets (click to view)
 							ul#dataset_list
@@ -70,4 +70,4 @@ html
 						h3 Console Output
 						#console_javascript
 		textarea#content_xml.content(wrap="off")
-		include toolbox.html		
+		include toolbox.html
