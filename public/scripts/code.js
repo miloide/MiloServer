@@ -448,11 +448,11 @@ Code.runJS = function() {
 		if(!window.navigator.onLine){
 			internetConnection.showOfflineAlert();
 		}
-			var setup =  DeepLearn.setup;
-			var jscode = setup + code;
-			eval(jscode);
-			$("#console_holder").show();
-			
+		var setup =  DeepLearn.setup;
+		var jscode = setup + code;
+		eval(jscode);
+		$("#console_holder").show();
+
 	} catch (e) {
 		console.log(jscode);
 		alert(MSG['badCode'].replace('%1', e));
