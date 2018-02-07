@@ -169,7 +169,7 @@ Blockly.JavaScript['dataconfiguration'] = function(block) {
     return code;
   };
 
-Blockly.JavaScript['linearregression1'] = function(block) {
+Blockly.JavaScript['dl_feedentry'] = function(block) {
     var value_inuptx = Blockly.JavaScript.valueToCode(block, 'inuptX', Blockly.JavaScript.ORDER_ATOMIC);
     var value_inputy = Blockly.JavaScript.valueToCode(block, 'inputY', Blockly.JavaScript.ORDER_ATOMIC);
     var dropdown_costfunction = block.getFieldValue('costFunction');

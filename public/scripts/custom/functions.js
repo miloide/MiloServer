@@ -273,6 +273,11 @@ console.webLog = (function (old_function,div_id) {
     };
 } (console.log.bind(console), "#console_javascript"));
 
+/**
+ * Creates a class for parametric Model(Linear and logistic regression) operations
+ * @class
+ */
+
 
 /**
  * Creates a class for Plot operations
@@ -332,13 +337,13 @@ function Plot() {
  */
 Plot.prototype.addDataItem = function(data) {
     if(data.x == undefined){
-        helpers.showAlert("Error", "Not enough data to plot!");
+        Helpers.showAlert("Error", "Not enough data to plot!");
         return;
     }
     if (data.type == "scatter") {
         if(data.x == undefined || data.y == undefined)
         {
-          helpers.showAlert("Error", "Not enough data");
+          Helpers.showAlert("Error", "Not enough data");
           return;
         }
     }
@@ -348,8 +353,6 @@ Plot.prototype.addDataItem = function(data) {
     this.data_.push(data);
     return true;
 };
-
-
 
 /**
  * Sets the plot title to given string argument

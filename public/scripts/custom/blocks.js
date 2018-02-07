@@ -3,20 +3,6 @@
 // To change global colour brightness - set HSV Saturation and Value between 0(inclusive) and 1(exclusive);
 Blockly.HSV_SATURATION = 0.60;
 Blockly.HSV_VALUE = 0.75;
-
-Blockly.Blocks['dataset_1'] = {
-    init: function() {
-      this.appendDummyInput()
-          .appendField("Input Dataset - Iris");
-      this.setColour(230);
-      this.setPreviousStatement(true, null);
-      this.setNextStatement(true, null);
-    this.setTooltip("");
-   this.setHelpUrl("");
-
-    }
-  };
-
 Blockly.Blocks['train'] = {
   init: function() {
     this.appendDummyInput()
@@ -28,17 +14,6 @@ Blockly.Blocks['train'] = {
  this.setHelpUrl("");
   }
 };
-Blockly.Blocks['linearregression'] = {
-    init: function() {
-      this.appendDummyInput()
-          .appendField("LinearRegression");
-      this.setColour(230);
-      this.setPreviousStatement(true, null);
-      this.setNextStatement(true, null);
-    this.setTooltip("");
-   this.setHelpUrl("");
-    }
-  };
   Blockly.Blocks['linearregression1'] = {
     init: function() {
       this.appendDummyInput()

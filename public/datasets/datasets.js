@@ -108,7 +108,7 @@ Datasets.uploadDataset= function(event){
         Datasets.confirmHeader(file);
     }
     else{
-        helpers.showAlert("Error","Only csv files supported");
+        Helpers.showAlert("Error","Only csv files supported");
     }
 };
 
@@ -126,6 +126,18 @@ Datasets.confirmHeader = function(file){
         Datasets[fileName] = {};
         Datasets[fileName].header = false;
         Datasets[fileName].rows = [];
+    }
+    reader.onprogress = function(){
+        $('#loadingDiv').show();
+    }
+    reader.onloadend = function(){
+        $('#loadingDiv').hide();
+    }
+    reader.onerror = function(){
+        Helpers.showAlert("Error", " Error encountered while reading file. Please try again!");
+    }
+    reader.onabort = function(){
+        Helpers.showAlert("Error", "File reading aborted");
     }
     reader.onload = function(){
         var data = String(reader.result).split("\n");

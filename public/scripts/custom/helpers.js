@@ -1,11 +1,11 @@
 /**
  * Namespace for all helper functions
  */
- var helpers = {};
+ var Helpers = {};
  /** 
  * Function for setting custom dialog body and header
 */
-helpers.showAlert = function(header, body){
+Helpers.showAlert = function(header, body){
     $('#alertHeader').html(header);
     $('#alertBody').html(body);
     $('#alertModalTrigger').click();
@@ -14,24 +14,24 @@ helpers.showAlert = function(header, body){
 /**
  * Namespace for Network functions,variables
  */
-helpers.network = {};
-helpers.network.isOnline = window.navigator.onLine;
-helpers.network.showOfflineAlert = function(){
-    helpers.network.isOnline = false;
+Helpers.Network = {};
+Helpers.Network.isOnline = window.navigator.onLine;
+Helpers.Network.showOfflineAlert = function(){
+    Helpers.Network.isOnline = false;
     helpers.showAlert("Internet Disconnected", "Looks like you arent connected to the internet.<br>Some features may not work as expected!" );
 };
 
-helpers.network.showOnlineAlert = function(){
-    helpers.network.isOnline = true;
+Helpers.Network.showOnlineAlert = function(){
+    Helpers.Network.isOnline = true;
     helpers.showAlert("Internet Connection Restored", "You are back online!<br>Everything should work fine now.");
 };
 /**
  * Event listeners for window
  */
 window.addEventListener("offline", function(e){
-    helpers.network.showOfflineAlert();
+    Helpers.Network.showOfflineAlert();
 });
 
 window.addEventListener("online", function(e){
-    helpers.network.showOnlineAlert();
+    Helpers.Network.showOnlineAlert();
 });
