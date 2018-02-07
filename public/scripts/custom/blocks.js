@@ -546,7 +546,7 @@ Blockly.Blocks['lists_zip_with'] = {
     containerBlock.initSvg();
     var connection = containerBlock.getInput('STACK').connection;
     for (var i = 0; i < this.itemCount_; i++) {
-      var itemBlock = workspace.newBlock('lists_create_with_item');
+      var itemBlock = workspace.newBlock('lists_zip_with_item');
       itemBlock.initSvg();
       connection.connect(itemBlock.previousConnection);
       connection = itemBlock.nextConnection;
@@ -623,5 +623,21 @@ Blockly.Blocks['lists_zip_with'] = {
       this.removeInput('ADD' + i);
       i++;
     }
+  }
+};
+
+Blockly.Blocks['lists_zip_with_item'] = {
+  /**
+   * Mutator block for adding items to zip lists
+   * @this Blockly.Block
+   */
+  init: function() {
+    this.setColour(Blockly.Blocks.lists.HUE);
+    this.appendDummyInput()
+        .appendField(Blockly.Msg.LISTS_CREATE_WITH_ITEM_TITLE);
+    this.setPreviousStatement(true);
+    this.setNextStatement(true);
+    this.setTooltip(Blockly.Msg.LISTS_CREATE_WITH_ITEM_TOOLTIP);
+    this.contextMenu = false;
   }
 };
