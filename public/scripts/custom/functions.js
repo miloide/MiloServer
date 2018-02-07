@@ -311,6 +311,7 @@ function Plot() {
         title:'Untitled Plot',
         xaxis:{},
         yaxis:{},
+        showlegend:true
 
     };
 
