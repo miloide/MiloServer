@@ -67,7 +67,6 @@ Datasets.generateBlock = function(name){
         Blockly.JavaScript[name+"_get"] = Datasets.codegenTemplate(name);
     }
 }
-
 Datasets.generateBlockDefinition = function(name){
     if(Datasets.imported[name]!=undefined){
         Blockly.defineBlocksWithJsonArray([{
@@ -109,7 +108,7 @@ Datasets.uploadDataset= function(event){
         Datasets.confirmHeader(file);
     }
     else{
-        alert("Only csv files supported");
+        helpers.showAlert("Error","Only csv files supported");
     }
 };
 
@@ -204,7 +203,6 @@ Datasets.importBuiltIn = function(){
  * @param {string} name
  */
 Datasets.show = function(name){
-    // console.log(name);
     if (Datasets.loaded[name] == undefined || Datasets.loaded[name]==false) return;
     var data = Datasets[name].rows;
     var colWidths = [];

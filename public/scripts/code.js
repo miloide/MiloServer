@@ -446,7 +446,7 @@ Code.runJS = function() {
 	Blockly.JavaScript.INFINITE_LOOP_TRAP = null;
 	try {
 		if(!window.navigator.onLine){
-			internetConnection.showOfflineAlert();
+			helpers.network.showOfflineAlert();
 		}
 		var setup =  DeepLearn.setup;
 		var jscode = setup + code;
@@ -455,7 +455,7 @@ Code.runJS = function() {
 
 	} catch (e) {
 		console.log(jscode);
-		alert(MSG['badCode'].replace('%1', e));
+		helpers.showAlert("Error",MSG['badCode'].replace('%1', e));
 	}
 };
 

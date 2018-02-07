@@ -1,30 +1,37 @@
 /**
- * Namespace for internet connections functions,variables
+ * Namespace for all helper functions
  */
-var internetConnection = {};
-internetConnection.isOnline = window.navigator.onLine;
-internetConnection.showOfflineAlert = function(){
-    internetConnection.isOnline = false;
-    $('#alertHeader').html("Internet Disconnected");
-    $('#alertBody').html("Looks like you arent connected to the internet.<br>Some features may not work as expected!");
+ var helpers = {};
+ /** 
+ * Function for setting custom dialog body and header
+*/
+helpers.showAlert = function(header, body){
+    $('#alertHeader').html(header);
+    $('#alertBody').html(body);
     $('#alertModalTrigger').click();
+}
 
+/**
+ * Namespace for Network functions,variables
+ */
+helpers.network = {};
+helpers.network.isOnline = window.navigator.onLine;
+helpers.network.showOfflineAlert = function(){
+    helpers.network.isOnline = false;
+    helpers.showAlert("Internet Disconnected", "Looks like you arent connected to the internet.<br>Some features may not work as expected!" );
 };
 
-internetConnection.showOnlineAlert = function(){
-    internetConnection.isOnline = true;
-    $('#alertHeader').html("Internet Connection Restored");
-    $('#alertBody').html("You are back online!<br>Everything should work fine now.");
-    $('#alertModalTrigger').click();
+helpers.network.showOnlineAlert = function(){
+    helpers.network.isOnline = true;
+    helpers.showAlert("Internet Connection Restored", "You are back online!<br>Everything should work fine now.");
 };
-
 /**
  * Event listeners for window
  */
 window.addEventListener("offline", function(e){
-    internetConnection.showOfflineAlert();
+    helpers.network.showOfflineAlert();
 });
 
 window.addEventListener("online", function(e){
-    internetConnection.showOnlineAlert();
+    helpers.network.showOnlineAlert();
 });

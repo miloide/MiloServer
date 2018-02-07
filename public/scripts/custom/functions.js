@@ -332,13 +332,13 @@ function Plot() {
  */
 Plot.prototype.addDataItem = function(data) {
     if(data.x == undefined){
-        alert("Not enough data to plot!");
+        helpers.showAlert("Error", "Not enough data to plot!");
         return;
     }
     if (data.type == "scatter") {
         if(data.x == undefined || data.y == undefined)
         {
-          alert("Not enough data");
+          helpers.showAlert("Error", "Not enough data");
           return;
         }
     }
