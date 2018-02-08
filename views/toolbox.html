@@ -347,16 +347,12 @@
         <block type="mlparams">
           <field name="paramters">learningRate</field>
         </block>
-          <block type="dataset_1"></block>
-          <block type="linearregression"></block>
           <block type="train"></block>
           <block type="dataconfiguration"></block>
           <block type="predict"></block>
-        <block type="linearregression1">
+          <block type="dl_feedentry">
           <field name="costFunction">MEAN</field>
         </block>
-        <!-- TODO(arjun): Replace InputFile block with button -->
-        <button id="add_dataset" text="Add DataSet..." callbackKey="ADD_DATASET" ></button>
         <block type="createoptimizer">
           <field name="optimizer">Adagrad</field>
           <field name="rate">0</field>
