@@ -1,19 +1,19 @@
 Datasets.california_housing = {};
 Datasets.california_housing["header"] = true;
+Datasets.california_housing.header = [
+    "rand_id",
+    "longitude",
+    "latitude",
+    "housing_median_age",
+    "total_rooms",
+    "total_bedrooms",
+    "population",
+    "households",
+    "median_income",
+    "median_house_value"
+];
 Datasets.california_housing.rows = 
-[
-    [
-        "rand_id",
-        "longitude",
-        "latitude",
-        "housing_median_age",
-        "total_rooms",
-        "total_bedrooms",
-        "population",
-        "households",
-        "median_income",
-        "median_house_value"
-    ],
+[    
     [
         "13931",
         "-122.03",

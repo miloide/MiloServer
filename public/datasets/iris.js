@@ -1,13 +1,13 @@
 Datasets.iris = {};
 Datasets.iris["header"] = true;
+Datasets.iris.headers = [
+  "Sepal length",
+  "Sepal width",
+  "Petal length",
+  "Petal width",
+  "Class"
+];
 Datasets.iris.rows = [
-    [
-        "Sepal length",
-        "Sepal width",
-        "Petal length",
-        "Petal width",
-        "Class"
-    ],
     [
       "5.1",
       "3.5",
