@@ -18,12 +18,12 @@ Helpers.Network = {};
 Helpers.Network.isOnline = window.navigator.onLine;
 Helpers.Network.showOfflineAlert = function(){
     Helpers.Network.isOnline = false;
-    helpers.showAlert("Internet Disconnected", "Looks like you arent connected to the internet.<br>Some features may not work as expected!" );
+    Helpers.showAlert("Internet Disconnected", "Looks like you arent connected to the internet.<br>Some features may not work as expected!" );
 };
 
 Helpers.Network.showOnlineAlert = function(){
     Helpers.Network.isOnline = true;
-    helpers.showAlert("Internet Connection Restored", "You are back online!<br>Everything should work fine now.");
+    Helpers.showAlert("Internet Connection Restored", "You are back online!<br>Everything should work fine now.");
 };
 /**
  * Event listeners for window
