@@ -271,14 +271,14 @@ Datasets.show = function(name){
 Datasets.convert.rowsToMap = function(data){
     var dataLength = data.rows.length;
     var dataDictionary = {};
-    var headers = Object.keys(data.headers);
+    var headers = data.headers;
     var rowLength = headers.length;
     for(var head in headers){
-        dataDictionary[head] = [];
+        dataDictionary[headers[head]] = [];
     }
-    for(let i = rowCount; i < dataLength; i++){
+    for(let i = 0; i < dataLength; i++){
         var row = data.rows[i];
-        for(let j = 0;j < row.length;j++){
+        for(let j = 0; j < row.length; j++){
             dataDictionary[headers[j]].push(row[j]);
         }
     }

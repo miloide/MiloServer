@@ -1,6 +1,6 @@
 Datasets.california_housing = {};
 Datasets.california_housing["header"] = true;
-Datasets.california_housing.header = [
+Datasets.california_housing.headers = [
     "rand_id",
     "longitude",
     "latitude",
