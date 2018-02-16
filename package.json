@@ -1,13 +1,15 @@
 {
-  "name": "file_server",
+  "name": "milo_server",
   "version": "1.0.0",
   "description": "",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node app.js",
+    "dev": "webpack && npm start"
   },
-  "author": "",
-  "license": "ISC",
+  "author": "Arjun Rao",
+  "license": "MIT",
   "dependencies": {
     "bcrypt-nodejs": "0.0.3",
     "body-parser": "^1.17.1",
@@ -24,5 +26,9 @@
     "passport-local": "^1.0.0",
     "pug": "^2.0.0-rc.4",
     "serve-index": "^1.0.0"
+  },
+  "devDependencies": {
+    "webpack": "^3.11.0",
+    "webpack-glob": "^2.0.2"
   }
 }
