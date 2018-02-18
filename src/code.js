@@ -6,6 +6,7 @@ var MSG = require('./strings');
 var Datasets = require('./datasets');
 var BlocklyStorage = window.BlocklyStorage = require('./storage');
 var DeepLearn = require('./deeplearn');
+
 // Export globally
 window.$ = require('jquery');
 window.Datasets = Datasets;

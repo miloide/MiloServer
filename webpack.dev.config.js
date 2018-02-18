@@ -1,7 +1,6 @@
 var webpack = require("webpack");
 var glob = require("glob");
 var path = require("path");
-var CompressionPlugin = require('compression-webpack-plugin');
 
 var OUT_DIR = path.join(__dirname,"public")
 
@@ -15,9 +14,11 @@ module.exports = {
     './src/codegen.js',
     './src/blocks.js',
     './src/code.js',
+    "webpack-hot-middleware/client?reload=true"
   ]),
   output: {
     path: OUT_DIR,
+    publicPath: __dirname + "/public",
     filename: 'bundle.js',
   },
   resolve: {
@@ -30,13 +31,8 @@ module.exports = {
       'window.jQuery': 'jquery',
       'Blockly':'milo-blocks'
     }),
-    new webpack.optimize.AggressiveMergingPlugin(),
-    new CompressionPlugin({
-        asset: "[path].gz[query]",
-        algorithm: "gzip",
-        test: /\.js$|\.css$|\.html$/,
-        threshold: 10240,
-        minRatio: 0.8
-    })
+    new webpack.optimize.OccurrenceOrderPlugin(),
+    new webpack.HotModuleReplacementPlugin(),
+    new webpack.NoEmitOnErrorsPlugin(),
   ],
 }

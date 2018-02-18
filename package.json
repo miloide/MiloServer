@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node app.js",
-    "dev": "webpack && npm start"
+    "build": "NODE_ENV=production webpack -p --config ./webpack.config.js"
   },
   "author": "Arjun Rao",
   "license": "MIT",
@@ -32,9 +32,12 @@
     "serve-index": "^1.0.0"
   },
   "devDependencies": {
+    "compression-webpack-plugin": "^1.1.7",
     "eslint-loader": "^1.9.0",
     "script-loader": "^0.7.2",
     "webpack": "^3.11.0",
-    "webpack-glob": "^2.0.2"
+    "webpack-dev-middleware": "^2.0.5",
+    "webpack-glob": "^2.0.2",
+    "webpack-hot-middleware": "^2.21.0"
   }
 }
