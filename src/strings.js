@@ -1,3 +1,14 @@
+Blockly.Msg.ML_HUE = "360";
+Blockly.Msg.IMAGE_HUE = "180";
+Blockly.Msg.PLOT_HUE = "230";
+Blockly.Msg.SCATTER_HUE = "130";
+Blockly.Msg.HISTOGRAM_HUE = "60";
+
+// To change global colour brightness - set HSV Saturation and Value between 0(inclusive) and 1(exclusive);
+Blockly.HSV_SATURATION = 0.60;
+Blockly.HSV_VALUE = 0.75;
+
+
 var MSG = {
   title: " IDE",
   blocks: "Blocks",
@@ -23,3 +34,5 @@ var MSG = {
   xmlError: "Could not load your saved file. Perhaps it was created with a different version of Blockly?",
   badXml: "Error parsing XML:\n%1\n\nSelect 'OK' to abandon your changes or 'Cancel' to further edit the XML."
 };
+
+module.exports = MSG;

@@ -26,7 +26,7 @@
 
 // Create a namespace.
 var BlocklyStorage = {};
-
+var Blockly = require('milo-blocks');
 /**
  * Backup code blocks to localStorage.
  * @param {!Blockly.WorkspaceSvg} workspace Workspace.
@@ -213,3 +213,4 @@ BlocklyStorage.pruneUndefined = function(xml){
   return jqueryXml[0];
 }
 
+module.exports = BlocklyStorage;

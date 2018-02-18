@@ -16,11 +16,15 @@
     "connect-flash": "^0.1.1",
     "cookie-parser": "^1.4.3",
     "ejs": "^2.5.6",
+    "eslint": "^4.18.0",
+    "expose-loader": "^0.7.4",
     "express": "^4.14.0",
     "express-session": "^1.15.1",
     "file-system": "^2.2.2",
     "formidable": "^1.0.17",
     "fs-extra": "^5.0.0",
+    "jquery": "^3.3.1",
+    "milo-blocks": "1.0.0",
     "mongoose": "^4.9.1",
     "morgan": "^1.8.1",
     "passport-local": "^1.0.0",
@@ -28,6 +32,8 @@
     "serve-index": "^1.0.0"
   },
   "devDependencies": {
+    "eslint-loader": "^1.9.0",
+    "script-loader": "^0.7.2",
     "webpack": "^3.11.0",
     "webpack-glob": "^2.0.2"
   }

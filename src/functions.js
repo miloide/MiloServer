@@ -72,7 +72,7 @@ WebCam.init = function(callback) {
         WebCam.exists = false;
         // Fail Gracefully
         if (typeof(callback) == "function"){
-            imgShow(imgFromURL("media/nocamera.jpg"));
+            imgShow(imgFromURL("media/nocamera.jpg",true));
         }
     }
 };
@@ -80,7 +80,7 @@ WebCam.init = function(callback) {
 /**
  * Cleans up misc_output div, console_javascript div, and other references
  */
-function clearOutput() {
+const clearOutput = () => {
     var MediaStream = WebCam.stream;
     if (MediaStream != undefined){
         MediaStream.getAudioTracks().forEach(function(track) {
@@ -143,7 +143,7 @@ WebCam.capture_ = function(){
  * Returns a singleton HTMLCanvasElement
  * @returns {HTMLCanvasElement}
  */
-function getImageCanvas(){
+const getImageCanvas = () => {
     var canvas = document.getElementById("ImageCanvas");
     if(canvas == undefined){
         canvas = document.createElement("canvas");
@@ -159,7 +159,7 @@ function getImageCanvas(){
  * @param {string} url Url for src attribute of generated <img> tag
  * @returns {HTMLImageElement}
  */
-function imgFromURL(url,isWebCam){
+const imgFromURL = (url,isWebCam) => {
     const w = 227,h = 227;
     var img = new Image(w,h);
     img.setAttribute("crossorigin","anonymous");
@@ -178,7 +178,7 @@ function imgFromURL(url,isWebCam){
  * Render Image on UI
  * @param {HTMLImageElement} <img> tag to render
  */
-function imgShow(imgTag){
+const imgShow = (imgTag) => {
     $('#loadingDiv').show();
     if(typeof(imgTag)=="function"){
         imgTag(imgShow);
@@ -213,7 +213,7 @@ SqueezeNet.classify = function(imgTag){
         var scriptElement = document.createElement("script");
         scriptElement.setAttribute("id","snetScript");
         //scriptElement.src = "https://unpkg.com/deeplearn-squeezenet";
-        scriptElement.src = "scripts/squeezenet.js";
+        scriptElement.src = "js/squeezenet.js";
         scriptElement.onload = function () {
             SqueezeNet.loaded = true;
             SqueezeNet.classify_(imgTag);
@@ -449,3 +449,12 @@ console.save = function(data, filename){
     a.dispatchEvent(e)
  };
 
+module.exports = {
+    Plot,
+    SqueezeNet,
+    Dataset,
+    WebCam,
+    imgFromURL,
+    imgShow,
+    getImageCanvas
+}

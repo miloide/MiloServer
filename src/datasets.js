@@ -326,6 +326,4 @@ Datasets.zip = function(...arrays){
     return Array.from({ length }, (value, index) => arrays.map((array => array[index])));
 };
 
-window.Datasets = Datasets;
-
 module.exports = Datasets;
