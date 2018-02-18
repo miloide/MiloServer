@@ -37,6 +37,9 @@ node_modules/
 jspm_packages/
 
 public/bundle.js
+public/bundle.js.gz
+
+test.bundle.js
 
 # Typescript v1 declaration files
 typings/
