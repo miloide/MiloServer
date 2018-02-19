@@ -4,9 +4,10 @@
   "description": "",
   "main": "app.js",
   "scripts": {
+    "preinstall": "npm link milo-blocks",
     "test": "webpack -w --config webpack.config-test.js",
     "start": "node app.js",
-    "build": "NODE_ENV=production webpack -p --config ./webpack.config.js"
+    "build": "NODE_ENV=production webpack --config ./webpack.config.js"
   },
   "author": "Arjun Rao",
   "license": "MIT",
@@ -24,7 +25,7 @@
     "formidable": "^1.0.17",
     "fs-extra": "^5.0.0",
     "jquery": "^3.3.1",
-    "milo-blocks": "1.0.0",
+    "milo-blocks": "file:../milo-blocks/",
     "mongoose": "^4.9.1",
     "morgan": "^1.8.1",
     "passport-local": "^1.0.0",

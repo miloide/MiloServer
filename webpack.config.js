@@ -3,7 +3,7 @@ var glob = require("glob");
 var path = require("path");
 var CompressionPlugin = require('compression-webpack-plugin');
 
-var OUT_DIR = path.join(__dirname,"public")
+var OUT_DIR = path.join(__dirname,"public");
 
 module.exports = {
   entry: glob.sync("./lib/*.js").concat([
@@ -39,4 +39,4 @@ module.exports = {
         minRatio: 0.8
     })
   ],
-}
+};
