@@ -2,7 +2,7 @@
  * Namespace for all helper functions
  */
  var Helpers = {};
- /** 
+ /**
  * Function for setting custom dialog body and header
 */
 Helpers.showAlert = function(header, body){
@@ -35,3 +35,5 @@ window.addEventListener("offline", function(e){
 window.addEventListener("online", function(e){
     Helpers.Network.showOnlineAlert();
 });
+
+module.exports = Helpers;

@@ -1,28 +1,51 @@
 {
-  "name": "file_server",
+  "name": "milo_server",
   "version": "1.0.0",
   "description": "",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "preinstall": "npm link milo-blocks",
+    "test": "webpack -w --config webpack.config-test.js",
+    "start": "node app.js",
+    "build": "NODE_ENV=production webpack --config ./webpack.config.js"
   },
-  "author": "",
-  "license": "ISC",
+  "author": "Arjun Rao",
+  "license": "MIT",
   "dependencies": {
     "bcrypt-nodejs": "0.0.3",
     "body-parser": "^1.17.1",
     "connect-flash": "^0.1.1",
     "cookie-parser": "^1.4.3",
     "ejs": "^2.5.6",
+    "eslint": "^4.18.0",
+    "expose-loader": "^0.7.4",
     "express": "^4.14.0",
     "express-session": "^1.15.1",
     "file-system": "^2.2.2",
     "formidable": "^1.0.17",
     "fs-extra": "^5.0.0",
+    "jquery": "^3.3.1",
+    "milo-blocks": "file:../milo-blocks/",
     "mongoose": "^4.9.1",
     "morgan": "^1.8.1",
     "passport-local": "^1.0.0",
     "pug": "^2.0.0-rc.4",
     "serve-index": "^1.0.0"
+  },
+  "devDependencies": {
+    "atomus": "^2.0.0",
+    "chai": "^4.1.2",
+    "compression-webpack-plugin": "^1.1.7",
+    "eslint-loader": "^1.9.0",
+    "mocha": "^5.0.1",
+    "mocha-jsdom": "^1.1.0",
+    "mocha-webpack": "^1.0.1",
+    "script-loader": "^0.7.2",
+    "webpack": "^3.11.0",
+    "webpack-dev-middleware": "^2.0.5",
+    "webpack-glob": "^2.0.2",
+    "webpack-hot-middleware": "^2.21.0",
+    "webpack-node-externals": "^1.6.0",
+    "webpack-shell-plugin": "^0.5.0"
   }
 }

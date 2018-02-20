@@ -91,7 +91,7 @@ Datasets.generateBlockDefinition = function(name){
  */
 
 Datasets.triggerClick = function(){
-    $("#fileLoader").click();   
+    $("#fileLoader").click();
 };
 
 /**
@@ -146,11 +146,11 @@ Datasets.readUploadedFile = function(file){
         if(data[0]!=undefined){
             noAttributes = data[0].split(",").length;
         }
-        for(let i = 0 ;i < nrows-1; i++)
+        for(var i = 0 ;i < nrows-1; i++)
         {
             var rowElements = data[i].split(",");
             var rowToString = [];
-            for(let j = 0; j < noAttributes; j++)
+            for(var j = 0; j < noAttributes; j++)
                 rowToString.push(String(rowElements[j]));
             Datasets[fileName].rows.push(rowToString);
         }
@@ -176,8 +176,8 @@ Datasets.readUploadedFile = function(file){
 };
 
 /**
- * 
- * @param {*} name - Dataset 
+ *
+ * @param {*} name - Dataset
  * Checks whether the uploaded file has its first row as header or not.
  * If not it arbitarily assigns headers to it.
  * Headers are immutable
@@ -194,9 +194,9 @@ Datasets.checkHeader = function(name){
     else if(!Datasets[name].header){
         var rowLength = Datasets[name].rows[0].length;
         Datasets[name].headers = [];
-        for(let i = 0;i < rowLength; i++){
+        for(var i = 0;i < rowLength; i++){
             Datasets[name].headers.push(String.fromCharCode(i+65));
-        } 
+        }
     }
     Datasets[name].header = true;
 }
@@ -242,7 +242,7 @@ Datasets.show = function(name){
     if (Datasets.loaded[name] == undefined || Datasets.loaded[name]==false) return;
     var data = Datasets[name].rows;
     var colWidths = [];
-    for(let i = 0; i < Datasets[name].headers.length; i++){
+    for(var i = 0; i < Datasets[name].headers.length; i++){
         colWidths.push(100);
     }
     $('#dataset_output').jexcel({data:data, colWidths:colWidths, colHeaders:Datasets[name].headers});
@@ -276,9 +276,9 @@ Datasets.convert.rowsToMap = function(data){
     for(var head in headers){
         dataDictionary[headers[head]] = [];
     }
-    for(let i = 0; i < dataLength; i++){
+    for(var i = 0; i < dataLength; i++){
         var row = data.rows[i];
-        for(let j = 0; j < row.length; j++){
+        for(var j = 0; j < row.length; j++){
             dataDictionary[headers[j]].push(row[j]);
         }
     }
@@ -303,7 +303,7 @@ Datasets.convert.mapToRows = function(dataDictionary){
     var rows = [];
     var keys = Object.keys(dataDictionary);
     var rowLength = dataDictionary[keys[0]].length;
-    for(let i = 0; i < rowLength; i++)
+    for(var i = 0; i < rowLength; i++)
     {
         var row = [];
         for(var key in keys)
@@ -325,3 +325,5 @@ Datasets.zip = function(...arrays){
     const length = Math.min(...arrays.map(arr => arr.length));
     return Array.from({ length }, (value, index) => arrays.map((array => array[index])));
 };
+
+module.exports = Datasets;

@@ -1,11 +1,24 @@
 var express = require('express');
 var app = express();
 var path = require('path');
-var formidable = require('formidable');
-var fs = require('fs');
 var http = require('http');
-var https = require('https');
-var serveIndex = require('serve-index');
+const webpackHotMid = require("webpack-hot-middleware");
+
+const NODE_ENV = process.env.NODE_ENV ? process.env.NODE_ENV.toLowerCase() : 'development';
+
+if (NODE_ENV  == 'development'){
+  console.log("Development Environment");
+  var devConfig = require("./webpack.dev.config.js");
+  var webpack = require('webpack');
+  var webpackDevMiddleware = require("webpack-dev-middleware");
+  const compiler = webpack(devConfig);
+
+  app.use(webpackDevMiddleware(compiler, {
+    publicPath: "/"
+  }));
+  app.use(webpackHotMid(compiler));
+}
+
 
 app.set('views', './views');
 app.set('view engine', 'pug');

@@ -1,5 +1,23 @@
 
 'use strict';
+//var Datasets  = require('./datasets')
+var Helpers = require('./helpers');
+var MSG = require('./strings');
+var Datasets = require('./datasets');
+var BlocklyStorage = window.BlocklyStorage = require('./storage');
+var DeepLearn = require('./deeplearn');
+
+// Export globally
+window.$ = require('jquery');
+window.Datasets = Datasets;
+var Blockly = window.Blockly = require('milo-blocks');
+window.DeepLearn = DeepLearn;
+
+var utils = require('./functions')
+for (var key in utils) {
+  global[key] = utils[key];
+}
+
 
 /**
  * Create a namespace for the application.
@@ -138,7 +156,7 @@ Code.bindClick = function(el, func) {
  */
 Code.importPrettify = function() {
 	var script = document.createElement('script');
-	script.setAttribute('src', 'scripts/run_prettify.js');
+	script.setAttribute('src', 'js/run_prettify.js');
 	document.head.appendChild(script);
 };
 
@@ -477,9 +495,9 @@ Code.discard = function() {
 };
 
 // Load the Code demo's language strings.
-document.write('<script src="msg/' + Code.LANG + '.js"></script>\n');
+// document.write('<script src="msg/' + Code.LANG + '.js"></script>\n');
 // Load Blockly's language strings.
-document.write('<script src="msg/js/' + Code.LANG + '.js"></script>\n');
+//document.write('<script src="msg/js/' + Code.LANG + '.js"></script>\n');
 
 window.addEventListener('load', Code.init);
 
