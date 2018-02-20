@@ -446,7 +446,6 @@ console.save = function(data, filename){
 module.exports = {
     Plot,
     SqueezeNet,
-    Dataset,
     WebCam,
     imgFromURL,
     imgShow,
