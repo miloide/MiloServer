@@ -2,6 +2,7 @@
  * Create a NameSpace for Datasets
  */
 var Datasets = {};
+//var Code = require('./code');
 Datasets.convert = {};
 Datasets.imported = {};
 
@@ -28,11 +29,8 @@ Datasets.flyoutCallback = function(workspace) {
     xmlList.push(label);
     for (var index in datasetList){
         var name = datasetList[index];
-        if (Datasets.loaded[name] == true) {
-            if (Blockly.JavaScript[name+"_get"] == undefined)
-            {
+        if (Datasets.loaded[name] == true && Datasets.imported[name]!=undefined) {
                Datasets.generateBlock(name);
-            }
             var blockText = '<xml>' +
                 '<block type="'+name+'_get">' +
                 '</block>' +
@@ -49,13 +47,6 @@ Datasets.flyoutCallback = function(workspace) {
  * @param name - name of loaded dataset
  */
 Datasets.generateBlock = function(name){
-
-    if(Blockly.JavaScript[name+"_get"] == undefined)
-    {
-        if(Datasets.imported[name]==undefined)
-        {
-            Datasets.imported[name] = Datasets.convert.rowsToMap(Datasets[name]);
-        }
         var keys = Object.keys(Datasets.imported[name]);
         Datasets.imported[name]["options"] = [];
         for(var index in keys){
@@ -65,7 +56,7 @@ Datasets.generateBlock = function(name){
         }
         Datasets.generateBlockDefinition(name);
         Blockly.JavaScript[name+"_get"] = Datasets.codegenTemplate(name);
-    }
+    
 }
 Datasets.generateBlockDefinition = function(name){
     if(Datasets.imported[name]!=undefined){
@@ -198,6 +189,7 @@ Datasets.checkHeader = function(name){
             Datasets[name].headers.push(String.fromCharCode(i+65));
         }
     }
+    Datasets.imported[name] = Datasets.convert.rowsToMap(Datasets[name]);
     Datasets[name].header = true;
 }
 /**
@@ -227,12 +219,25 @@ Datasets.importBuiltIn = function(){
     scriptElement.src = "datasets/"+name+".js";
     scriptElement.onload = function () {
         Datasets.loaded[name] = true;
+        Datasets.imported[name] = Datasets.convert.rowsToMap(Datasets[name]);
         $("#dataset_list").append(
             '<li><button class="button-none" onclick="Datasets.show(\''+name+'\')">'+name+'</button></li>'
         );
     };
     document.head.appendChild(scriptElement);
 }
+
+Datasets.newJexcelHandler = function(name) {
+    return function(table){ 
+        console.log(name);
+        var headerLength = Datasets[name].headers.length;
+        var newColumn = table.jexcel('getHeader',headerLength-1);
+        Datasets[name].headers.push(newColumn); 
+        console.log(newColumn);
+        Datasets.imported[name] = Datasets.convert.rowsToMap(Datasets[name]);
+        Code.workspace.updateToolbox(document.getElementById('toolbox'));
+    }
+};   
 
 /**
  * Shows the loaded dataset on screen
@@ -245,11 +250,14 @@ Datasets.show = function(name){
     for(var i = 0; i < Datasets[name].headers.length; i++){
         colWidths.push(100);
     }
-    $('#dataset_output').jexcel({data:data, colWidths:colWidths, colHeaders:Datasets[name].headers});
+    var handler = Datasets.newJexcelHandler(name);
+    console.log(handler);
+    $('#dataset_output').jexcel({data:data, colWidths:colWidths, colHeaders:Datasets[name].headers, oninsertcolumn: handler});
     $('#dataset_save').html('Save ' + name);
     $('#dataset_save').show();
     $('#dataset_save').on('click',function(){
         Datasets[name].rows = $("#dataset_output").jexcel('getData');
+        Datasets.imported[name] = Datasets.convert.rowsToMap(Datasets[name]);
     });
 }
 /**

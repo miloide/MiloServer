@@ -381,8 +381,6 @@ var methods = {
                                 contextMenuContent = options.contextMenu(o[0], o[1]);
                             } else {
                                 if ($(e.target).parent().parent().is('thead')) {
-                                    contextMenuContent += "<a onclick=\"$('#" + $.fn.jexcel.current + "').jexcel('orderBy', " + o[1] + ", 0)\">Order ascending <span></span></a>";
-                                    contextMenuContent += "<a onclick=\"$('#" + $.fn.jexcel.current + "').jexcel('orderBy', " + o[1] + ", 1)\">Order descending <span></span></a><hr>";
                                     if ($.fn.jexcel.defaults[$.fn.jexcel.current].allowInsertColumn == true) {
                                         contextMenuContent += "<a onclick=\"$('#" + $.fn.jexcel.current + "').jexcel('insertColumn', 1, null, " + o[1] + ")\">Insert a new column<span></span></a>";
                                     }
