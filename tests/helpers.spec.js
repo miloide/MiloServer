@@ -8,7 +8,7 @@ describe('Testing Helpers Module', function() {
     it('Check if all methods of helpers exist', function() {
       var Helpers = require('../src/helpers');
       expect(Helpers).to.exist;
-      expect(Helpers.Network,"Network").to.exist;
+      expect(Helpers.Network,"Wanted Network").to.exist;
       expect(Helpers.showAlert).to.exist;
       expect(Helpers.Network.showOfflineAlert).to.exist;
   });

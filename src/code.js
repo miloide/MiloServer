@@ -1,6 +1,5 @@
 
 'use strict';
-//var Datasets  = require('./datasets')
 var Helpers = require('./helpers');
 var MSG = require('./strings');
 var Datasets = require('./datasets');
@@ -501,4 +500,5 @@ Code.discard = function() {
 
 window.addEventListener('load', Code.init);
 
-
+window.Code = Code;
+module.exports = Code;

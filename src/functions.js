@@ -1,10 +1,4 @@
 /**
- * Create a NameSpace for dataset
-*/
-var Dataset = {};
-Dataset.exceldata = [];
-
-/**
  * Create a NameSpace for WebCam Operations
  */
 
@@ -452,7 +446,6 @@ console.save = function(data, filename){
 module.exports = {
     Plot,
     SqueezeNet,
-    Dataset,
     WebCam,
     imgFromURL,
     imgShow,
