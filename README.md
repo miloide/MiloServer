@@ -14,6 +14,7 @@ cd ..
 git clone https://github.com/4and4/MiloServer.git
 cd MiloServer
 npm install
+npm link milo-blocks
 ```
 
 ## Running Milo Server
