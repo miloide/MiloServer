@@ -2,10 +2,13 @@
 
 ## Installing dependencies
 
+Install node v6.9.0 or above, and npm 3.10.8 or above
+
 ```
 git clone https://github.com/4and4/milo-blocks.git
 cd milo-blocks
 npm install
+npm run prepare
 npm link
 cd ..
 git clone https://github.com/4and4/MiloServer.git
