@@ -1,17 +1,8 @@
 <!--
   - Thanks for submitting code to MiloServer!  Please fill out the following as part of
-  - your pull request so we can review your code more easily.
-  -->
+  - your pull request so we can review your code more easily. -->
 
-## The basics
 
-<!-- TODO: Verify the following, checking each box with an 'x' between the brackets: [x] -->
-
-- [ ] I branched from develop
-- [ ] My pull request is against develop
-- [ ] My code follows the [style guide](https://github.com/4and4/MiloServer/wiki/Style-Guide)
-
-## The details
 ### Resolves
 
 <!-- TODO: What Github issue does this resolve? Please include a link. -->
