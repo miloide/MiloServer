@@ -613,3 +613,16 @@ Blockly.Blocks['lists_zip_with_item'] = {
     this.contextMenu = false;
   }
 };
+
+Blockly.Blocks['functionplot'] = {
+  init: function() {
+    this.appendValueInput("NAME")
+        .setCheck(null)
+        .appendField("Y =");
+    this.setColour(230);
+ this.setTooltip("");
+ this.setHelpUrl("");
+  }
+};
+
+

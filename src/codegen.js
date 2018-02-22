@@ -106,6 +106,13 @@ Blockly.JavaScript['plot_scatter'] = function(block) {
     return code;
   };
 
+Blockly.JavaScript['functionplot'] = function(block) {
+  var value_name = Blockly.JavaScript.valueToCode(block, 'NAME', Blockly.JavaScript.ORDER_ATOMIC);
+  var code = value_name+' \n';
+  console.log(code);
+  return code;
+};
+
 Blockly.JavaScript['plot_histogram'] = function(block) {
     var value_x = Blockly.JavaScript.valueToCode(block, 'X', Blockly.JavaScript.ORDER_ATOMIC);
     var value_name = Blockly.JavaScript.valueToCode(block, 'NAME', Blockly.JavaScript.ORDER_ATOMIC);
