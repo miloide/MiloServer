@@ -108,8 +108,24 @@ Blockly.JavaScript['plot_scatter'] = function(block) {
 
 Blockly.JavaScript['functionplot'] = function(block) {
   var value_name = Blockly.JavaScript.valueToCode(block, 'NAME', Blockly.JavaScript.ORDER_ATOMIC);
-  var code = value_name+' \n';
-  console.log(code);
+  var functionExpresssion = 'Y = ' +  value_name+' \n';
+  var colour_hue = block.getFieldValue('HUE');
+  x_ = [], y_ = [];  
+  for(let i = -10;i <= 10; i++){
+      x_.push(i);
+      x = i;
+      y_.push(eval(value_name));
+  }
+  var code = '{\n'+
+  '"Function":'+ value_name+
+  '\n, "type":"scatter",\n'+
+  '"name":"'+ "Function" +'"'+
+  ',\n"x":['+ x_ +']'+
+  ',\n"y":['+ y_ +']'+
+  ',\n"marker": {"color":"'+ colour_hue +'"}'+
+  ',\n"isLine":'+ true +
+  '\n},\n'
+;
   return code;
 };
 

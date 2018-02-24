@@ -620,6 +620,7 @@ Blockly.Blocks['functionplot'] = {
         .setCheck(null)
         .appendField("Y =");
     this.setColour(230);
+    this.setPreviousStatement(true);
  this.setTooltip("");
  this.setHelpUrl("");
   }

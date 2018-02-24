@@ -372,15 +372,13 @@ Code.init = function() {
 	Code.bindClick('runButton', Code.runJS);
 	// TODO(arjun): Enable link button once Node JS server is setup with DB Store
 	var linkButton = document.getElementById('linkButton');
-	if (!'BlocklyStorage' in window) {
+	if ('BlocklyStorage' in window) {
 		BlocklyStorage['HTTPREQUEST_ERROR'] = MSG['httpRequestError'];
 		BlocklyStorage['LINK_ALERT'] = MSG['linkAlert'];
 		BlocklyStorage['HASH_ERROR'] = MSG['hashError'];
 		BlocklyStorage['XML_ERROR'] = MSG['xmlError'];
 		Code.bindClick(linkButton,
 				function() {BlocklyStorage.link(Code.workspace);});
-	} else if (linkButton) {
-		linkButton.className = 'disabled';
 	}
 
 	for (var i = 0; i < Code.TABS_.length; i++) {
