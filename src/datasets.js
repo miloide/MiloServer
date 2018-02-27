@@ -239,6 +239,12 @@ Datasets.newJexcelHandler = function(name) {
     }
 };   
 
+Datasets.jexcelSaveHandler = function(name){
+    return function(table){
+       Datasets[name].rows = table.jexcel('getdata'); 
+       Datasets.imported[name] = Datasets.convert.rowsToMap(Datasets[name]);
+    }
+}
 /**
  * Shows the loaded dataset on screen
  * @param {string} name
@@ -251,8 +257,9 @@ Datasets.show = function(name){
         colWidths.push(100);
     }
     var handler = Datasets.newJexcelHandler(name);
+    var saveHandler = Datasets.jexcelSaveHandler(name);
     console.log(handler);
-    $('#dataset_output').jexcel({data:data, colWidths:colWidths, colHeaders:Datasets[name].headers, oninsertcolumn: handler});
+    $('#dataset_output').jexcel({data:data, colWidths:colWidths, colHeaders:Datasets[name].headers, oninsertcolumn: handler, onchnage: saveHandler, oninsertrow: saveHandler, ondeletecolumn: saveHandler});
     $('#dataset_save').html('Save ' + name);
     $('#dataset_save').show();
     $('#dataset_save').on('click',function(){
