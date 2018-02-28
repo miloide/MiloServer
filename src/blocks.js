@@ -626,4 +626,15 @@ Blockly.Blocks['functionplot'] = {
   }
 };
 
+Blockly.Blocks['x'] = {
+  init: function() {
+    this.appendDummyInput()
+        .appendField("x");
+    this.setOutput(true, null);
+    this.setColour(230);
+ this.setTooltip("");
+ this.setHelpUrl("");
+  }
+};
+
 
