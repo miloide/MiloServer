@@ -111,20 +111,20 @@ Blockly.JavaScript['functionplot'] = function(block) {
   var functionExpresssion = 'Y = ' +  value_name+' \n';
   var colour_hue = block.getFieldValue('HUE');
   x_ = [], y_ = [];  
-  for(let i = -10;i <= 10; i++){
+  for(var i = -10;i <= 10; i++){
       x_.push(i);
       x = i;
       y_.push(eval(value_name));
   }
   var code = '{\n'+
-  '"Function":'+ value_name+
-  '\n, "type":"scatter",\n'+
-  '"name":"'+ "Function" +'"'+
-  ',\n"x":['+ x_ +']'+
-  ',\n"y":['+ y_ +']'+
-  ',\n"marker": {"color":"'+ colour_hue +'"}'+
-  ',\n"isLine":'+ true +
-  '\n},\n'
+        '"Function":'+ value_name+
+        '\n, "type":"scatter",\n'+
+        '"name":"'+ "Function" +'"'+
+        ',\n"x":['+ x_ +']'+
+        ',\n"y":['+ y_ +']'+
+        ',\n"marker": {"color":"'+ colour_hue +'"}'+
+        ',\n"isLine":'+ true +
+        '\n},\n'
 ;
   return code;
 };
