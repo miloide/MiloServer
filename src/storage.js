@@ -27,6 +27,7 @@
 // Create a namespace.
 var BlocklyStorage = {};
 var Blockly = require('milo-blocks');
+var Helpers = require('./helpers');
 /**
  * Backup code blocks to localStorage.
  * @param {!Blockly.WorkspaceSvg} workspace Workspace.
@@ -130,8 +131,9 @@ BlocklyStorage.handleRequest_ = function() {
       var data = BlocklyStorage.httpRequest_.responseText.trim();
       if (BlocklyStorage.httpRequest_.name == 'xml') {
         window.location.hash = data;
-        BlocklyStorage.alert(BlocklyStorage.LINK_ALERT.replace('%1',
-            window.location.href));
+        // BlocklyStorage.alert(BlocklyStorage.LINK_ALERT.replace('%1',
+        //     window.location.href));
+        Helpers.showAlert("Share your milo blocks with this link",BlocklyStorage.LINK_ALERT.replace('%1',window.location.href));
       } else if (BlocklyStorage.httpRequest_.name == 'key') {
         if (!data.length) {
           BlocklyStorage.alert(BlocklyStorage.HASH_ERROR.replace('%1',
