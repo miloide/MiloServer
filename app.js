@@ -30,7 +30,13 @@ app.get('/', function(req, res){
     res.render('editor');
 });
 
-db.connect('mongodb://localhost:27017/miloDB');
+
+try {  
+  db.connect('mongodb://localhost:27017/miloDB');
+} catch(e){
+  console.log(e.message);
+}
+
 app.use('/', routes); 
 var httpServer = http.createServer(app);
 
