@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
-const blocksSchema =new Schema({
+const storageSchema =new Schema({
     hash:{
         type: String,
         required:true
@@ -18,5 +18,5 @@ const blocksSchema =new Schema({
         type: Date, 
         default: Date.now
     }
-},{collection: 'miloBlocks'});
-const miloBlocks = module.exports = mongoose.model('miloBlocks', blocksSchema);
+},{collection: 'blockStorage'});
+const blockStorage = module.exports = mongoose.model('blockStorage', storageSchema);
