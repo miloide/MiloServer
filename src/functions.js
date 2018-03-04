@@ -252,18 +252,24 @@ console.webLog = (function (old_function,div_id) {
     return function (value) {
         //See https://developer.mozilla.org/en-US/docs/Web/API/Console/log
         console.log(value);
-        Promise.resolve(value).then(function(val){
-            try{
-                var values = Object.values(JSON.parse(JSON.stringify(val)));
-                if (values.length == 1) values = values[0];
-                old_function(JSON.parse(JSON.stringify(values)));
-                $(div_id).append('<pre class="block">' + JSON.stringify(values,null,1) + '</pre>');
-            } catch (e){
-                old_function(val);
-                $(div_id).append('<pre class="block">' + val + '</pre>');
-            }
+        if (value.then == undefined){
+            old_function(value);
+            $(div_id).append('<pre class="block">' + value + '</pre>');
+        }
+        else {
+            Promise.resolve(value).then(function(val){
+                try{
+                    var values = Object.values(JSON.parse(JSON.stringify(val)));
+                    if (values.length == 1) values = values[0];
+                    old_function(JSON.parse(JSON.stringify(values)));
+                    $(div_id).append('<pre class="block">' + JSON.stringify(values,null,1) + '</pre>');
+                } catch (e){
+                    old_function(val);
+                    $(div_id).append('<pre class="block">' + val + '</pre>');
+                }
 
-        });
+            });
+        }
     };
 } (console.log.bind(console), "#console_javascript"));
 
@@ -378,10 +384,21 @@ Plot.prototype.setYLabel= function(label) {
  * TODO (arjun): Add checks for ensuring data existence
  */
 Plot.prototype.show = function() {
-    Plotly.newPlot(this.div_,this.data_, this.layout_);
-    console.log(this);
-    //Add the Plotly div to the canvas
     $(this.canvas_).prepend(this.div_);
+    var d3 = Plotly.d3;
+    var WIDTH_IN_PERCENT_OF_PARENT = 540;
+    var HEIGHT_IN_PERCENT_OF_PARENT = 80;
+    const gd3 = d3.select("#"+this.div_.getAttribute("id"))
+                .append('div')
+                .style({
+                    width: WIDTH_IN_PERCENT_OF_PARENT + '%',
+                    //height: HEIGHT_IN_PERCENT_OF_PARENT + 'vh',
+                });
+    const gd = gd3.node();
+    Plotly.newPlot(gd,this.data_, this.layout_);
+    gd.setAttribute("style","");
+    Plotly.Plots.resize(gd);
+    //Add the Plotly div to the canvas
     $("#graph_output").show();
 };
 

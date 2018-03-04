@@ -1,0 +1,115 @@
+doctype html
+html
+	include head.pug
+	include dialogs.pug
+	body
+		nav.navbar.navbar-default
+			.navbar-header
+				a.navbar-brand(href='#') Milo
+			// Collect the nav links, forms, and other content for toggling
+			#navigation.collapse.navbar-collapse
+				ul.nav.navbar-nav
+					li.btn-group
+						li.dropdown
+							a.dropdown-toggle(href='#', data-toggle='dropdown', role='button', aria-haspopup='true', aria-expanded='false')
+								| Project
+								span.caret
+							ul.dropdown-menu
+								li
+									a#linkButton(href='#') Save
+								li
+									a(href='#') Load project
+								li
+									a(href='#') Download Project
+								li.divider(role='separator')
+								li
+									a(href='#') Login or SignUp
+					li.btn-group
+						li.dropdown
+							a.dropdown-toggle(href='#', data-toggle='dropdown', role='button', aria-haspopup='true', aria-expanded='false')
+								| Editor
+								span.caret
+							ul.dropdown-menu
+								li
+									a#runButton(href='#') Run
+								li.divider(role='separator')
+								li
+									a#trashButton(href='#') Delete All
+					li.btn-group
+						li.dropdown
+							a.dropdown-toggle(href='#', data-toggle='dropdown', role='button', aria-haspopup='true', aria-expanded='false')
+								| Datasets
+								span.caret
+							ul.dropdown-menu
+								li
+									a(href='#') Upload
+								li
+									a(href='#') Import All
+								li.divider(role='separator')
+								li
+									span &nbsp Built In Datasets
+								li
+									a(href='#') Iris
+								li
+									a(href='#') California Housing
+				ul.nav.navbar-nav.navbar-right
+					li
+						img#loadingDiv(style="display: none;width:50px;",src="media/loading.gif")
+					li
+						select#languageMenu(style="display: none;")
+
+			br
+			ul.nav.nav-tabs
+				li.active(role='presentation')
+					a#tab_blocks.tabon(href='#') Workspace
+				li(role='presentation')
+					a#tab_data.taboff(href='#') Data Explorer
+				li(role='presentation')
+					a#tab_javascript.taboff(href='#') Code
+				li(role='presentation')
+					a#tab_xml.taboff(href='#') Debug
+		#content_blocks.content
+			.container-fluid.zero-margin
+				.row
+					.col-lg-7
+						#content_workspace(style="height: 88vh; width: 100%;")
+					#outputs.col-lg-5.scroll.zero-margin.pull-right
+						#graph_output(style="display: none")
+						#misc_output
+						#console_holder(style="display: none")
+							h3 Console Output
+							#console_javascript
+		#content_data.content
+			.container-fluid
+				.row
+					.col-lg-4
+						h3 Datasets
+						p Select built-in dataset and click import or upload csv file.
+						select#builtInDropdown
+						button(onclick="Datasets.importBuiltIn();") Import
+						button(onclick="Datasets.triggerClick();") Upload
+						input#fileLoader(type="file", name="files", onchange= "Datasets.uploadDataset(event)",style = "display : none")
+						br
+						button#dataset_save(style='display:none') Save
+						button#alertModalTrigger(data-toggle="modal", data-target="#alertModal", style="display:none")
+						button#confirmModalTrigger(data-toggle="modal", data-target="#confirmModal", style="display:none")
+						.col-lg-12
+							h4 Loaded Datasets (click to view)
+							ul#dataset_list
+					#explorer.col-lg-7
+						.col-lg-12
+							#dataset_output
+		#content_javascript.content
+			.container-fluid
+				.row
+					.col-lg-6
+						h3 Generated JS
+						pre#source_javascript.code
+		#content_xml.content
+			.container-fluid
+				.row
+					.col-sm-12
+						h3 Generated XML
+						textarea#content_xml_text(wrap="off")
+
+		include toolbox.html

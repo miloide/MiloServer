@@ -3,7 +3,7 @@ html, body {
 }
 
 body {
-  background-color: #fff;
+  background-color: #f7f7f7;
   font-family: sans-serif;
   margin: 0;
   overflow: hidden;
@@ -13,10 +13,21 @@ body {
   text-align: right;
 }
 
+.navbar{
+  margin-bottom: 0px;
+}
+.zero-margin {
+  margin-left: 0 !important;
+  padding-left: 0px;
+  margin-right: 0 !important;
+}
+
+#outputs{
+  height: 88vh;
+}
+
 .container{
-  padding-right: 10px;
-  padding-left: 10px;
-  height: 100%;
+  padding: 0px;
 }
 .scroll {
   overflow: scroll;
@@ -26,6 +37,12 @@ body {
 }
 .scroll-x {
   overflow-x: scroll;
+}
+
+#explorer {
+  max-height: 700px;
+  height: 700px;
+  overflow: scroll;
 }
 
 canvas {
@@ -102,40 +119,6 @@ h1 {
   margin-right: 5px;
 }
 
-/* Tabs */
-#tabRow>td {
-  border: 1px solid #ccc;
-  /* border-bottom: none; */
-}
-td.tabon {
-  border-bottom-color: #ddd !important;
-  background-color: #ddd;
-  padding: 5px 19px;
-}
-td.taboff {
-  cursor: pointer;
-  padding: 5px 19px;
-}
-td.taboff:hover {
-  background-color: #eee;
-}
-td.tabmin {
-  border-top-style: none !important;
-  border-left-style: none !important;
-  border-right-style: none !important;
-}
-td.tabmax {
-  border-top-style: none !important;
-  border-left-style: none !important;
-  border-right-style: none !important;
-  width: 99%;
-  padding-left: 10px;
-  padding-right: 10px;
-  text-align: right;
-}
-html[dir=rtl] td.tabmax {
-  text-align: left;
-}
 
 table {
   border-collapse: collapse;
@@ -518,4 +501,34 @@ button.bg-dark:focus {
   .modal-lg {
     max-width: 800px;
   }
+}
+
+.blocklyFlyoutButton:hover {
+  fill: rgb(31, 0, 184) !important;
+}
+.blocklyTreeRow:not(.blocklyTreeSelected):hover {
+  background-color: rgb(31, 0, 184);
+  }
+
+.blocklyToolboxDiv {
+  background-color: #2c648e;
+  color:#fff !important;
+  overflow-x: visible;
+  overflow-y: auto;
+  position: absolute;
+  z-index: 70;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.blocklySvg {
+  background-color: #F9F9F9;
+  outline: none;
+  overflow: hidden;
+  position: absolute;
+  display: block;
+}
+
+.container-full {
+  margin: 0 auto;
+  width: 100%;
 }

@@ -27,17 +27,17 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
 app.get('/', function(req, res){
-    res.render('editor');
+    res.render('ide');
 });
 
 
-try {  
+try {
   db.connect('mongodb://localhost:27017/miloDB');
 } catch(e){
   console.log(e.message);
 }
 
-app.use('/', routes); 
+app.use('/', routes);
 var httpServer = http.createServer(app);
 
 httpServer.listen(5000, function(){
