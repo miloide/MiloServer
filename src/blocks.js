@@ -614,7 +614,7 @@ Blockly.Blocks['lists_zip_with_item'] = {
   }
 };
 
-Blockly.Blocks['functionplot'] = {
+Blockly.Blocks['function_plot'] = {
   init: function() {
     this.appendValueInput("NAME")
         .setCheck(null)
@@ -626,7 +626,7 @@ Blockly.Blocks['functionplot'] = {
   }
 };
 
-Blockly.Blocks['x'] = {
+Blockly.Blocks['function_plot_X'] = {
   init: function() {
     this.appendDummyInput()
         .appendField("x");

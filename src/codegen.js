@@ -106,11 +106,11 @@ Blockly.JavaScript['plot_scatter'] = function(block) {
     return code;
   };
 
-Blockly.JavaScript['functionplot'] = function(block) {
+Blockly.JavaScript['function_plot'] = function(block) {
   var value_name = Blockly.JavaScript.valueToCode(block, 'NAME', Blockly.JavaScript.ORDER_ATOMIC);
   var functionExpresssion = 'Y = ' +  value_name+' \n';
   var colour_hue = block.getFieldValue('HUE');
-  x_ = [], y_ = [];  
+  var x_ = [], y_ = [];  
   for(var i = -10;i <= 10; i++){
       x_.push(i);
       x = i;
@@ -235,3 +235,9 @@ Blockly.JavaScript['lists_zip_with'] = function(block) {
     var code = 'Datasets.zip(' + elements.join(', ') + ')';
     return [code, Blockly.JavaScript.ORDER_ATOMIC];
   };
+
+  Blockly.JavaScript['function_plot_x'] = function(block){
+      var code = 'x';
+      return code;
+  }
+
