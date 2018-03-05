@@ -8,6 +8,7 @@ var DeepLearn = require('./deeplearn');
 
 // Export globally
 window.$ = require('jquery');
+window.jQuery  = window.$;
 window.Datasets = Datasets;
 var Blockly = window.Blockly = require('milo-blocks');
 window.DeepLearn = DeepLearn;
@@ -21,25 +22,25 @@ for (var key in utils) {
 /**
  * Create a namespace for the application.
  */
-var Code = {};
+var Milo = {};
 
 /**
  * Lookup for names of supported languages.  Keys should be in ISO 639 format.
  */
-Code.LANGUAGE_NAME = {
+Milo.LANGUAGE_NAME = {
 	'en': 'English'
 };
 
 /**
  * List of RTL languages.
  */
-Code.LANGUAGE_RTL = [];
+Milo.LANGUAGE_RTL = [];
 
 /**
  * Blockly's main workspace.
  * @type {Blockly.WorkspaceSvg}
  */
-Code.workspace = null;
+Milo.workspace = null;
 
 /**
  * Extracts a parameter from the URL.
@@ -48,7 +49,7 @@ Code.workspace = null;
  * @param {string} defaultValue Value to return if paramater not found.
  * @return {string} The parameter value or the default value if not found.
  */
-Code.getStringParamFromUrl = function(name, defaultValue) {
+Milo.getStringParamFromUrl = function(name, defaultValue) {
 	var val = location.search.match(new RegExp('[?&]' + name + '=([^&]+)'));
 	return val ? decodeURIComponent(val[1].replace(/\+/g, '%20')) : defaultValue;
 };
@@ -57,9 +58,9 @@ Code.getStringParamFromUrl = function(name, defaultValue) {
  * Get the language of this user from the URL.
  * @return {string} User's language.
  */
-Code.getLang = function() {
-	var lang = Code.getStringParamFromUrl('lang', '');
-	if (Code.LANGUAGE_NAME[lang] === undefined) {
+Milo.getLang = function() {
+	var lang = Milo.getStringParamFromUrl('lang', '');
+	if (Milo.LANGUAGE_NAME[lang] === undefined) {
 		// Default to English.
 		lang = 'en';
 	}
@@ -67,18 +68,18 @@ Code.getLang = function() {
 };
 
 /**
- * Is the current language (Code.LANG) an RTL language?
+ * Is the current language (Milo.LANG) an RTL language?
  * @return {boolean} True if RTL, false if LTR.
  */
-Code.isRtl = function() {
-	return Code.LANGUAGE_RTL.indexOf(Code.LANG) != -1;
+Milo.isRtl = function() {
+	return Milo.LANGUAGE_RTL.indexOf(Milo.LANG) != -1;
 };
 
 /**
  * Load blocks saved on App Engine Storage or in session/local storage.
  * @param {string} defaultXml Text representation of default blocks.
  */
-Code.loadBlocks = function(defaultXml) {
+Milo.loadBlocks = function(defaultXml) {
 	try {
 		var loadOnce = window.sessionStorage.loadOnceBlocks;
 	} catch(e) {
@@ -93,11 +94,11 @@ Code.loadBlocks = function(defaultXml) {
 		// Language switching stores the blocks during the reload.
 		delete window.sessionStorage.loadOnceBlocks;
 		var xml = Blockly.Xml.textToDom(loadOnce);
-		Blockly.Xml.domToWorkspace(xml, Code.workspace);
+		Blockly.Xml.domToWorkspace(xml, Milo.workspace);
 	} else if (defaultXml) {
 		// Load the editor with default starting blocks.
 		var xml = Blockly.Xml.textToDom(defaultXml);
-		Blockly.Xml.domToWorkspace(xml, Code.workspace);
+		Blockly.Xml.domToWorkspace(xml, Milo.workspace);
 	} else if ('BlocklyStorage' in window) {
 		// Restore saved blocks in a separate thread so that subsequent
 		// initialization is not affected from a failed load.
@@ -108,13 +109,13 @@ Code.loadBlocks = function(defaultXml) {
 /**
  * Save the blocks and reload with a different language.
  */
-Code.changeLanguage = function() {
+Milo.changeLanguage = function() {
 	// Store the blocks for the duration of the reload.
 	// This should be skipped for the index page, which has no blocks and does
 	// not load Blockly.
 	// MSIE 11 does not support sessionStorage on file:// URLs.
 	if (typeof Blockly != 'undefined' && window.sessionStorage) {
-		var xml = Blockly.Xml.workspaceToDom(Code.workspace);
+		var xml = Blockly.Xml.workspaceToDom(Milo.workspace);
 		var text = Blockly.Xml.domToText(xml);
 		window.sessionStorage.loadOnceBlocks = text;
 	}
@@ -142,7 +143,7 @@ Code.changeLanguage = function() {
  * @param {!Element|string} el Button element or ID thereof.
  * @param {!Function} func Event handler to bind.
  */
-Code.bindClick = function(el, func) {
+Milo.bindClick = function(el, func) {
 	if (typeof el == 'string') {
 		el = document.getElementById(el);
 	}
@@ -153,7 +154,7 @@ Code.bindClick = function(el, func) {
 /**
  * Load the Prettify CSS and JavaScript.
  */
-Code.importPrettify = function() {
+Milo.importPrettify = function() {
 	var script = document.createElement('script');
 	script.setAttribute('src', 'js/run_prettify.js');
 	document.head.appendChild(script);
@@ -165,7 +166,7 @@ Code.importPrettify = function() {
  * @return {!Object} Contains height, width, x, and y properties.
  * @private
  */
-Code.getBBox_ = function(element) {
+Milo.getBBox_ = function(element) {
 	var height = element.offsetHeight;
 	var width = element.offsetWidth;
 	var x = 0;
@@ -187,21 +188,21 @@ Code.getBBox_ = function(element) {
  * User's language (e.g. "en").
  * @type {string}
  */
-Code.LANG = Code.getLang();
+Milo.LANG = Milo.getLang();
 
 /**
  * List of tab names.
  * @private
  */
-Code.TABS_ = ['blocks', 'javascript', 'data', 'xml'];
+Milo.TABS_ = ['blocks', 'javascript', 'data', 'xml'];
 
-Code.selected = 'blocks';
+Milo.selected = 'blocks';
 
 /**
  * Switch the visible pane when a tab is clicked.
  * @param {string} clickedName Name of tab clicked.
  */
-Code.tabClick = function(clickedName) {
+Milo.tabClick = function(clickedName) {
 	// If the XML tab was open, save and render the content.
 	if (document.getElementById('tab_xml').className == 'tabon') {
 		var xmlTextarea = document.getElementById('content_xml');
@@ -218,52 +219,52 @@ Code.tabClick = function(clickedName) {
 			}
 		}
 		if (xmlDom) {
-			Code.workspace.clear();
-			Blockly.Xml.domToWorkspace(xmlDom, Code.workspace);
+			Milo.workspace.clear();
+			Blockly.Xml.domToWorkspace(xmlDom, Milo.workspace);
 		}
 	}
 
 	if (document.getElementById('tab_blocks').className == 'tabon') {
-		Code.workspace.setVisible(false);
+		Milo.workspace.setVisible(false);
 	}
 	// Deselect all tabs and hide all panes.
-	for (var i = 0; i < Code.TABS_.length; i++) {
-		var name = Code.TABS_[i];
+	for (var i = 0; i < Milo.TABS_.length; i++) {
+		var name = Milo.TABS_[i];
 		document.getElementById('tab_' + name).className = 'taboff';
+		$('#tab_' + name).parent().removeClass('active');
 		document.getElementById('content_' + name).style.visibility = 'hidden';
 	}
 
 	// Select the active tab.
-	Code.selected = clickedName;
+	Milo.selected = clickedName;
 	document.getElementById('tab_' + clickedName).className = 'tabon';
+	$('#tab_' + clickedName).parent().addClass('active');
 	// Show the selected pane.
 	document.getElementById('content_' + clickedName).style.visibility =
 			'visible';
-	Code.renderContent();
+	Milo.renderContent();
 	if (clickedName == 'blocks') {
-		Code.workspace.setVisible(true);
+		Milo.workspace.setVisible(true);
 	}
-	Blockly.svgResize(Code.workspace);
+	Blockly.svgResize(Milo.workspace);
 };
 
 /**
  * Populate the currently selected pane with content generated from the blocks.
  */
-Code.renderContent = function() {
-	var content = document.getElementById('content_' + Code.selected);
-	if (content.id != "content_javascript") {
-		$("#graph_output").hide();
-	}
+Milo.renderContent = function() {
+	var content = document.getElementById('content_' + Milo.selected);
+
 	// Initialize the pane.
 	if (content.id == 'content_xml') {
-		var xmlTextarea = document.getElementById('content_xml');
-		var xmlDom = Blockly.Xml.workspaceToDom(Code.workspace);
+		var xmlTextarea = document.getElementById('content_xml_text');
+		var xmlDom = Blockly.Xml.workspaceToDom(Milo.workspace);
 		var xmlText = Blockly.Xml.domToPrettyText(xmlDom);
 		xmlTextarea.value = xmlText;
 		xmlTextarea.focus();
 	} else if (content.id == 'content_javascript') {
 		$("#graph_output").show();
-		var code = Blockly.JavaScript.workspaceToCode(Code.workspace);
+		var code = Blockly.JavaScript.workspaceToCode(Milo.workspace);
 		var sourceElement = document.getElementById("source_javascript");
 		sourceElement.textContent = code;
 		if (typeof PR.prettyPrintOne == 'function') {
@@ -284,32 +285,28 @@ Code.renderContent = function() {
 /**
  * Initialize Blockly.  Called on page load.
  */
-Code.init = function() {
-	Code.initLanguage();
+Milo.init = function() {
+	Milo.initLanguage();
 
-	var rtl = Code.isRtl();
-	var container = document.getElementById('content_area');
-	var onresize = function(e) {
-		var bBox = Code.getBBox_(container);
-		for (var i = 0; i < Code.TABS_.length; i++) {
-			var el = document.getElementById('content_' + Code.TABS_[i]);
-			el.style.top = bBox.y + 'px';
-			el.style.left = bBox.x + 'px';
-			// Height and width need to be set, read back, then set again to
-			// compensate for scrollbars.
-			el.style.height = bBox.height + 'px';
-			el.style.height = (2 * bBox.height - el.offsetHeight) + 'px';
-			el.style.width = bBox.width + 'px';
-			el.style.width = (2 * bBox.width - el.offsetWidth) + 'px';
-		}
-		// Make the 'Blocks' tab line up with the toolbox.
-		if (Code.workspace && Code.workspace.toolbox_.width) {
-			document.getElementById('tab_blocks').style.minWidth =
-					(Code.workspace.toolbox_.width - 38) + 'px';
-					// Account for the 19 pixel margin and on each side.
-		}
-	};
-	window.addEventListener('resize', onresize, false);
+	// var onresize = function(e) {
+	// 	var bBox = Milo.getBBox_(container);
+	// 	var el = document.getElementById('content_workspace');
+	// 	el.style.top = bBox.y + 'px';
+	// 	el.style.left = bBox.x + 'px';
+	// 	// Height and width need to be set, read back, then set again to
+	// 	// compensate for scrollbars.
+	// 	el.style.height = bBox.height + 'px';
+	// 	el.style.height = (2 * bBox.height - el.offsetHeight) + 'px';
+	// 	el.style.width = bBox.width + 'px';
+	// 	el.style.width = (2 * bBox.width - el.offsetWidth) + 'px';
+
+	// 	// Make the 'Blocks' tab line up with the toolbox.
+	// 	// if (Milo.workspace && Milo.workspace.toolbox_.width) {
+	// 	// 	document.getElementById('tab_blocks').style.minWidth =
+	// 	// 			(Milo.workspace.toolbox_.width - 38) + 'px';
+	// 				// Account for the 19 pixel margin and on each side.
+	// };
+	//window.addEventListener('resize', onresize, false);
 
 	// The toolbox XML specifies each category name using Blockly's messaging
 	// format (eg. `<category name="%{BKY_CATLOGIC}">`).
@@ -331,20 +328,35 @@ Code.init = function() {
 			function(m, p1, p2) {return p1 + MSG[p2];});
 	var toolboxXml = Blockly.Xml.textToDom(toolboxText);
 
-	Code.workspace = Blockly.inject('content_blocks',
-			{grid:
-					{spacing: 25,
-					 length: 3,
-					 colour: '#ccc',
-					 snap: true},
-			 media: 'media/',
-			 rtl: rtl,
-			 toolbox: toolboxXml,
-			 zoom:
-					 {controls: true,
-						wheel: true}
-			});
-
+	Milo.workspace = Blockly.inject('content_workspace', {
+		media: 'media/',
+		toolbox: toolboxXml,
+		zoom: {
+			controls: true,
+			wheel: false
+		}
+	});
+	//var workspaceDiv = document.getElementById('content_workspace');
+	//var container = document.getElementById('content_area');
+	// var onresize = function(e) {
+	// 	// Compute the absolute coordinates and dimensions of blocklyArea.
+	// 	var element = container;
+	// 	var x = 0;
+	// 	var y = 0;
+	// 	do {
+	// 		x += element.offsetLeft;
+	// 		y += element.offsetTop;
+	// 		element = element.offsetParent;
+	// 	} while (element);
+	// 	// Position blocklyDiv over blocklyArea.
+	// 	workspaceDiv.style.left = x + 'px';
+	// 	workspaceDiv.style.top = y + 'px';
+	// 	workspaceDiv.style.width = container.offsetWidth + 'px';
+	// 	workspaceDiv.style.height = container.offsetHeight + 'px';
+	// };
+	// window.addEventListener('resize', onresize, false);
+	// onresize();
+	// Blockly.svgResize(Milo.workspace);
 	// Add to reserved word list: Local variables in execution environment (runJS)
 	// and the infinite loop detection function.
 	Blockly.JavaScript.addReservedWords(
@@ -352,24 +364,24 @@ Code.init = function() {
 	);
 	// Register callbacks for buttons
 	// TODO(arjun): implement adddataset callback
-	Code.workspace.registerToolboxCategoryCallback('DATASETS',Datasets.flyoutCallback);
+	Milo.workspace.registerToolboxCategoryCallback('DATASETS',Datasets.flyoutCallback);
 	// Per https://groups.google.com/d/msg/blockly/Ux9OQuyJ9XE/8PvZt73aBgAJ need to update due to bug.
-	Code.workspace.updateToolbox(document.getElementById('toolbox'));
+	Milo.workspace.updateToolbox(document.getElementById('toolbox'));
 
-	Code.loadBlocks('');
+	Milo.loadBlocks('');
 
 	if ('BlocklyStorage' in window) {
 		// Hook a save function onto unload.
-		BlocklyStorage.backupOnUnload(Code.workspace);
+		BlocklyStorage.backupOnUnload(Milo.workspace);
 	}
 
-	Code.tabClick(Code.selected);
+	Milo.tabClick(Milo.selected);
 
-	Code.bindClick('trashButton',function() {
-				Code.discard();
-				Code.renderContent();
+	Milo.bindClick('trashButton',function() {
+				Milo.discard();
+				Milo.renderContent();
 	});
-	Code.bindClick('runButton', Code.runJS);
+	Milo.bindClick('runButton', Milo.runJS);
 	// TODO(arjun): Enable link button once Node JS server is setup with DB Store
 	var linkButton = document.getElementById('linkButton');
 	if ('BlocklyStorage' in window) {
@@ -377,36 +389,36 @@ Code.init = function() {
 		BlocklyStorage['LINK_ALERT'] = MSG['linkAlert'];
 		BlocklyStorage['HASH_ERROR'] = MSG['hashError'];
 		BlocklyStorage['XML_ERROR'] = MSG['xmlError'];
-		Code.bindClick(linkButton,
-				function() {BlocklyStorage.link(Code.workspace);});
+		Milo.bindClick(linkButton,
+				function() {BlocklyStorage.link(Milo.workspace);});
 	}
 
-	for (var i = 0; i < Code.TABS_.length; i++) {
-		var name = Code.TABS_[i];
-		Code.bindClick('tab_' + name,
-				function(name_) {return function() {Code.tabClick(name_);};}(name));
+	for (var i = 0; i < Milo.TABS_.length; i++) {
+		var name = Milo.TABS_[i];
+		Milo.bindClick('tab_' + name,
+				function(name_) {return function() {Milo.tabClick(name_);};}(name));
 	}
-	onresize();
-	Blockly.svgResize(Code.workspace);
+	//onresize();
+	//Blockly.svgResize(Milo.workspace);
 
 	// Lazy-load the syntax-highlighting.
-	window.setTimeout(Code.importPrettify, 1);
+	window.setTimeout(Milo.importPrettify, 1);
 
 };
 
 /**
  * Initialize the page language.
  */
-Code.initLanguage = function() {
+Milo.initLanguage = function() {
 	// Set the HTML's language and direction.
-	var rtl = Code.isRtl();
+	var rtl = Milo.isRtl();
 	document.dir = rtl ? 'rtl' : 'ltr';
-	document.head.parentElement.setAttribute('lang', Code.LANG);
+	document.head.parentElement.setAttribute('lang', Milo.LANG);
 
 	// Sort languages alphabetically.
 	var languages = [];
-	for (var lang in Code.LANGUAGE_NAME) {
-		languages.push([Code.LANGUAGE_NAME[lang], lang]);
+	for (var lang in Milo.LANGUAGE_NAME) {
+		languages.push([Milo.LANGUAGE_NAME[lang], lang]);
 	}
 	var comp = function(a, b) {
 		// Sort based on first argument ('English', 'Русский', '简体字', etc).
@@ -422,32 +434,25 @@ Code.initLanguage = function() {
 		var tuple = languages[i];
 		var lang = tuple[tuple.length - 1];
 		var option = new Option(tuple[0], lang);
-		if (lang == Code.LANG) {
+		if (lang == Milo.LANG) {
 			option.selected = true;
 		}
 		languageMenu.options.add(option);
 	}
-	languageMenu.addEventListener('change', Code.changeLanguage, true);
+	languageMenu.addEventListener('change', Milo.changeLanguage, true);
 
-	// Inject language strings.
-	document.title += ' ' + MSG['title'];
-	document.getElementById('title').textContent = MSG['title'];
-	document.getElementById('tab_blocks').textContent = MSG['blocks'];
 
-	document.getElementById('linkButton').title = MSG['linkTooltip'];
-	document.getElementById('runButton').title = MSG['runTooltip'];
-	document.getElementById('trashButton').title = MSG['trashTooltip'];
 };
 
 /**
- * Execute the user's code.
+ * Execute the user's Milo.
  * Just a quick and dirty eval.  Catch infinite loops.
  * TODO(arjun): Replace with JS Interpretter from
  *              https://developers.google.com/blockly/guides/app-integration/running-javascript
  */
-Code.runJS = function() {
-	Code.selected = 'javascript';
-	Code.tabClick(Code.selected);
+Milo.runJS = function() {
+	// Milo.selected = 'javascript';
+	// Milo.tabClick(Milo.selected);
 	document.getElementById("graph_output").innerHTML="";
 
 	Blockly.JavaScript.INFINITE_LOOP_TRAP = '  checkTimeout();\n';
@@ -457,7 +462,7 @@ Code.runJS = function() {
 			throw MSG['timeout'];
 		}
 	};
-	var code = Blockly.JavaScript.workspaceToCode(Code.workspace);
+	var code = Blockly.JavaScript.workspaceToCode(Milo.workspace);
 	Blockly.JavaScript.INFINITE_LOOP_TRAP = null;
 	try {
 		if(!window.navigator.onLine){
@@ -477,11 +482,11 @@ Code.runJS = function() {
 /**
  * Discard all blocks from the workspace and clean up any used references like webcam, etc.
  */
-Code.discard = function() {
-	var count = Code.workspace.getAllBlocks().length;
+Milo.discard = function() {
+	var count = Milo.workspace.getAllBlocks().length;
 	if (count < 2 ||
 			window.confirm(Blockly.Msg.DELETE_ALL_BLOCKS.replace('%1', count))) {
-		Code.workspace.clear();
+		Milo.workspace.clear();
 		if (window.location.hash) {
 			window.location.hash = '';
 		}
@@ -492,11 +497,11 @@ Code.discard = function() {
 };
 
 // Load the Code demo's language strings.
-// document.write('<script src="msg/' + Code.LANG + '.js"></script>\n');
+// document.write('<script src="msg/' + Milo.LANG + '.js"></script>\n');
 // Load Blockly's language strings.
-//document.write('<script src="msg/js/' + Code.LANG + '.js"></script>\n');
+//document.write('<script src="msg/js/' + Milo.LANG + '.js"></script>\n');
 
-window.addEventListener('load', Code.init);
+window.addEventListener('load', Milo.init);
 
-window.Code = Code;
-module.exports = Code;
+window.Milo = Milo;
+module.exports = Milo;

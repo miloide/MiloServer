@@ -15,7 +15,7 @@ module.exports = {
     './src/functions.js',
     './src/codegen.js',
     './src/blocks.js',
-    './src/code.js',
+    './src/milo.js',
   ]),
   output: {
     path: OUT_DIR,

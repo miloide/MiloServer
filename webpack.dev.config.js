@@ -13,7 +13,7 @@ module.exports = {
     './src/functions.js',
     './src/codegen.js',
     './src/blocks.js',
-    './src/code.js',
+    './src/milo.js',
     "webpack-hot-middleware/client?reload=true"
   ]),
   output: {
