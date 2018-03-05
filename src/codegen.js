@@ -86,6 +86,24 @@ Blockly.JavaScript.img_show = function(block) {
     return code;
 };
 
+Blockly.JavaScript['probability_mass_function'] = function(block) {
+  var value_name = Blockly.JavaScript.valueToCode(block, 'NAME', Blockly.JavaScript.ORDER_ATOMIC);
+  // TODO: Assemble JavaScript into code variable.
+  var pmfVar = Blockly.JavaScript.variableDB_.getDistinctName(
+        'pmf', Blockly.Variables.NAME_TYPE);
+  var newPlot = "var "+ pmfVar +" = new Pmf();";
+  return newPlot;
+};
+
+
+Blockly.JavaScript['construct_pmf'] = function(block) {
+  var dropdown_name = block.getFieldValue('NAME');
+  var value_name = Blockly.JavaScript.valueToCode(block, 'NAME', Blockly.JavaScript.ORDER_ATOMIC);
+  // TODO: Assemble JavaScript into code variable.
+  var code = '...';
+  // TODO: Change ORDER_NONE to the correct strength.
+  return [code, Blockly.JavaScript.ORDER_NONE];
+};
 // TODO (arjun): Actual Plot Generation Code.
 Blockly.JavaScript['plot_scatter'] = function(block) {
     var value_x = Blockly.JavaScript.valueToCode(block, 'X', Blockly.JavaScript.ORDER_ATOMIC);
@@ -107,17 +125,16 @@ Blockly.JavaScript['plot_scatter'] = function(block) {
   };
 
 Blockly.JavaScript['function_plot'] = function(block) {
-  var value_name = Blockly.JavaScript.valueToCode(block, 'NAME', Blockly.JavaScript.ORDER_ATOMIC);
-  var functionExpresssion = 'Y = ' +  value_name+' \n';
+  var expression = Blockly.JavaScript.valueToCode(block, 'NAME', Blockly.JavaScript.ORDER_ATOMIC);
   var colour_hue = block.getFieldValue('HUE');
-  var x_ = [], y_ = [];  
+  var x_ = [], y_ = [];   
   for(var i = -10;i <= 10; i++){
       x_.push(i);
       x = i;
-      y_.push(eval(value_name));
+      y_.push(eval(expression));
   }
   var code = '{\n'+
-        '"Function":'+ value_name+
+        '"Function":'+ expression+
         '\n, "type":"scatter",\n'+
         '"name":"'+ "Function" +'"'+
         ',\n"x":['+ x_ +']'+

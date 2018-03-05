@@ -10,6 +10,7 @@ module.exports = {
     './src/deeplearn.js',
     './src/storage.js',
     './src/datasets.js',
+    '/src/statistics/pmf.js'
     './src/helpers.js',
     './src/functions.js',
     './src/codegen.js',

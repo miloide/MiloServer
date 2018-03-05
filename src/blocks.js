@@ -626,7 +626,7 @@ Blockly.Blocks['function_plot'] = {
   }
 };
 
-Blockly.Blocks['function_plot_X'] = {
+Blockly.Blocks['function_plot_x'] = {
   init: function() {
     this.appendDummyInput()
         .appendField("x");
@@ -636,5 +636,27 @@ Blockly.Blocks['function_plot_X'] = {
  this.setHelpUrl("");
   }
 };
+Blockly.Blocks['probability_mass_function'] = {
+  init: function() {
+    this.appendValueInput("NAME")
+        .setCheck(null)
+        .appendField("Construct Pmf");
+    this.setPreviousStatement(true, null);
+    this.setNextStatement(true, null);
+    this.setColour(230);
+ this.setTooltip("Probability mass function");
+ this.setHelpUrl("http://greenteapress.com/thinkstats/Pmf.py");
+  }
+};
 
-
+Blockly.Blocks['construct_pmf'] = {
+  init: function() {
+    this.appendValueInput("NAME")
+        .setCheck(null)
+        .appendField(new Blockly.FieldDropdown([["make Hist From List","makeHistFromList"], ["make Pmf From List","makePmfFromList"]]), "NAME");
+    this.setOutput(true, null);
+    this.setColour(230);
+ this.setTooltip("");
+ this.setHelpUrl("");
+  }
+};
