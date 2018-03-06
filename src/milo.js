@@ -4,6 +4,7 @@ var Helpers = require('./helpers');
 var MSG = require('./strings');
 var Datasets = require('./datasets');
 var BlocklyStorage = window.BlocklyStorage = require('./storage');
+var statistics = require('./statistics/pmf');
 var DeepLearn = require('./deeplearn');
 
 // Export globally
@@ -17,7 +18,8 @@ var utils = require('./functions')
 for (var key in utils) {
   global[key] = utils[key];
 }
-
+for(var key in statistics)
+	global[key]=statistics[key];
 
 /**
  * Create a namespace for the application.

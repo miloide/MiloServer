@@ -640,7 +640,7 @@ Blockly.Blocks['probability_mass_function'] = {
   init: function() {
     this.appendValueInput("NAME")
         .setCheck(null)
-        .appendField("Construct Pmf");
+        .appendField("Construct");
     this.setPreviousStatement(true, null);
     this.setNextStatement(true, null);
     this.setColour(230);
@@ -653,7 +653,7 @@ Blockly.Blocks['construct_pmf'] = {
   init: function() {
     this.appendValueInput("NAME")
         .setCheck(null)
-        .appendField(new Blockly.FieldDropdown([["make Hist From List","makeHistFromList"], ["make Pmf From List","makePmfFromList"]]), "NAME");
+        .appendField(new Blockly.FieldDropdown([[" Hist From List","makeHistFromList"], ["make Pmf From List","makePmfFromList"]]), "NAME");
     this.setOutput(true, null);
     this.setColour(230);
  this.setTooltip("");

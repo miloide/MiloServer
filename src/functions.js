@@ -3,7 +3,6 @@
  */
 
 var WebCam = {};
-
 // Holder for HTMLVideoElement
 WebCam.video = null;
 WebCam.loaded = false;

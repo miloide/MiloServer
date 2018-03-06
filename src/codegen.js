@@ -89,10 +89,10 @@ Blockly.JavaScript.img_show = function(block) {
 Blockly.JavaScript['probability_mass_function'] = function(block) {
   var value_name = Blockly.JavaScript.valueToCode(block, 'NAME', Blockly.JavaScript.ORDER_ATOMIC);
   // TODO: Assemble JavaScript into code variable.
-  var pmfVar = Blockly.JavaScript.variableDB_.getDistinctName(
-        'pmf', Blockly.Variables.NAME_TYPE);
-  var newPlot = "var "+ pmfVar +" = new Pmf();";
-  return newPlot;
+  var plotVar = Blockly.JavaScript.variableDB_.getDistinctName(
+    'plot', Blockly.Variables.NAME_TYPE);
+  var code = value_name;
+  return value_name;
 };
 
 
@@ -100,7 +100,9 @@ Blockly.JavaScript['construct_pmf'] = function(block) {
   var dropdown_name = block.getFieldValue('NAME');
   var value_name = Blockly.JavaScript.valueToCode(block, 'NAME', Blockly.JavaScript.ORDER_ATOMIC);
   // TODO: Assemble JavaScript into code variable.
-  var code = '...';
+  var pmfVar = Blockly.JavaScript.variableDB_.getDistinctName(
+    'pmf', Blockly.Variables.NAME_TYPE);
+  var code = dropdown_name + '(' + value_name +')';
   // TODO: Change ORDER_NONE to the correct strength.
   return [code, Blockly.JavaScript.ORDER_NONE];
 };
