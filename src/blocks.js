@@ -679,20 +679,8 @@ Blockly.Blocks['function_plot_x'] = {
  this.setHelpUrl("");
   }
 };
-Blockly.Blocks['probability_mass_function'] = {
-  init: function() {
-    this.appendValueInput("NAME")
-        .setCheck(null)
-        .appendField("Construct");
-    this.setPreviousStatement(true, null);
-    this.setNextStatement(true, null);
-    this.setColour(230);
- this.setTooltip("Probability mass function");
- this.setHelpUrl("http://greenteapress.com/thinkstats/Pmf.py");
-  }
-};
 
-Blockly.Blocks['construct_pmf'] = {
+Blockly.Blocks['stats_construct_pmf'] = {
   init: function() {
     this.appendValueInput("NAME")
         .setCheck(null)
@@ -703,7 +691,7 @@ Blockly.Blocks['construct_pmf'] = {
  this.setHelpUrl("");
   }
 };
-Blockly.Blocks['pmf_getters'] = {
+Blockly.Blocks['stats_pmf_getters'] = {
   init: function() {
     this.appendValueInput("NAME")
         .setCheck(null)
@@ -719,18 +707,18 @@ Blockly.Blocks['pmf_getters'] = {
 }
 };
 
-Blockly.Blocks['statistics'] = {
-  init: function() {
-    this.appendValueInput("NAME")
-        .setCheck(null)
-        .appendField("Get")
-        .appendField(new Blockly.FieldDropdown([["mean","mean"], ["variance","variance"], ["exponentiation","exp"], ["normalize","normalize"]]), "NAME")
-        .appendField("From Pmf");
-    this.setPreviousStatement(true, null);
-    this.setOutput(true,null);
-    this.setNextStatement(true, null);
-    this.setColour(230);
- this.setTooltip("");
- this.setHelpUrl("");
-}
+Blockly.Blocks['stats_pmf_operations'] = {
+      init: function() {
+        this.appendValueInput("NAME")
+            .setCheck(null)
+            .appendField("Get")
+            .appendField(new Blockly.FieldDropdown([["mean","mean"], ["variance","variance"], ["exponentiation","exp"], ["normalize","normalize"]]), "NAME")
+            .appendField("From Pmf");
+        this.setPreviousStatement(true, null);
+        this.setOutput(true,null);
+        this.setNextStatement(true, null);
+        this.setColour(230);
+    this.setTooltip("");
+    this.setHelpUrl("");
+  }
 };

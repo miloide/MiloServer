@@ -87,7 +87,7 @@ Blockly.JavaScript.img_show = function(block) {
 };
 
 
-Blockly.JavaScript['construct_pmf'] = function(block) {
+Blockly.JavaScript['stats_construct_pmf'] = function(block) {
   var dropdown_name = block.getFieldValue('NAME');
   var value_name = Blockly.JavaScript.valueToCode(block, 'NAME', Blockly.JavaScript.ORDER_ATOMIC);
   // TODO: Assemble JavaScript into code variable.
@@ -95,7 +95,7 @@ Blockly.JavaScript['construct_pmf'] = function(block) {
   return [code , Blockly.JavaScript.ORDER_NONE];
 };
 
-Blockly.JavaScript['pmf_getters'] = function(block) {
+Blockly.JavaScript['stats_pmf_getters'] = function(block) {
     var dropdown_name = block.getFieldValue('NAME');
     var value_name = Blockly.JavaScript.valueToCode(block, 'NAME', Blockly.JavaScript.ORDER_ATOMIC);
     // TODO: Assemble JavaScript into code variable.
@@ -103,13 +103,13 @@ Blockly.JavaScript['pmf_getters'] = function(block) {
     return [code , Blockly.JavaScript.ORDER_NONE];
   };
 
-Blockly.JavaScript['statistics'] = function(block) {
+Blockly.JavaScript['stats_pmf_operations'] = function(block) {
     var dropdown_name = block.getFieldValue('NAME');
     var value_name = Blockly.JavaScript.valueToCode(block, 'NAME', Blockly.JavaScript.ORDER_ATOMIC);
     // TODO: Assemble JavaScript into code variable.
     var code = value_name +'.'+dropdown_name+'()';
     return [code, Blockly.JavaScript.ORDER_NONE];
-  }; 
+  };
 
 // TODO (arjun): Actual Plot Generation Code.
 Blockly.JavaScript['plot_scatter'] = function(block) {
@@ -152,7 +152,7 @@ Blockly.JavaScript['plot_scatter'] = function(block) {
 Blockly.JavaScript['function_plot'] = function(block) {
   var expression = Blockly.JavaScript.valueToCode(block, 'NAME', Blockly.JavaScript.ORDER_ATOMIC);
   var colour_hue = block.getFieldValue('HUE');
-  var x_ = [], y_ = [];   
+  var x_ = [], y_ = [];
   for(var i = -10;i <= 10; i++){
       x_.push(i);
       x = i;

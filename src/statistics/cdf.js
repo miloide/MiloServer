@@ -1,28 +1,28 @@
-// Array.prototype.bisect = function (val) {
-//     var idx;
-//     if (this.length === 0) {
-//         return 0;
-//     }
-//     for (idx=0; idx < this.length; idx++) {
-//         if (val < this[idx]) {
-//             return idx;
-//         }
-//     }
-//     return idx;
-// };
+Cdf.prototype.bisect = function (val) {
+    var idx;
+    if (this.length === 0) {
+        return 0;
+    }
+    for (idx=0; idx < this.length; idx++) {
+        if (val < this[idx]) {
+            return idx;
+        }
+    }
+    return idx;
+};
 
-// Array.prototype.insert = function (val, inPlace) {
-//     var idx = this.bisect(val);
-//     if (inPlace) {
-//         this.splice(idx, 0, val);
-//         return this;
-//     }
-//     return this.slice(0, idx).concat([val], this.slice(idx));
-// };
+Cdf.prototype.insert = function (val, inPlace) {
+    var idx = this.bisect(val);
+    if (inPlace) {
+        this.splice(idx, 0, val);
+        return this;
+    }
+    return this.slice(0, idx).concat([val], this.slice(idx));
+};
 
 function zip(arrays) {
     return arrays[0].map(function(_,i){
-        return arrays.map(function(array){return array[i]})
+        return arrays.map(function(array){return array[i]});
     });
 }
 
@@ -30,8 +30,8 @@ function Cdf(xs = undefined, ps = undefined, name =''){
     if(xs == undefined)
         this.xs = [];
     if(ps == undefined)
-        this.ps = [];    
-    this.name = name;    
+        this.ps = [];
+    this.name = name;
 }
 
 Cdf.prototype.values = function(){
@@ -66,7 +66,7 @@ Cdf.prototype.value = function(p){
     if(p == this.ps[index-1])
         return this.xs[index-1];
     else
-        return this.xs[index];        
+        return this.xs[index];
 }
 
 Cdf.prototype.percentile = function(p){
@@ -98,14 +98,14 @@ Cdf.prototype.mean = function(){
 }
 
 Cdf.prototype.render = function(){
-    
+
     var xs = [this.xs[0]];
     ps = [0.0];
     var iterator = this.ps.entries();
     for(let it of iterator){
         xs.push(this.xs[it[0]]);
         ps.push(it[1]);
-        
+
         try{
             xs.push(this.xs[it[0]+1]);
             ps.push(it[1]);
