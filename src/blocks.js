@@ -697,7 +697,7 @@ Blockly.Blocks['stats_pmf_getters'] = {
         .setCheck(null)
         .appendField("Get")
         .appendField(new Blockly.FieldDropdown([["Probabilities","items"], ["Values","values"], ["list","getList"], ["dictionary","getDict"]]), "NAME")
-        .appendField("From");
+        .appendField("From Pmf");
     this.setOutput(true,null);
     this.setColour(230);
  this.setTooltip("");
