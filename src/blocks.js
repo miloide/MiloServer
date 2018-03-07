@@ -684,7 +684,8 @@ Blockly.Blocks['stats_construct_pmf'] = {
   init: function() {
     this.appendValueInput("NAME")
         .setCheck(null)
-        .appendField(new Blockly.FieldDropdown([[" Make Hist From List","makeHistFromList"], ["Make Pmf From List","makePmfFromList"],["Make Pmf from Hist","makePmfFromHist"]]), "NAME");
+        .appendField("Make")
+        .appendField(new Blockly.FieldDropdown([[" Hist Map From List","makeHistFromList"], [" Pmf Map From List","makePmfFromList"],[" Pmf Map from Frequencies","makePmfFromHist"]]), "NAME");
     this.setOutput(true, null);
     this.setColour(230);
  this.setTooltip("");
@@ -696,8 +697,8 @@ Blockly.Blocks['stats_pmf_getters'] = {
     this.appendValueInput("NAME")
         .setCheck(null)
         .appendField("Get")
-        .appendField(new Blockly.FieldDropdown([["Probabilities","items"], ["Values","values"], ["list","getList"], ["dictionary","getDict"]]), "NAME")
-        .appendField("From Pmf");
+        .appendField(new Blockly.FieldDropdown([["Keys","items"], ["Values","values"], ["list","getList"], ["dictionary","getDict"]]), "NAME")
+        .appendField("From Map");
     this.setOutput(true,null);
     this.setColour(230);
  this.setTooltip("");
