@@ -425,7 +425,7 @@ Plot.prototype.setOptions = function(options){
                 this.setXLabel(options[index].value);
                 break;
             case "plot_ylabel":
-                this.setXLabel(options[index].value);
+                this.setYLabel(options[index].value);
                 break;
         }
     }
