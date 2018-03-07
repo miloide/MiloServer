@@ -21,6 +21,9 @@ DictWrapper.prototype.items = function(){
     });
     return values 
 }
+DictWrapper.prototype.getPair =function(){
+    arr = Object.getOwnPropertyNames(this.dict).map(function(e) {return [e, obj[e]];});
+}
 
 DictWrapper.prototype.render = function(){
     var sorted = [];
@@ -64,13 +67,20 @@ DictWrapper.prototype.total = function(){
         }
   return sum;
 }
-
+DictWrapper.prototype.getList = function(){
+    var list = [];
+    for(var key in this.dict){
+        value = this.dict[key];
+        for(var i = 0; i < value; i++)
+            list.push(parseFloat(key));
+    }
+    return list;
+}
 DictWrapper.prototype.maxLike = function(){
    return Object.keys(this.dict).reduce(function(a, b){ return this.dict[a] > this.dict[b] ? this.dict[a] : this.dict[b] });
 }
 
 function Pmf(dict, name=''){
-    
     this.dictwrapper = new DictWrapper(dict,name);
 }
 
@@ -147,7 +157,7 @@ Pmf.prototype.log = function(){
     }    
 }
 Pmf.prototype.exp = function(){
-      
+    
       max = this.maxLike();
       for(var key in this.dictwrapper.dict){
          this.set(key, Math.exp(this.dictwrapper.dict[key]/max));
@@ -213,10 +223,10 @@ function makePmfFromCdf(cdf, name=undefined){
     }
     pmf = new Pmf(name = name);
     prev = 0.0;
-    items = cdf.items();
-    for(var key in items){
-        pmf.incr(items[key], prob-prev);
-        prev = prob;
+    items = cdf.dictwrapper.getPair();
+    for(var pair in items){
+        pmf.incr(items[pair][0], items[pair][1]-prev);
+        prev = items[pair][1];
     }
     return pmf;
 }

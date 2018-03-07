@@ -319,6 +319,49 @@ Blockly.defineBlocksWithJsonArray([  // BEGIN JSON EXTRACT
         "helpUrl": ""
       },
       {
+        "type": "plot_bar",
+        "lastDummyAlign0": "RIGHT",
+        "message0": "Bar %1 X %2 Y %3 Label %4 Color %5 %6",
+        "args0": [
+          {
+            "type": "input_dummy"
+          },
+          {
+            "type": "input_value",
+            "name": "X",
+            "check": "Array",
+            "align": "RIGHT"
+          },
+          {
+            "type": "input_value",
+            "name": "Y",
+            "check": "Array",
+            "align": "RIGHT"
+          },
+          {
+            "type": "input_value",
+            "name": "NAME",
+            "check": "String",
+            "align": "RIGHT"
+          },
+          {
+            "type": "field_colour",
+            "name": "HUE",
+            "colour": "#ffffff"
+          },
+          {
+            "type": "input_dummy",
+            "align": "RIGHT"
+          }
+        ],
+        "inputsInline": false,
+        "previousStatement": "Plot",
+        "nextStatement": "Plot",
+        "colour": "%{BKY_SCATTER_HUE}",
+        "tooltip": "Set plot options",
+        "helpUrl": ""
+      },
+      {
         "type": "plot_histogram",
         "lastDummyAlign0": "RIGHT",
         "message0": "Histogram Plot %1 X %2 Label %3 Color %4",
@@ -653,21 +696,41 @@ Blockly.Blocks['construct_pmf'] = {
   init: function() {
     this.appendValueInput("NAME")
         .setCheck(null)
-        .appendField(new Blockly.FieldDropdown([[" Make Hist From List","makeHistFromList"], ["make Pmf From List","makePmfFromList"]]), "NAME");
+        .appendField(new Blockly.FieldDropdown([[" Make Hist From List","makeHistFromList"], ["Make Pmf From List","makePmfFromList"],["Make Pmf from Hist","makePmfFromHist"]]), "NAME");
     this.setOutput(true, null);
     this.setColour(230);
  this.setTooltip("");
  this.setHelpUrl("");
   }
 };
-Blockly.Blocks['pmf_get_dict'] = {
+Blockly.Blocks['pmf_getters'] = {
   init: function() {
     this.appendValueInput("NAME")
         .setCheck(null)
-        .appendField("Get Pmf values");
-    this.setOutput(true, null);
+        .appendField("Get")
+        .appendField(new Blockly.FieldDropdown([["items","items"], ["keys","values"], ["list","getList"], ["dictionary","getDict"]]), "NAME")
+        .appendField("From");
+    this.setPreviousStatement(true, null);
+    this.setOutput(true,null);
+    this.setNextStatement(true, null);
     this.setColour(230);
  this.setTooltip("");
  this.setHelpUrl("");
-  }
+}
+};
+
+Blockly.Blocks['statistics'] = {
+  init: function() {
+    this.appendValueInput("NAME")
+        .setCheck(null)
+        .appendField("Get")
+        .appendField(new Blockly.FieldDropdown([["mean","mean"], ["variance","variance"], ["exponentiation","exp"], ["normalize","normalize"]]), "NAME")
+        .appendField("From Pmf");
+    this.setPreviousStatement(true, null);
+    this.setOutput(true,null);
+    this.setNextStatement(true, null);
+    this.setColour(230);
+ this.setTooltip("");
+ this.setHelpUrl("");
+}
 };

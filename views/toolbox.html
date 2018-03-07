@@ -376,7 +376,12 @@
         <block type="construct_pmf">
           <field name="NAME">makeHistFromList</field>
         </block>
-        <block type="pmf_get_dict"></block>
+        <block type="pmf_getters">
+          <field name="NAME">items</field>
+        </block>
+        <block type="statistics">
+          <field name="NAME">mean</field>
+        </block>
       </category>
       <category name="Plot"  colour="%{BKY_PLOT_HUE}">
         <block type="plot_scatter">
@@ -386,6 +391,9 @@
         <block type="function_plot"></block>
         <block type="function_plot_x"></block>
         <block type="plot_histogram">
+          <field name="HUE">#ffffff</field>
+        </block>
+        <block type="plot_bar">
           <field name="HUE">#ffffff</field>
         </block>
         <block type="plot_title">

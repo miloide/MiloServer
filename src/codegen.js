@@ -95,13 +95,22 @@ Blockly.JavaScript['construct_pmf'] = function(block) {
   return [code , Blockly.JavaScript.ORDER_NONE];
 };
 
-Blockly.JavaScript['pmf_get_dict'] = function(block) {
+Blockly.JavaScript['pmf_getters'] = function(block) {
+    var dropdown_name = block.getFieldValue('NAME');
     var value_name = Blockly.JavaScript.valueToCode(block, 'NAME', Blockly.JavaScript.ORDER_ATOMIC);
     // TODO: Assemble JavaScript into code variable.
-    var code = value_name + '.dictwrapper.getDict()' ;
-    
-    return [code, Blockly.JavaScript.ORDER_NONE];
+    var code = value_name+'.dictwrapper.'+dropdown_name+'()';
+    return [code , Blockly.JavaScript.ORDER_NONE];
   };
+
+Blockly.JavaScript['statistics'] = function(block) {
+    var dropdown_name = block.getFieldValue('NAME');
+    var value_name = Blockly.JavaScript.valueToCode(block, 'NAME', Blockly.JavaScript.ORDER_ATOMIC);
+    // TODO: Assemble JavaScript into code variable.
+    var code = value_name +'.'+dropdown_name+'()';
+    return [code, Blockly.JavaScript.ORDER_NONE];
+  }; 
+
 // TODO (arjun): Actual Plot Generation Code.
 Blockly.JavaScript['plot_scatter'] = function(block) {
     var value_x = Blockly.JavaScript.valueToCode(block, 'X', Blockly.JavaScript.ORDER_ATOMIC);
@@ -121,6 +130,25 @@ Blockly.JavaScript['plot_scatter'] = function(block) {
     ;
     return code;
   };
+
+  Blockly.JavaScript['plot_bar'] = function(block) {
+    var value_x = Blockly.JavaScript.valueToCode(block, 'X', Blockly.JavaScript.ORDER_ATOMIC);
+    var value_y = Blockly.JavaScript.valueToCode(block, 'Y', Blockly.JavaScript.ORDER_ATOMIC);
+    var value_name = Blockly.JavaScript.valueToCode(block, 'NAME', Blockly.JavaScript.ORDER_ATOMIC);
+    var colour_hue = block.getFieldValue('HUE');
+    // TODO: Assemble JavaScript into code variable.
+    var code = '{\n'+
+        '"type":"bar",\n'+
+        '"name":"'+ value_name +'"'+
+        ',\n"x":'+ value_x +
+        ',\n"y":'+ value_y +
+        ',\n"marker": {"color":"'+ colour_hue +'"}'+
+        ',\n"isLine":'+ checkbox_connect +
+        '\n},\n'
+    ;
+    return code;
+  };
+
 
 Blockly.JavaScript['function_plot'] = function(block) {
   var expression = Blockly.JavaScript.valueToCode(block, 'NAME', Blockly.JavaScript.ORDER_ATOMIC);
