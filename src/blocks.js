@@ -698,9 +698,7 @@ Blockly.Blocks['stats_pmf_getters'] = {
         .appendField("Get")
         .appendField(new Blockly.FieldDropdown([["items","items"], ["keys","values"], ["list","getList"], ["dictionary","getDict"]]), "NAME")
         .appendField("From");
-    this.setPreviousStatement(true, null);
     this.setOutput(true,null);
-    this.setNextStatement(true, null);
     this.setColour(230);
  this.setTooltip("");
  this.setHelpUrl("");
@@ -714,9 +712,7 @@ Blockly.Blocks['stats_pmf_operations'] = {
             .appendField("Get")
             .appendField(new Blockly.FieldDropdown([["mean","mean"], ["variance","variance"], ["exponentiation","exp"], ["normalize","normalize"]]), "NAME")
             .appendField("From Pmf");
-        this.setPreviousStatement(true, null);
         this.setOutput(true,null);
-        this.setNextStatement(true, null);
         this.setColour(230);
     this.setTooltip("");
     this.setHelpUrl("");
