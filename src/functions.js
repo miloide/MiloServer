@@ -250,10 +250,10 @@ SqueezeNet.classify_ = async function(imgTag) {  // jshint ignore:line
 console.webLog = (function (old_function,div_id) {
     return function (value) {
         //See https://developer.mozilla.org/en-US/docs/Web/API/Console/log
-        console.log(value);
+        // console.log(value);
         if (value.then == undefined){
-            old_function(value);
-            $(div_id).append('<pre class="block">' + value + '</pre>');
+            old_function(JSON.stringify(value));
+            $(div_id).append('<pre class="block">' + JSON.stringify(value) + '</pre>');
         }
         else {
             Promise.resolve(value).then(function(val){
