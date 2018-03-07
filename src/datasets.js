@@ -1,3 +1,5 @@
+var swal = require("sweetalert");
+
 /**
  * Create a NameSpace for Datasets
  */
@@ -56,7 +58,7 @@ Datasets.generateBlock = function(name){
         }
         Datasets.generateBlockDefinition(name);
         Blockly.JavaScript[name+"_get"] = Datasets.codegenTemplate(name);
-    
+
 }
 Datasets.generateBlockDefinition = function(name){
     if(Datasets.imported[name]!=undefined){
@@ -94,11 +96,11 @@ Datasets.uploadDataset= function(event){
     var file = event.target.files[0];
     var fileName = file.name.replace(".csv","");
     if(file.type == "text/csv" || file.type == "application/vnd.ms-excel"){
-        $("#confirmModalTrigger").click();
+        // $("#confirmModalTrigger").click();
         Datasets.readUploadedFile(file);
     }
     else{
-        Helpers.showAlert("Error","Only csv files supported");
+        Helpers.showAlert("Error","Only csv files supported","error");
     }
 };
 
@@ -115,7 +117,7 @@ Datasets.readUploadedFile = function(file){
         Datasets[fileName].rows = [];
     }
     else{
-        Helpers.showAlert("File Error", " A File already exists with the name. This will update the contents of the previously loaded file!");
+        Helpers.showAlert("File Error", " A File already exists with the name. This will update the contents of the previously loaded file!","error");
     }
     reader.onprogress = function(){
         $('#loadingDiv').show();
@@ -124,10 +126,10 @@ Datasets.readUploadedFile = function(file){
         $('#loadingDiv').hide();
     }
     reader.onerror = function(){
-        Helpers.showAlert("Error", " Error encountered while reading file. Please try again!");
+        Helpers.showAlert("Error", " Error encountered while reading file. Please try again!","error");
     }
     reader.onabort = function(){
-        Helpers.showAlert("Error", "File reading aborted");
+        Helpers.showAlert("Error", "File reading aborted","error");
     }
     reader.onload = function(){
         console.log("onload");
@@ -153,17 +155,17 @@ Datasets.readUploadedFile = function(file){
         Datasets.checkHeader(fileName);
         Datasets.show(fileName);
     }
-    $('#confirmBody').html(" Is the first row a header row?" +
-                            "<br>If not default column headers will be used.");
-        $('#confirmBtnYes').on("click",function(){
+
+    swal("Is the first row a header row?","If not default column headers will be used.","info",{
+        buttons: ["no","yes"],
+    }).then(function(val) {
+        if (val){
             Datasets[fileName].header = true;
-            reader.readAsText(file);
-            $('confirmModal').modal('hide');
-        });
-        $('#confirmBtnNo').on("click",function(){
-            reader.readAsText(file);
-            $('confirmModal').modal('hide');
-        });
+        }
+        reader.readAsText(file);
+    });
+
+
 };
 
 /**
@@ -228,16 +230,16 @@ Datasets.importBuiltIn = function(){
 }
 
 Datasets.newJexcelHandler = function(name) {
-    return function(table){ 
+    return function(table){
         console.log(name);
         var headerLength = Datasets[name].headers.length;
         var newColumn = table.jexcel('getHeader',headerLength-1);
-        Datasets[name].headers.push(newColumn); 
+        Datasets[name].headers.push(newColumn);
         console.log(newColumn);
         Datasets.imported[name] = Datasets.convert.rowsToMap(Datasets[name]);
         Code.workspace.updateToolbox(document.getElementById('toolbox'));
     }
-};   
+};
 
 /**
  * Shows the loaded dataset on screen

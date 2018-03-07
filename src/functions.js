@@ -465,5 +465,6 @@ module.exports = {
     WebCam,
     imgFromURL,
     imgShow,
-    getImageCanvas
+    getImageCanvas,
+    clearOutput
 }

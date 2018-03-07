@@ -19,17 +19,26 @@ npm link milo-blocks
 npm link
 ```
 ## Creating Database
+
+* Make sure mongodb is installed (Google for OSX Specific details)
+* Run the mongo deamon `mongod --dbpath ../milo-data/` and run `mongo` to open the cli`
 To create the database, open your mongoDB shell and run the follow commands
 ```
 use miloDB
+db.dummy.insert({'v':'1.0'});
 ```
 
 ## Running Milo Server
+
+To start the mongo deamon in the background
+```
+mongod --fork --dbpath ../milo-data/ --logpath ../milo-data/mongo.log
+```
 To run the server, open a terminal at the project root and run the following:
 ```
 npm start
 ```
-
+The `mongod` command is only needed if the mongo deamon is not started
 
 ## Updating code
 

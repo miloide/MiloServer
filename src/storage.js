@@ -28,6 +28,7 @@
 var BlocklyStorage = {};
 var Blockly = require('milo-blocks');
 var Helpers = require('./helpers');
+var swal = require('sweetalert');
 /**
  * Backup code blocks to localStorage.
  * @param {!Blockly.WorkspaceSvg} workspace Workspace.
@@ -125,15 +126,21 @@ BlocklyStorage.makeRequest_ = function(url, name, content, workspace) {
 BlocklyStorage.handleRequest_ = function() {
   if (BlocklyStorage.httpRequest_.readyState == 4) {
     if (BlocklyStorage.httpRequest_.status != 200) {
-      BlocklyStorage.alert(BlocklyStorage.HTTPREQUEST_ERROR + '\n' +
-          'httpRequest_.status: ' + BlocklyStorage.httpRequest_.status);
+      swal("Project Save Failed!",
+                  '\nhttpRequest_.status: '+
+                  BlocklyStorage.httpRequest_.status,"error"
+      );
+
     } else {
       var data = BlocklyStorage.httpRequest_.responseText.trim();
       if (BlocklyStorage.httpRequest_.name == 'xml') {
         window.location.hash = data;
         // BlocklyStorage.alert(BlocklyStorage.LINK_ALERT.replace('%1',
         //     window.location.href));
-        Helpers.showAlert("Share your milo blocks with this link",BlocklyStorage.LINK_ALERT.replace('%1',window.location.href));
+        Helpers.showAlert("Share your milo blocks with this link",
+              BlocklyStorage.LINK_ALERT.replace('%1',window.location.href),
+              "success"
+        );
       } else if (BlocklyStorage.httpRequest_.name == 'key') {
         if (!data.length) {
           BlocklyStorage.alert(BlocklyStorage.HASH_ERROR.replace('%1',

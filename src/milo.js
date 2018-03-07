@@ -1,13 +1,14 @@
 
 'use strict';
 var Helpers = require('./helpers');
+var clearOutput = require('./functions.js').clearOutput;
 var MSG = require('./strings');
 var Datasets = require('./datasets');
 var BlocklyStorage = window.BlocklyStorage = require('./storage');
 var statistics_pmf = require('./statistics/pmf');
 var statistics_cdf = require('./statistics/cdf');
 var DeepLearn = require('./deeplearn');
-
+var swal = require('sweetalert');
 // Export globally
 window.$ = require('jquery');
 window.jQuery  = window.$;
@@ -22,7 +23,7 @@ for (var key in utils) {
 for(var key in statistics_pmf)
 	global[key]=statistics_pmf[key];
 for(var key in statistics_cdf)
-	global[key]=statistics_cdf[key];	
+	global[key]=statistics_cdf[key];
 
 /**
  * Create a namespace for the application.
@@ -394,8 +395,9 @@ Milo.init = function() {
 		BlocklyStorage['LINK_ALERT'] = MSG['linkAlert'];
 		BlocklyStorage['HASH_ERROR'] = MSG['hashError'];
 		BlocklyStorage['XML_ERROR'] = MSG['xmlError'];
-		Milo.bindClick(linkButton,
-				function() {BlocklyStorage.link(Milo.workspace);});
+		Milo.bindClick(linkButton, function() {
+			BlocklyStorage.link(Milo.workspace);
+		});
 	}
 
 	for (var i = 0; i < Milo.TABS_.length; i++) {
@@ -489,16 +491,21 @@ Milo.runJS = function() {
  */
 Milo.discard = function() {
 	var count = Milo.workspace.getAllBlocks().length;
-	if (count < 2 ||
-			window.confirm(Blockly.Msg.DELETE_ALL_BLOCKS.replace('%1', count))) {
-		Milo.workspace.clear();
-		if (window.location.hash) {
-			window.location.hash = '';
-		}
-
-		// Clear run results
-		clearOutput();
+	if (count > 0){
+		swal("Are you sure?",Blockly.Msg.DELETE_ALL_BLOCKS.replace('%1', count),"warning",{
+			buttons: true,
+			dangerMode: true
+		}).then(function(val) {
+			if (val){
+				Milo.workspace.clear();
+				if (window.location.hash) {
+					window.location.hash = '';
+				}
+			}
+		});
 	}
+	// Clear run results
+	clearOutput();
 };
 
 // Load the Code demo's language strings.
