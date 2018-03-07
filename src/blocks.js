@@ -653,7 +653,18 @@ Blockly.Blocks['construct_pmf'] = {
   init: function() {
     this.appendValueInput("NAME")
         .setCheck(null)
-        .appendField(new Blockly.FieldDropdown([[" Hist From List","makeHistFromList"], ["make Pmf From List","makePmfFromList"]]), "NAME");
+        .appendField(new Blockly.FieldDropdown([[" Make Hist From List","makeHistFromList"], ["make Pmf From List","makePmfFromList"]]), "NAME");
+    this.setOutput(true, null);
+    this.setColour(230);
+ this.setTooltip("");
+ this.setHelpUrl("");
+  }
+};
+Blockly.Blocks['pmf_get_dict'] = {
+  init: function() {
+    this.appendValueInput("NAME")
+        .setCheck(null)
+        .appendField("Get Pmf values");
     this.setOutput(true, null);
     this.setColour(230);
  this.setTooltip("");

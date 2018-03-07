@@ -86,26 +86,22 @@ Blockly.JavaScript.img_show = function(block) {
     return code;
 };
 
-Blockly.JavaScript['probability_mass_function'] = function(block) {
-  var value_name = Blockly.JavaScript.valueToCode(block, 'NAME', Blockly.JavaScript.ORDER_ATOMIC);
-  // TODO: Assemble JavaScript into code variable.
-  var plotVar = Blockly.JavaScript.variableDB_.getDistinctName(
-    'plot', Blockly.Variables.NAME_TYPE);
-  var code = value_name;
-  return value_name;
-};
-
 
 Blockly.JavaScript['construct_pmf'] = function(block) {
   var dropdown_name = block.getFieldValue('NAME');
   var value_name = Blockly.JavaScript.valueToCode(block, 'NAME', Blockly.JavaScript.ORDER_ATOMIC);
   // TODO: Assemble JavaScript into code variable.
-  var pmfVar = Blockly.JavaScript.variableDB_.getDistinctName(
-    'pmf', Blockly.Variables.NAME_TYPE);
-  var code = dropdown_name + '(' + value_name +')';
-  // TODO: Change ORDER_NONE to the correct strength.
-  return [code, Blockly.JavaScript.ORDER_NONE];
+  var code =  dropdown_name + '(' + value_name +')';
+  return [code , Blockly.JavaScript.ORDER_NONE];
 };
+
+Blockly.JavaScript['pmf_get_dict'] = function(block) {
+    var value_name = Blockly.JavaScript.valueToCode(block, 'NAME', Blockly.JavaScript.ORDER_ATOMIC);
+    // TODO: Assemble JavaScript into code variable.
+    var code = value_name + '.dictwrapper.getDict()' ;
+    
+    return [code, Blockly.JavaScript.ORDER_NONE];
+  };
 // TODO (arjun): Actual Plot Generation Code.
 Blockly.JavaScript['plot_scatter'] = function(block) {
     var value_x = Blockly.JavaScript.valueToCode(block, 'X', Blockly.JavaScript.ORDER_ATOMIC);

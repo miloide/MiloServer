@@ -100,7 +100,6 @@ Pmf.prototype.normalize = function(fractino = 1.0){
     factor = parseFloat(fractino/total);
     for(var x in this.dictwrapper.dict){
         if(this.dictwrapper.dict.hasOwnProperty(x)){
-            console.log(this.dictwrapper.dict[x]);
             this.dictwrapper.dict[x]*=factor;
         }
     }
@@ -187,8 +186,9 @@ function makeHistFromDict(d, name=''){
 }
 
 function makePmfFromList(t, name=''){
-    hist = makeHistFromList(t,name);    
-    return makePmfFromHist(hist);
+    hist = makeHistFromList(t,name);  
+    pmf = makePmfFromHist(hist);  
+    return pmf;
 }
 
 function makePmfFromDict(d, name=''){
@@ -220,7 +220,6 @@ function makePmfFromCdf(cdf, name=undefined){
     }
     return pmf;
 }
-
 module.exports = {
     Pmf,
     DictWrapper,
