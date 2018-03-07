@@ -1,12 +1,16 @@
 Blockly.Msg.ML_HUE = "360";
-Blockly.Msg.IMAGE_HUE = "180";
+Blockly.Msg.IMAGE_HUE = "20";
 Blockly.Msg.PLOT_HUE = "230";
-Blockly.Msg.SCATTER_HUE = "130";
-Blockly.Msg.HISTOGRAM_HUE = "60";
+Blockly.Msg.SCATTER_HUE = "210";
+Blockly.Msg.HISTOGRAM_HUE = "195";
+Blockly.Msg.TEXTS_HUE = "220";
+Blockly.Msg.LOOPS_HUE = "200";
+Blockly.Msg.LOGIC_HUE = "190";
+Blockly.Blocks.texts.HUE = "220"
 
 // To change global colour brightness - set HSV Saturation and Value between 0(inclusive) and 1(exclusive);
-Blockly.HSV_SATURATION = 0.60;
-Blockly.HSV_VALUE = 0.75;
+Blockly.HSV_SATURATION = 0.89;
+Blockly.HSV_VALUE = 0.95;
 
 
 var MSG = {
