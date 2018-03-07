@@ -1,24 +1,24 @@
-Array.prototype.bisect = function (val) {
-    var idx;
-    if (this.length === 0) {
-        return 0;
-    }
-    for (idx=0; idx < this.length; idx++) {
-        if (val < this[idx]) {
-            return idx;
-        }
-    }
-    return idx;
-};
+// Array.prototype.bisect = function (val) {
+//     var idx;
+//     if (this.length === 0) {
+//         return 0;
+//     }
+//     for (idx=0; idx < this.length; idx++) {
+//         if (val < this[idx]) {
+//             return idx;
+//         }
+//     }
+//     return idx;
+// };
 
-Array.prototype.insert = function (val, inPlace) {
-    var idx = this.bisect(val);
-    if (inPlace) {
-        this.splice(idx, 0, val);
-        return this;
-    }
-    return this.slice(0, idx).concat([val], this.slice(idx));
-};
+// Array.prototype.insert = function (val, inPlace) {
+//     var idx = this.bisect(val);
+//     if (inPlace) {
+//         this.splice(idx, 0, val);
+//         return this;
+//     }
+//     return this.slice(0, idx).concat([val], this.slice(idx));
+// };
 
 function zip(arrays) {
     return arrays[0].map(function(_,i){

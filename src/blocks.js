@@ -355,8 +355,8 @@ Blockly.defineBlocksWithJsonArray([  // BEGIN JSON EXTRACT
           }
         ],
         "inputsInline": false,
-        "previousStatement": "Plot",
-        "nextStatement": "Plot",
+        "previousStatement": null,
+        "nextStatement": null,
         "colour": "%{BKY_SCATTER_HUE}",
         "tooltip": "Set plot options",
         "helpUrl": ""

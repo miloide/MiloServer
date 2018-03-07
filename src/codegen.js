@@ -143,7 +143,6 @@ Blockly.JavaScript['plot_scatter'] = function(block) {
         ',\n"x":'+ value_x +
         ',\n"y":'+ value_y +
         ',\n"marker": {"color":"'+ colour_hue +'"}'+
-        ',\n"isLine":'+ checkbox_connect +
         '\n},\n'
     ;
     return code;
