@@ -135,7 +135,49 @@ html
 						a(href='#') >
 
 				div(data-page='1')
-					p Content for Div Number 1
+					
+					h3
+						strong Probability Mass Function
+					p
+					| In probability and statistics, a probability mass function (pmf) is a function that gives the probability that a discrete random variable is exactly equal to some value. The probability mass function is often the primary means of defining a discrete probability distributions.
+					p
+					| A 
+					strong PMF equation 
+					| looks like this:
+					br
+					| P(X = x).
+					br
+					| That just means “the probability that X takes on some value.
+					p
+					| It’s not a very useful equation on its own; What’s more useful is an equation that tells you the probability of some individual event happening. For example:
+					br
+					| P(X=1) = 0.2 * 0.2.
+					p
+					strong Experiment
+					|  :: Suppose I toss a fair die twice independently.
+					br
+					strong Random Variable
+					|  :: X = Minimum of the two outcomes
+					br
+					strong Sample space S = {(i, j)|1 ≤ i, j ≤ 6}.
+					br
+					| Please note that the sample space has 36 elements and hence element has probability 1/36.
+					br
+					| The values X can take are {1, 2, 3, 4, 5, 6}.
+					br
+					| X = i corresponds to the event {(i, i),(i, i + 1),(i + 1, i), . . . ,(i, 6),(6, i)}.
+					br
+					| Hence
+					br
+					| P(X = i) = (1 + (6 − i) ∗ 2)/36 =(13 − 2i)/36
+					p
+					br
+					| Thus we can write the pmf as
+					br
+					| pX(x) = (13 − 2x)/36
+					br
+					| for x ∈ {1, 2, . . . , 6}
+
 				div(data-page='2', style='display:none;')
 					p Content for Div Number 2
 				div(data-page='3', style='display:none;')

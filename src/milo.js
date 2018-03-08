@@ -470,8 +470,7 @@ Milo.initLanguage = function() {
 Milo.runJS = function() {
 
 	clearOutput();
-	clearOutput();
-
+	$('#sidebar').removeClass(sidebar-open);
 	Blockly.JavaScript.INFINITE_LOOP_TRAP = '  checkTimeout();\n';
 	var timeouts = 0;
 	var checkTimeout = function() {
