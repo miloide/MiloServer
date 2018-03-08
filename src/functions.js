@@ -1,3 +1,4 @@
+var pmf = require('./statistics/pmf');
 /**
  * Create a NameSpace for WebCam Operations
  */
@@ -352,6 +353,16 @@ Plot.prototype.addDataItem = function(data) {
     }
     data.marker["symbol"] = "circle";
     if (data.marker["color"] == "#ffffff") data.marker["color"] = undefined;
+    if (data.group != undefined){
+        var hist = pmf.makeHistFromList(data.group);
+        var keys = hist.dictwrapper.values();
+        var key2color = {}
+        for (var i in keys) key2color[keys[i]] = i+1;
+        var color = [];
+        for (var i in data.group) color.push(key2color[data.group[i]]);
+        data.marker["color"] = color;
+        data.text = data.group;
+    }
     if (data.type == "scatter") data.mode = data.isLine?"markers+lines":"markers";
     this.data_.push(data);
     return true;
@@ -386,6 +397,7 @@ Plot.prototype.setYLabel= function(label) {
  * TODO (arjun): Add checks for ensuring data existence
  */
 Plot.prototype.show = function() {
+    console.log(this);
     $(this.canvas_).prepend(this.div_);
     var d3 = Plotly.d3;
     var WIDTH_IN_PERCENT_OF_PARENT = 540;
