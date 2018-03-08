@@ -134,7 +134,65 @@ html
 					li(data-page='+')
 						a(href='#') >
 
-				div(data-page='1')
+
+				div(data-page='1', style='display:none;')
+					h3
+						strong
+							| Hello! Welcome to Milo !
+							img(src='https://html-online.com/editor/tinymce4_6_5/plugins/emoticons/img/smiley-cool.gif', alt='cool')
+							| . Here's a quick tour of milo.
+					ul
+							li The left hand side of milo is the
+							strong  toolbox 
+							| where you can find a plethora of blocks to use to construct some awesome programs! The toolbox is organized in categories. Each category has blocks that perform some operation related to the category.
+							br
+							li To try out these blocks, go ahead and select any one of the category and drag the blocks into the 
+							strong workspace 
+							| As you can see, these blocks have some kind of notch. These notches allow you to 
+							strong connect
+							|two or more blocks together into one unit. Go ahead and try this.
+							br
+							li To create variables go to the 
+							strong variables category
+							| and click on create variable. You will be prompted with an alert. Add the variable name and then you can see blocks for the new variable are created.
+							li Took a look at these blocks!
+							br
+					img(src='media/milo.png',alt='Milo Blocks' class="center")
+				
+				div(data-page='2', style='display:none;')
+					h3
+						strong How to plot with Milo
+					ul
+						li Its always better to plot data to gain more insight such as outliers from them. 
+						br
+						li To create a plot, make sure you first have a list to begin with. You can create a list using create list block from category lists or you can import one of the built in datasets from the datasets dropdown and drag a block from datasets category and setting your desirable column to plot from the dataset.
+						br
+						li Try importing one of the datasets from the dataset dropdown. Once you click on the dataset, switch over to the tab view to view the dataset.
+						br
+						li Take a look at the example below to see how list can be created!
+
+					img(src='media/lists.png',class="center", alt='list')
+					
+					ul
+						br
+						li You can create a list of numbers by selecting the create list block from advanced category.
+						br
+						li Go to next tab to continue the plotting tutorial
+
+				div(data-page='3', style='display:none;')
+					h3 How to plot with Milo Continued
+					ul
+						li To create a plot, you will require two basic blocks. Click on the plot category to see the various kinds of plots available.
+						br
+						li First drag te kind of plot you want to create. For example drag the bar plot into the workspace. Next drag the data lists you want to visualize into the workspace.
+						br
+						li For a better visualization, use one of the built in datasets. Connect the list to bar plot block. Connect iris Length list block to X and class list block to Y
+						br
+						li Once you have connected the data list blocks with bar plot, drag the plot block from the plot category. Now connect the bar plot block to this newly dragged plot block. 
+						br
+						li Now click on run to visualize the bar plot :).
+					img(src='media/plots.png',class="center", alt='list')
+				div(data-page='4', style='display:none;')
 					
 					h3
 						strong Probability Mass Function
@@ -178,19 +236,8 @@ html
 					br
 					| for x ∈ {1, 2, . . . , 6}
 
-				div(data-page='2', style='display:none;')
-					p Content for Div Number 2
-				div(data-page='3', style='display:none;')
-					p Content for Div Number 3
-				div(data-page='4', style='display:none;')
-					p Content for Div Number 4
 				div(data-page='5', style='display:none;')
-					p Content for Div Number 5
-
-
-
-
-
+					p Content for Div Number 4
 
 		include toolbox.html
 		#snackbar
