@@ -30,27 +30,25 @@ html
 								span.caret
 							ul.dropdown-menu
 								li
-									a#runButton(href='#') Run
+									a.runButton(href='#') Run
 								li.divider(role='separator')
 								li
-									a#trashButton(href='#') Delete All
+									a#trashButton(href='#') Reset
 					li.btn-group
 						li.dropdown
 							a.dropdown-toggle(href='#', data-toggle='dropdown', role='button', aria-haspopup='true', aria-expanded='false')
 								| Datasets
 								span.caret
-							ul.dropdown-menu
+							ul#menuDatasetImport.dropdown-menu
 								li
-									a(href='#') Upload
-								li
-									a(href='#') Import All
+									a(href='#' onclick='Datasets.triggerClick()') Upload
 								li.divider(role='separator')
 								li
 									span &nbsp Built In Datasets
-								li
-									a(href='#') Iris
-								li
-									a(href='#') California Housing
+
+
+					li
+						a.runButton(href='#') Run
 				ul.nav.navbar-nav.navbar-right
 					li
 						img#loadingDiv(style="display: none;width:50px;",src="media/loading.gif")
@@ -82,19 +80,19 @@ html
 			.container-fluid
 				.row
 					.col-lg-4
-						h3 Datasets
-						p Select built-in dataset and click import or upload csv file.
-						select#builtInDropdown
-						button(onclick="Datasets.importBuiltIn();") Import
-						button(onclick="Datasets.triggerClick();") Upload
+						h3 Data Explorer
+						p Select a dataset from the list below to view or import from the menu.
+						//- select#builtInDropdown
+						//- button(onclick="Datasets.importBuiltIn();") Import
+						//- button(onclick="Datasets.triggerClick();") Upload
 						input#fileLoader(type="file", name="files", onchange= "Datasets.uploadDataset(event)",style = "display : none")
 						br
 						button#dataset_save(style='display:none') Save
-						button#alertModalTrigger(data-toggle="modal", data-target="#alertModal", style="display:none")
-						button#confirmModalTrigger(data-toggle="modal", data-target="#confirmModal", style="display:none")
-						.col-lg-12
-							h4 Loaded Datasets (click to view)
-							ul#dataset_list
+						//- button#alertModalTrigger(data-toggle="modal", data-target="#alertModal", style="display:none")
+						//- button#confirmModalTrigger(data-toggle="modal", data-target="#confirmModal", style="display:none")
+						//- .col-lg-12
+						//- h4 Loaded Datasets (click to view)
+						ul#dataset_list
 					#explorer.col-lg-7
 						.col-lg-12
 							#dataset_output

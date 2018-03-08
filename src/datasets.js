@@ -1,5 +1,5 @@
 var swal = require("sweetalert");
-
+var $ = require('jquery');
 /**
  * Create a NameSpace for Datasets
  */
@@ -13,7 +13,7 @@ Datasets.imported = {};
  */
 Datasets.loaded = {
     "iris":false,
-    "california_housing":false
+    "california":false
 };
 
 
@@ -26,7 +26,7 @@ Datasets.flyoutCallback = function(workspace) {
     // Returns dataset blocks
     var xmlList = [];
     var datasetList = Object.keys(Datasets.loaded);
-    var labelText = '<xml><label text="Import datasets from the Data Explorer"></label></xml>';
+    var labelText = '<xml><label text="Import datasets from the Menu"></label></xml>';
     var label = Blockly.Xml.textToDom(labelText).firstChild;
     xmlList.push(label);
     for (var index in datasetList){
@@ -214,6 +214,10 @@ Datasets.codegenTemplate = function (name) {
 
 Datasets.importBuiltIn = function(){
     var name = $("#builtInDropdown").val();
+    Datasets.importHelper(name);
+};
+
+Datasets.importHelper = function(name){
     if (name == undefined) return;
     if (Datasets.loaded[name]== undefined || Datasets.loaded[name]) return;
     var scriptElement = document.createElement("script");
@@ -225,11 +229,14 @@ Datasets.importBuiltIn = function(){
         $("#dataset_list").append(
             '<li><button class="button-none" onclick="Datasets.show(\''+name+'\')">'+name+'</button></li>'
         );
+        $("#"+name+"MenuItem").hide();
+        $("#menuDatasetImport").append('<li class="divider" role="separator"></li><li>&nbspImported '+ name +'</li>');
+        $("#"+name+"MenuItem").attr("disabled","disabled");
     };
     document.head.appendChild(scriptElement);
-}
+};
 
-Datasets.newJexcelHandler = function(name) {
+Datasets.createJexcelHandler = function(name) {
     return function(table){
         console.log(name);
         var headerLength = Datasets[name].headers.length;
@@ -237,8 +244,8 @@ Datasets.newJexcelHandler = function(name) {
         Datasets[name].headers.push(newColumn);
         console.log(newColumn);
         Datasets.imported[name] = Datasets.convert.rowsToMap(Datasets[name]);
-        Code.workspace.updateToolbox(document.getElementById('toolbox'));
-    }
+        Milo.workspace.updateToolbox(document.getElementById('toolbox'));
+    };
 };
 
 /**
@@ -252,7 +259,7 @@ Datasets.show = function(name){
     for(var i = 0; i < Datasets[name].headers.length; i++){
         colWidths.push(100);
     }
-    var handler = Datasets.newJexcelHandler(name);
+    var handler = Datasets.createJexcelHandler(name);
     console.log(handler);
     $('#dataset_output').jexcel({data:data, colWidths:colWidths, colHeaders:Datasets[name].headers, oninsertcolumn: handler});
     $('#dataset_save').html('Save ' + name);

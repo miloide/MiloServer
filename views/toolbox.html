@@ -214,6 +214,7 @@
       </block>
       <block type="lists_create_with"></block>
       <block type="lists_zip_with"></block>
+      <block type="lists_numeric"></block>
       <block type="lists_repeat">
         <value name="NUM">
           <shadow type="math_number">
@@ -341,19 +342,19 @@
           </block>
       </category>
       <category name="Miscellaneous" colour="%{BKY_ML_HUE}">
-        <block type="optimizer">
+        <block type="dl_optimizer">
           <field name="optimizer">SGD</field>
         </block>
-        <block type="mlparams">
+        <block type="dl_mlparams">
           <field name="paramters">learningRate</field>
         </block>
-          <block type="train"></block>
-          <block type="dataconfiguration"></block>
-          <block type="predict"></block>
+          <block type="dl_train"></block>
+          <block type="dl_dataconfiguration"></block>
+          <block type="dl_predict"></block>
           <block type="dl_feedentry">
           <field name="costFunction">MEAN</field>
         </block>
-        <block type="createoptimizer">
+        <block type="dl_createoptimizer">
           <field name="optimizer">Adagrad</field>
           <field name="rate">0</field>
           <field name="numBatches">0</field>
@@ -399,7 +400,7 @@
         <block type="plot_title">
           <field name="NAME">My Plot</field>
         </block>
-        <block type="show_plot"></block>
+        <block type="plot_show"></block>
         <block type="plot_x_title">
           <field name="NAME">My Plot</field>
         </block>

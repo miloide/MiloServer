@@ -86,10 +86,10 @@ const clearOutput = () => {
     WebCam.loaded = false;
     // Clear outputs if any
     document.getElementById("console_javascript").innerHTML="";
-    $("#console_holder").hide();
-    $("#loadingDiv").hide();
     document.getElementById("misc_output").innerHTML="";
     document.getElementById("graph_output").innerHTML="";
+    $("#console_holder").hide();
+    $("#loadingDiv").hide();
 }
 
 /**
@@ -101,6 +101,7 @@ WebCam.image = function(callback){
         // Gracefully fall back to image
         $(WebCam.video).hide();
         imgShow(imgFromURL("media/nocamera.jpg",true));
+        return;
 
     }
 
@@ -251,23 +252,25 @@ console.webLog = (function (old_function,div_id) {
     return function (value) {
         //See https://developer.mozilla.org/en-US/docs/Web/API/Console/log
         // console.log(value);
-        if (value.then == undefined){
-            old_function(JSON.stringify(value));
-            $(div_id).append('<pre class="block">' + JSON.stringify(value) + '</pre>');
-        }
-        else {
+        if (value instanceof Promise){
             Promise.resolve(value).then(function(val){
                 try{
                     var values = Object.values(JSON.parse(JSON.stringify(val)));
                     if (values.length == 1) values = values[0];
                     old_function(JSON.parse(JSON.stringify(values)));
-                    $(div_id).append('<pre class="block">' + JSON.stringify(values,null,1) + '</pre>');
+                    $(div_id).append('<pre class="block">' + JSON.stringify(values,null,2) + '</pre>');
                 } catch (e){
                     old_function(val);
                     $(div_id).append('<pre class="block">' + val + '</pre>');
                 }
 
             });
+        } else {
+            old_function(JSON.stringify(value));
+            if (JSON.stringify(value).length < 20)
+                $(div_id).append('<pre class="block">' + JSON.stringify(value) + '</pre>');
+            else
+            $(div_id).append('<pre class="block">' + JSON.stringify(value,null,2) + '</pre>');
         }
     };
 } (console.log.bind(console), "#console_javascript"));

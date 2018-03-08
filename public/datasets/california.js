@@ -1,6 +1,6 @@
-Datasets.california_housing = {};
-Datasets.california_housing["header"] = true;
-Datasets.california_housing.headers = [
+Datasets.california = {};
+Datasets.california["header"] = true;
+Datasets.california.headers = [
     "rand_id",
     "longitude",
     "latitude",
@@ -12,8 +12,8 @@ Datasets.california_housing.headers = [
     "median_income",
     "median_house_value"
 ];
-Datasets.california_housing.rows = 
-[    
+Datasets.california.rows =
+[
     [
         "13931",
         "-122.03",

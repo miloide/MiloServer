@@ -10,7 +10,7 @@ var statistics_cdf = require('./statistics/cdf');
 var DeepLearn = require('./deeplearn');
 var swal = require('sweetalert');
 // Export globally
-window.$ = require('jquery');
+var $ = window.$ = require('jquery');
 window.jQuery  = window.$;
 window.Datasets = Datasets;
 var Blockly = window.Blockly = require('milo-blocks');
@@ -387,7 +387,7 @@ Milo.init = function() {
 				Milo.discard();
 				Milo.renderContent();
 	});
-	Milo.bindClick('runButton', Milo.runJS);
+	$(".runButton").click(Milo.runJS);
 	// TODO(arjun): Enable link button once Node JS server is setup with DB Store
 	var linkButton = document.getElementById('linkButton');
 	if ('BlocklyStorage' in window) {
@@ -405,6 +405,16 @@ Milo.init = function() {
 		Milo.bindClick('tab_' + name,
 				function(name_) {return function() {Milo.tabClick(name_);};}(name));
 	}
+	var defaultDatasets = Object.keys(Datasets.loaded);
+	for (var index in defaultDatasets){
+		$("#menuDatasetImport").append('<li id="'+defaultDatasets[index]+
+			'MenuItem"><a href="#" onclick="Datasets.importHelper(\''+
+			defaultDatasets[index]+'\')">'+
+			defaultDatasets[index]+
+			'</a></li>'
+		);
+	}
+
 	//onresize();
 	//Blockly.svgResize(Milo.workspace);
 
@@ -458,9 +468,9 @@ Milo.initLanguage = function() {
  *              https://developers.google.com/blockly/guides/app-integration/running-javascript
  */
 Milo.runJS = function() {
-	// Milo.selected = 'javascript';
-	// Milo.tabClick(Milo.selected);
-	document.getElementById("graph_output").innerHTML="";
+
+	clearOutput();
+	clearOutput();
 
 	Blockly.JavaScript.INFINITE_LOOP_TRAP = '  checkTimeout();\n';
 	var timeouts = 0;
@@ -492,7 +502,7 @@ Milo.runJS = function() {
 Milo.discard = function() {
 	var count = Milo.workspace.getAllBlocks().length;
 	if (count > 0){
-		swal("Are you sure?",Blockly.Msg.DELETE_ALL_BLOCKS.replace('%1', count),"warning",{
+		swal("Are you sure you want to reset?",Blockly.Msg.DELETE_ALL_BLOCKS.replace('%1', count),"warning",{
 			buttons: true,
 			dangerMode: true
 		}).then(function(val) {

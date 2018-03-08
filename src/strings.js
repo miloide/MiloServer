@@ -1,9 +1,3 @@
-Blockly.Msg.ML_HUE = "360";
-Blockly.Msg.IMAGE_HUE = "180";
-Blockly.Msg.PLOT_HUE = "230";
-Blockly.Msg.SCATTER_HUE = "130";
-Blockly.Msg.HISTOGRAM_HUE = "60";
-
 // To change global colour brightness - set HSV Saturation and Value between 0(inclusive) and 1(exclusive);
 Blockly.HSV_SATURATION = 0.60;
 Blockly.HSV_VALUE = 0.75;
