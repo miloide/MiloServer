@@ -353,7 +353,7 @@ Plot.prototype.addDataItem = function(data) {
     }
     data.marker["symbol"] = "circle";
     if (data.marker["color"] == "#ffffff") data.marker["color"] = undefined;
-    if (data.group != undefined){
+    if (data.group != undefined && data.group.length){
         var hist = pmf.makeHistFromList(data.group);
         var keys = hist.dictwrapper.values();
         var key2color = {}
@@ -397,7 +397,6 @@ Plot.prototype.setYLabel= function(label) {
  * TODO (arjun): Add checks for ensuring data existence
  */
 Plot.prototype.show = function() {
-    console.log(this);
     $(this.canvas_).prepend(this.div_);
     var d3 = Plotly.d3;
     var WIDTH_IN_PERCENT_OF_PARENT = 540;
