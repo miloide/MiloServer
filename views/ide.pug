@@ -54,6 +54,12 @@ html
 						img#loadingDiv(style="display: none;width:50px;",src="media/loading.gif")
 					li
 						select#languageMenu(style="display: none;")
+					li
+						button#sidebarToggleButton.navbar-toggle.toggle-right(type='button', data-toggle='sidebar', data-target='.sidebar-right')
+							span.icon-bar
+							span.icon-bar
+							span.icon-bar
+
 
 			br
 			ul.nav.nav-tabs
@@ -108,5 +114,41 @@ html
 					.col-sm-12
 						h3 Generated XML
 						textarea#content_xml_text(wrap="off")
+		#sidebar.col-xs-7.col-sm-3.col-md-3.sidebar.sidebar-right.sidebar-animate
+			h3 Milo Data Science Tutorial
+			p Go through each step and complete the marked exercise
+			.pagination-container
+				ul.pagination
+					li(data-page='-')
+						a(href='#') <
+					li.active(data-page='1')
+						a(href='#') 1
+					li(data-page='2')
+						a(href='#') 2
+					li(data-page='3')
+						a(href='#') 3
+					li(data-page='4')
+						a(href='#') 4
+					li(data-page='5')
+						a(href='#') 5
+					li(data-page='+')
+						a(href='#') >
+
+				div(data-page='1')
+					p Content for Div Number 1
+				div(data-page='2', style='display:none;')
+					p Content for Div Number 2
+				div(data-page='3', style='display:none;')
+					p Content for Div Number 3
+				div(data-page='4', style='display:none;')
+					p Content for Div Number 4
+				div(data-page='5', style='display:none;')
+					p Content for Div Number 5
+
+
+
+
+
 
 		include toolbox.html
+		#snackbar

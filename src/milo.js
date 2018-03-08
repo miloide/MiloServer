@@ -457,7 +457,7 @@ Milo.initLanguage = function() {
 		languageMenu.options.add(option);
 	}
 	languageMenu.addEventListener('change', Milo.changeLanguage, true);
-
+	Helpers.paginationHandler();
 
 };
 
