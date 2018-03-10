@@ -8,6 +8,9 @@ var WebCam = {};
 WebCam.video = null;
 WebCam.loaded = false;
 WebCam.exists = true;
+var gaussian = require('./statistics/gaussian');
+var statistics_pmf = require('./statistics/pmf');
+var statistics_cdf = require('./statistics/cdf');
 
 /**
  * Setup Webcam HTML Div and define methods for handling video stream
@@ -480,5 +483,8 @@ module.exports = {
     imgFromURL,
     imgShow,
     getImageCanvas,
-    clearOutput
+    clearOutput,
+    gaussian,
+    statistics_cdf,
+    statistics_pmf
 }
