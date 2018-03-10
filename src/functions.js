@@ -1,13 +1,16 @@
+var pmf = require('./statistics/pmf');
 /**
  * Create a NameSpace for WebCam Operations
  */
 
 var WebCam = {};
-
 // Holder for HTMLVideoElement
 WebCam.video = null;
 WebCam.loaded = false;
 WebCam.exists = true;
+var gaussian = require('./statistics/gaussian');
+var statistics_pmf = require('./statistics/pmf');
+var statistics_cdf = require('./statistics/cdf');
 
 /**
  * Setup Webcam HTML Div and define methods for handling video stream
@@ -87,10 +90,10 @@ const clearOutput = () => {
     WebCam.loaded = false;
     // Clear outputs if any
     document.getElementById("console_javascript").innerHTML="";
-    $("#console_holder").hide();
-    $("#loadingDiv").hide();
     document.getElementById("misc_output").innerHTML="";
     document.getElementById("graph_output").innerHTML="";
+    $("#console_holder").hide();
+    $("#loadingDiv").hide();
 }
 
 /**
@@ -102,6 +105,7 @@ WebCam.image = function(callback){
         // Gracefully fall back to image
         $(WebCam.video).hide();
         imgShow(imgFromURL("media/nocamera.jpg",true));
+        return;
 
     }
 
@@ -251,24 +255,26 @@ SqueezeNet.classify_ = async function(imgTag) {  // jshint ignore:line
 console.webLog = (function (old_function,div_id) {
     return function (value) {
         //See https://developer.mozilla.org/en-US/docs/Web/API/Console/log
-        console.log(value);
-        if (value.then == undefined){
-            old_function(value);
-            $(div_id).append('<pre class="block">' + value + '</pre>');
-        }
-        else {
+        // console.log(value);
+        if (value instanceof Promise){
             Promise.resolve(value).then(function(val){
                 try{
                     var values = Object.values(JSON.parse(JSON.stringify(val)));
                     if (values.length == 1) values = values[0];
                     old_function(JSON.parse(JSON.stringify(values)));
-                    $(div_id).append('<pre class="block">' + JSON.stringify(values,null,1) + '</pre>');
+                    $(div_id).append('<pre class="block">' + JSON.stringify(values,null,2) + '</pre>');
                 } catch (e){
                     old_function(val);
                     $(div_id).append('<pre class="block">' + val + '</pre>');
                 }
 
             });
+        } else {
+            old_function(JSON.stringify(value));
+            if (JSON.stringify(value).length < 20)
+                $(div_id).append('<pre class="block">' + JSON.stringify(value) + '</pre>');
+            else
+            $(div_id).append('<pre class="block">' + JSON.stringify(value,null,2) + '</pre>');
         }
     };
 } (console.log.bind(console), "#console_javascript"));
@@ -350,6 +356,16 @@ Plot.prototype.addDataItem = function(data) {
     }
     data.marker["symbol"] = "circle";
     if (data.marker["color"] == "#ffffff") data.marker["color"] = undefined;
+    if (data.group != undefined && data.group.length){
+        var hist = pmf.makeHistFromList(data.group);
+        var keys = hist.dictwrapper.values();
+        var key2color = {}
+        for (var i in keys) key2color[keys[i]] = i+1;
+        var color = [];
+        for (var i in data.group) color.push(key2color[data.group[i]]);
+        data.marker["color"] = color;
+        data.text = data.group;
+    }
     if (data.type == "scatter") data.mode = data.isLine?"markers+lines":"markers";
     this.data_.push(data);
     return true;
@@ -426,7 +442,7 @@ Plot.prototype.setOptions = function(options){
                 this.setXLabel(options[index].value);
                 break;
             case "plot_ylabel":
-                this.setXLabel(options[index].value);
+                this.setYLabel(options[index].value);
                 break;
         }
     }
@@ -466,5 +482,9 @@ module.exports = {
     WebCam,
     imgFromURL,
     imgShow,
-    getImageCanvas
+    getImageCanvas,
+    clearOutput,
+    gaussian,
+    statistics_cdf,
+    statistics_pmf
 }

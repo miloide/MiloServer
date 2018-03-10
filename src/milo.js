@@ -1,13 +1,15 @@
 
 'use strict';
 var Helpers = require('./helpers');
+var clearOutput = require('./functions.js').clearOutput;
 var MSG = require('./strings');
 var Datasets = require('./datasets');
 var BlocklyStorage = window.BlocklyStorage = require('./storage');
-var DeepLearn = require('./deeplearn');
 
+var DeepLearn = require('./deeplearn');
+var swal = require('sweetalert');
 // Export globally
-window.$ = require('jquery');
+var $ = window.$ = require('jquery');
 window.jQuery  = window.$;
 window.Datasets = Datasets;
 var Blockly = window.Blockly = require('milo-blocks');
@@ -17,7 +19,6 @@ var utils = require('./functions')
 for (var key in utils) {
   global[key] = utils[key];
 }
-
 
 /**
  * Create a namespace for the application.
@@ -381,7 +382,7 @@ Milo.init = function() {
 				Milo.discard();
 				Milo.renderContent();
 	});
-	Milo.bindClick('runButton', Milo.runJS);
+	$(".runButton").click(Milo.runJS);
 	// TODO(arjun): Enable link button once Node JS server is setup with DB Store
 	var linkButton = document.getElementById('linkButton');
 	if ('BlocklyStorage' in window) {
@@ -389,8 +390,9 @@ Milo.init = function() {
 		BlocklyStorage['LINK_ALERT'] = MSG['linkAlert'];
 		BlocklyStorage['HASH_ERROR'] = MSG['hashError'];
 		BlocklyStorage['XML_ERROR'] = MSG['xmlError'];
-		Milo.bindClick(linkButton,
-				function() {BlocklyStorage.link(Milo.workspace);});
+		Milo.bindClick(linkButton, function() {
+			BlocklyStorage.link(Milo.workspace);
+		});
 	}
 
 	for (var i = 0; i < Milo.TABS_.length; i++) {
@@ -398,6 +400,16 @@ Milo.init = function() {
 		Milo.bindClick('tab_' + name,
 				function(name_) {return function() {Milo.tabClick(name_);};}(name));
 	}
+	var defaultDatasets = Object.keys(Datasets.loaded);
+	for (var index in defaultDatasets){
+		$("#menuDatasetImport").append('<li id="'+defaultDatasets[index]+
+			'MenuItem"><a href="#" onclick="Datasets.importHelper(\''+
+			defaultDatasets[index]+'\')">'+
+			defaultDatasets[index]+
+			'</a></li>'
+		);
+	}
+
 	//onresize();
 	//Blockly.svgResize(Milo.workspace);
 
@@ -440,7 +452,7 @@ Milo.initLanguage = function() {
 		languageMenu.options.add(option);
 	}
 	languageMenu.addEventListener('change', Milo.changeLanguage, true);
-
+	Helpers.paginationHandler();
 
 };
 
@@ -451,10 +463,9 @@ Milo.initLanguage = function() {
  *              https://developers.google.com/blockly/guides/app-integration/running-javascript
  */
 Milo.runJS = function() {
-	// Milo.selected = 'javascript';
-	// Milo.tabClick(Milo.selected);
-	document.getElementById("graph_output").innerHTML="";
 
+	clearOutput();
+	$('#sidebar').removeClass(sidebar-open);
 	Blockly.JavaScript.INFINITE_LOOP_TRAP = '  checkTimeout();\n';
 	var timeouts = 0;
 	var checkTimeout = function() {
@@ -484,16 +495,21 @@ Milo.runJS = function() {
  */
 Milo.discard = function() {
 	var count = Milo.workspace.getAllBlocks().length;
-	if (count < 2 ||
-			window.confirm(Blockly.Msg.DELETE_ALL_BLOCKS.replace('%1', count))) {
-		Milo.workspace.clear();
-		if (window.location.hash) {
-			window.location.hash = '';
-		}
-
-		// Clear run results
-		clearOutput();
+	if (count > 0){
+		swal("Are you sure you want to reset?",Blockly.Msg.DELETE_ALL_BLOCKS.replace('%1', count),"warning",{
+			buttons: true,
+			dangerMode: true
+		}).then(function(val) {
+			if (val){
+				Milo.workspace.clear();
+				if (window.location.hash) {
+					window.location.hash = '';
+				}
+			}
+		});
 	}
+	// Clear run results
+	clearOutput();
 };
 
 // Load the Code demo's language strings.

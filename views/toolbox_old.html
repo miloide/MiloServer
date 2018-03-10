@@ -1,6 +1,43 @@
 <xml id="toolbox" style="display: none">
-
-    <category name="%{BKY_CATMATH}" colour="%{BKY_COLOUR_HUE}">
+    <category name="%{BKY_CATLOGIC}" colour="%{BKY_LOGIC_HUE}">
+      <block type="controls_if"></block>
+      <block type="logic_compare"></block>
+      <block type="logic_operation"></block>
+      <block type="logic_negate"></block>
+      <block type="logic_boolean"></block>
+      <block type="logic_null"></block>
+      <block type="logic_ternary"></block>
+    </category>
+    <category name="%{BKY_CATLOOPS}" colour="%{BKY_LOOPS_HUE}">
+      <block type="controls_repeat_ext">
+        <value name="TIMES">
+          <shadow type="math_number">
+            <field name="NUM">10</field>
+          </shadow>
+        </value>
+      </block>
+      <block type="controls_whileUntil"></block>
+      <block type="controls_for">
+        <value name="FROM">
+          <shadow type="math_number">
+            <field name="NUM">1</field>
+          </shadow>
+        </value>
+        <value name="TO">
+          <shadow type="math_number">
+            <field name="NUM">10</field>
+          </shadow>
+        </value>
+        <value name="BY">
+          <shadow type="math_number">
+            <field name="NUM">1</field>
+          </shadow>
+        </value>
+      </block>
+      <block type="controls_forEach"></block>
+      <block type="controls_flow_statements"></block>
+    </category>
+    <category name="%{BKY_CATMATH}" colour="%{BKY_MATH_HUE}">
       <block type="math_number"></block>
       <block type="math_arithmetic">
         <value name="A">
@@ -43,7 +80,7 @@
           </shadow>
         </value>
       </block>
-
+      <block type="math_on_list"></block>
       <block type="math_modulo">
         <value name="DIVIDEND">
           <shadow type="math_number">
@@ -87,70 +124,8 @@
       </block>
       <block type="math_random_float"></block>
     </category>
-
-    <category name="Statistics" colour="%{BKY_HISTOGRAM_HUE}">
-      <block type="lists_split_math">
-          <value name="INPUT">
-            <shadow type="text">
-              <field name="TEXT">1,2,3</field>
-            </shadow>
-          </value>
-          <value name="DELIM">
-            <shadow type="text">
-              <field name="TEXT">,</field>
-            </shadow>
-          </value>
-      </block>
-      <block type="math_on_list"></block>
-      <block type="stats_construct_pmf">
-        <field name="NAME">makeHistFromList</field>
-      </block>
-      <block type="normal_distribution"></block>
-      <block type="normal_distribution_getters">
-        <field name = "NAME2">pdf</field>
-      </block>
-      <block type="stats_pmf_getters">
-        <field name="NAME">items</field>
-      </block>
-      <block type="stats_pmf_operations">
-        <field name="NAME">mean</field>
-      </block>
-      <block type="lists_sort"></block>
-    </category>
-    <category name="Plot"  colour="%{BKY_SCATTER_HUE}">
-      <block type="plot_scatter">
-        <field name="HUE">#ffffff</field>
-        <field name="Connect">TRUE</field>
-      </block>
-      <block type="function_plot"></block>
-      <block type="function_plot_x"></block>
-      <block type="plot_histogram">
-        <field name="HUE">#ffffff</field>
-      </block>
-      <block type="plot_bar">
-        <field name="HUE">#ffffff</field>
-      </block>
-      <block type="plot_title">
-        <field name="NAME">My Plot</field>
-      </block>
-      <block type="plot_show"></block>
-      <block type="plot_x_title">
-        <field name="NAME">My Plot</field>
-      </block>
-      <block type="plot_y_title">
-        <field name="NAME">My Plot</field>
-      </block>
-    </category>
-    <category name="Datasets" colour="%{BKY_HISTOGRAM_HUE}" custom="DATASETS"></category>
     <category name="%{BKY_CATTEXT}" colour="%{BKY_TEXTS_HUE}">
       <block type="text"></block>
-      <block type="text_log">
-        <value name="TEXT">
-          <shadow type="text">
-            <field name="TEXT">abc</field>
-          </shadow>
-        </value>
-      </block>
       <block type="text_join"></block>
       <block type="text_append">
         <value name="TEXT">
@@ -211,14 +186,20 @@
           </shadow>
         </value>
       </block>
-      <!-- <block type="text_print">
+      <block type="text_print">
         <value name="TEXT">
           <shadow type="text">
             <field name="TEXT">abc</field>
           </shadow>
         </value>
-      </block> -->
-
+      </block>
+      <block type="text_log">
+        <value name="TEXT">
+          <shadow type="text">
+            <field name="TEXT">abc</field>
+          </shadow>
+        </value>
+      </block>
       <block type="text_prompt_ext">
         <value name="TEXT">
           <shadow type="text">
@@ -280,19 +261,7 @@
       </block>
       <block type="lists_sort"></block>
     </category>
-    <category name="Image" colour="%{BKY_IMAGE_HUE}">
-      <block type="img_from_webcam"></block>
-      <block type="squeezenet_label"></block>
-      <block type="img_show"></block>
-      <block type="img_from_url">
-          <value name="TEXT">
-              <shadow type="text">
-                <field name="TEXT">https://storage.googleapis.com/learnjs-data/images/cat.jpeg</field>
-              </shadow>
-            </value>
-      </block>
-    </category>
-    <!-- <category name="%{BKY_CATCOLOUR}" colour="%{BKY_COLOUR_HUE}">
+    <category name="%{BKY_CATCOLOUR}" colour="%{BKY_COLOUR_HUE}">
       <block type="colour_picker"></block>
       <block type="colour_random"></block>
       <block type="colour_rgb">
@@ -329,49 +298,13 @@
           </shadow>
         </value>
       </block>
-    </category> -->
-    <sep></sep>
-    <category name="Conditions" colour="%{BKY_LOOPS_HUE}">
-      <block type="controls_repeat_ext">
-        <value name="TIMES">
-          <shadow type="math_number">
-            <field name="NUM">10</field>
-          </shadow>
-        </value>
-      </block>
-      <block type="controls_whileUntil"></block>
-      <block type="controls_for">
-        <value name="FROM">
-          <shadow type="math_number">
-            <field name="NUM">1</field>
-          </shadow>
-        </value>
-        <value name="TO">
-          <shadow type="math_number">
-            <field name="NUM">10</field>
-          </shadow>
-        </value>
-        <value name="BY">
-          <shadow type="math_number">
-            <field name="NUM">1</field>
-          </shadow>
-        </value>
-      </block>
-      <block type="controls_forEach"></block>
-      <block type="controls_flow_statements"></block>
-      <block type="controls_if"></block>
-      <block type="logic_compare"></block>
-      <block type="logic_operation"></block>
-      <block type="logic_negate"></block>
-      <block type="logic_boolean"></block>
-      <block type="logic_null"></block>
-      <block type="logic_ternary"></block>
     </category>
+    <sep></sep>
     <category name="%{BKY_CATVARIABLES}" colour="%{BKY_VARIABLES_HUE}" custom="VARIABLE"></category>
     <category name="%{BKY_CATFUNCTIONS}" colour="%{BKY_PROCEDURES_HUE}" custom="PROCEDURE"></category>
     <sep></sep>
     <category name="%{BKY_CATML}" colour="%{BKY_ML_HUE}" expanded="true">
-      <category name="Vector Math" colour="%{BKY_COLOUR_HUE}">
+      <category name="%{BKY_CATMATH}" colour="%{BKY_ML_HUE}">
         <block type="dl_number"></block>
         <block type="dl_array1d"></block>
         <block type="dl_get_scalar"></block>
@@ -408,7 +341,7 @@
             </value>
           </block>
       </category>
-      <category name="Deep Learning" colour="%{BKY_HISTOGRAM_HUE}">
+      <category name="Miscellaneous" colour="%{BKY_ML_HUE}">
         <block type="dl_optimizer">
           <field name="optimizer">SGD</field>
         </block>
@@ -428,9 +361,53 @@
           <field name="batchSize">0</field>
         </block>
       </category>
-
-
-
-
+      <category name="Image" colour="%{BKY_IMAGE_HUE}">
+          <block type="img_from_webcam"></block>
+          <block type="squeezenet_label"></block>
+          <block type="img_show"></block>
+          <block type="img_from_url">
+              <value name="TEXT">
+                  <shadow type="text">
+                    <field name="TEXT">https://storage.googleapis.com/learnjs-data/images/cat.jpeg</field>
+                  </shadow>
+                </value>
+          </block>
+      </category>
+      <category name="Statistics" colour="%{BKY_PLOT_HUE}">
+        <block type="stats_construct_pmf">
+          <field name="NAME">makeHistFromList</field>
+        </block>
+        <block type="stats_pmf_getters">
+          <field name="NAME">items</field>
+        </block>
+        <block type="stats_pmf_operations">
+          <field name="NAME">mean</field>
+        </block>
+      </category>
+      <category name="Plot"  colour="%{BKY_PLOT_HUE}">
+        <block type="plot_scatter">
+          <field name="HUE">#ffffff</field>
+          <field name="Connect">TRUE</field>
+        </block>
+        <block type="function_plot"></block>
+        <block type="function_plot_x"></block>
+        <block type="plot_histogram">
+          <field name="HUE">#ffffff</field>
+        </block>
+        <block type="plot_bar">
+          <field name="HUE">#ffffff</field>
+        </block>
+        <block type="plot_title">
+          <field name="NAME">My Plot</field>
+        </block>
+        <block type="plot_show"></block>
+        <block type="plot_x_title">
+          <field name="NAME">My Plot</field>
+        </block>
+        <block type="plot_y_title">
+          <field name="NAME">My Plot</field>
+        </block>
+      </category>
+      <category name="Datasets" colour="%{BKY_HISTOGRAM_HUE}" custom="DATASETS"></category>
   </category>
 </xml>

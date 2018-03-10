@@ -15,10 +15,10 @@ routes.post('/storage', function(req, res){
         console.log(hash);
         instance.save(function(err){
             if(err)
-                return res.status(500).send(err);                   
+                return res.status(500).send(err);
             console.log("Saved!");
             return res.send(hash);
-        });     
+        });
     }
     else if(key == 'key'){
         var value = req.body.key;
