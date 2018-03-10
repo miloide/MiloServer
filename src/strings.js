@@ -1,6 +1,6 @@
 // To change global colour brightness - set HSV Saturation and Value between 0(inclusive) and 1(exclusive);
-Blockly.HSV_SATURATION = 0.60;
-Blockly.HSV_VALUE = 0.75;
+Blockly.HSV_SATURATION = 0.89;
+Blockly.HSV_VALUE = 0.95;
 
 
 var MSG = {
