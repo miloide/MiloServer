@@ -215,6 +215,9 @@
       <block type="lists_create_with"></block>
       <block type="lists_zip_with"></block>
       <block type="lists_numeric"></block>
+      <block type="create_list_from_range">
+        <field name="min_range">Create list from range</field>
+      </block>
       <block type="lists_repeat">
         <value name="NUM">
           <shadow type="math_number">
@@ -389,8 +392,13 @@
           <field name="HUE">#ffffff</field>
           <field name="Connect">TRUE</field>
         </block>
+        <block type="straight_line">
+          <field name="slope">Slope</field>
+        </block>
+
         <block type="function_plot"></block>
         <block type="function_plot_x"></block>
+        <block type="function_plot_y"</block>
         <block type="plot_histogram">
           <field name="HUE">#ffffff</field>
         </block>

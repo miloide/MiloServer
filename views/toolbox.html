@@ -122,8 +122,13 @@
         <field name="HUE">#ffffff</field>
         <field name="Connect">TRUE</field>
       </block>
+              <block type="straight_line">
+          <field name="slope">Slope</field>
+        </block>
+      
       <block type="function_plot"></block>
       <block type="function_plot_x"></block>
+      
       <block type="plot_histogram">
         <field name="HUE">#ffffff</field>
       </block>
@@ -140,6 +145,7 @@
       <block type="plot_y_title">
         <field name="NAME">My Plot</field>
       </block>
+      <block type="function_plot_y"</block>
     </category>
     <category name="Datasets" colour="%{BKY_HISTOGRAM_HUE}" custom="DATASETS"></category>
     <category name="%{BKY_CATTEXT}" colour="%{BKY_TEXTS_HUE}">
@@ -240,6 +246,9 @@
             <field name="NUM">5</field>
           </shadow>
         </value>
+      </block>
+            <block type="create_list_from_range">
+        <field name="min_range">0</field>
       </block>
       <block type="lists_length"></block>
       <block type="lists_isEmpty"></block>
