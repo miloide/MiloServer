@@ -6,4 +6,3 @@ describe('Testing DeepLearn module', function() {
     expect(DeepLearn.setup,"expected setup").to.exist;
   });
 });
-
