@@ -13,6 +13,7 @@
   "author": "Arjun Rao, Ayush Bihani",
   "license": "MIT",
   "dependencies": {
+    "@material/fab": "^0.32.0",
     "bcrypt": "^1.0.3",
     "bcrypt-nodejs": "0.0.3",
     "body-parser": "^1.17.1",
