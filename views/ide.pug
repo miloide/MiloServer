@@ -1,0 +1,244 @@
+doctype html
+html
+	include head.pug
+	body
+		nav.navbar.navbar-default
+			.navbar-header
+				a.navbar-brand(href='#') Milo
+			// Collect the nav links, forms, and other content for toggling
+			#navigation.collapse.navbar-collapse
+				ul.nav.navbar-nav
+					li.btn-group
+						li.dropdown
+							a.dropdown-toggle(href='#', data-toggle='dropdown', role='button', aria-haspopup='true', aria-expanded='false')
+								| Project
+								span.caret
+							ul.dropdown-menu
+								li
+									a#linkButton(href='#') Save
+								li
+									a(href='#') Load project
+								li
+									a(href='#') Download Project
+								li.divider(role='separator')
+								li
+									a(href='#') Login or SignUp
+					li.btn-group
+						li.dropdown
+							a.dropdown-toggle(href='#', data-toggle='dropdown', role='button', aria-haspopup='true', aria-expanded='false')
+								| Editor
+								span.caret
+							ul.dropdown-menu
+								li
+									a.runButton(href='#') Run
+								li.divider(role='separator')
+								li
+									a#trashButton(href='#') Reset
+					li.btn-group
+						li.dropdown
+							a.dropdown-toggle(href='#', data-toggle='dropdown', role='button', aria-haspopup='true', aria-expanded='false')
+								| Datasets
+								span.caret
+							ul#menuDatasetImport.dropdown-menu
+								li
+									a(href='#' onclick='Datasets.triggerClick()') Upload
+								li.divider(role='separator')
+								li
+									span &nbsp Built In Datasets
+
+
+					li
+						a.runButton(href='#') Run
+				ul.nav.navbar-nav.navbar-right
+					li
+						img#loadingDiv(style="display: none;width:50px;",src="media/loading.gif")
+					li
+						select#languageMenu(style="display: none;")
+					li
+						button#sidebarToggleButton.navbar-toggle.toggle-right(type='button', data-toggle='sidebar', data-target='.sidebar-right')
+							span.icon-bar
+							span.icon-bar
+							span.icon-bar
+
+
+			br
+			ul.nav.nav-tabs
+				li.active(role='presentation')
+					a#tab_blocks.tabon(href='#') Workspace
+				li(role='presentation')
+					a#tab_data.taboff(href='#') Data Explorer
+				li(role='presentation')
+					a#tab_javascript.taboff(href='#') Code
+				li(role='presentation')
+					a#tab_xml.taboff(href='#') Debug
+		#content_blocks.content
+			.container-fluid.zero-margin
+				.row
+					.col-lg-7
+						#content_workspace(style="height: 88vh; width: 100%;")
+					#outputs.col-lg-5.scroll.zero-margin.pull-right
+						#graph_output(style="display: none")
+						#misc_output
+						#console_holder(style="display: none")
+							h3 Console Output
+							#console_javascript
+		#content_data.content
+			.container-fluid
+				.row
+					.col-lg-4
+						h3 Data Explorer
+						p Select a dataset from the list below to view or import from the menu.
+						//- select#builtInDropdown
+						//- button(onclick="Datasets.importBuiltIn();") Import
+						//- button(onclick="Datasets.triggerClick();") Upload
+						input#fileLoader(type="file", name="files", onchange= "Datasets.uploadDataset(event)",style = "display : none")
+						br
+						button#dataset_save(style='display:none') Save
+						//- button#alertModalTrigger(data-toggle="modal", data-target="#alertModal", style="display:none")
+						//- button#confirmModalTrigger(data-toggle="modal", data-target="#confirmModal", style="display:none")
+						//- .col-lg-12
+						//- h4 Loaded Datasets (click to view)
+						ul#dataset_list
+					#explorer.col-lg-7
+						.col-lg-12
+							#dataset_output
+		#content_javascript.content
+			.container-fluid
+				.row
+					.col-lg-6
+						h3 Generated JS
+						pre#source_javascript.code
+		#content_xml.content
+			.container-fluid
+				.row
+					.col-sm-12
+						h3 Generated XML
+						textarea#content_xml_text(wrap="off")
+		#sidebar.col-xs-7.col-sm-3.col-md-3.sidebar.sidebar-right.sidebar-animate
+			h3 Milo Data Science Tutorial
+			p Go through each step and complete the marked exercise
+			.pagination-container
+				ul.pagination
+					li(data-page='-')
+						a(href='#') <
+					li.active(data-page='1')
+						a(href='#') 1
+					li(data-page='2')
+						a(href='#') 2
+					li(data-page='3')
+						a(href='#') 3
+					li(data-page='4')
+						a(href='#') 4
+					li(data-page='5')
+						a(href='#') 5
+					li(data-page='+')
+						a(href='#') >
+
+
+
+				div(data-page='1', class="page-data")
+					h3
+						strong
+							| Hello! Welcome to Milo !
+							img(src='https://html-online.com/editor/tinymce4_6_5/plugins/emoticons/img/smiley-cool.gif', alt='cool')
+							| . Here's a quick tour of milo.
+					ul
+							li The left hand side of milo is the
+							strong  toolbox
+							| where you can find a plethora of blocks to use to construct some awesome programs! The toolbox is organized in categories. Each category has blocks that perform some operation related to the category.
+							br
+							li To try out these blocks, go ahead and select any one of the category and drag the blocks into the
+							strong workspace
+							| As you can see, these blocks have some kind of notch. These notches allow you to
+							strong connect
+							|two or more blocks together into one unit. Go ahead and try this.
+							br
+							li To create variables go to the
+							strong variables category
+							| and click on create variable. You will be prompted with an alert. Add the variable name and then you can see blocks for the new variable are created.
+							li Took a look at these blocks!
+							br
+					img(src='media/milo.png',alt='Milo Blocks' class="center")
+
+				div(data-page='2', class="page-data",style='display:none;')
+					h3
+						strong How to plot with Milo
+					ul
+						li Its always better to plot data to gain more insight such as outliers from them. 
+						br
+						li To create a plot, make sure you first have a list to begin with. You can create a list using create list block from category lists or you can import one of the built in datasets from the datasets dropdown and drag a block from datasets category and setting your desirable column to plot from the dataset.
+						br
+						li Try importing one of the datasets from the dataset dropdown. Once you click on the dataset, switch over to the tab view to view the dataset.
+						br
+						li Take a look at the example below to see how list can be created!
+
+					img(src='media/lists.png',class="center", alt='list')
+
+					ul
+						br
+						li You can create a list of numbers by selecting the create list block from advanced category.
+						br
+						li Go to next tab to continue the plotting tutorial
+
+				div(data-page='3', class="page-data",style='display:none;')
+					h3 How to plot with Milo Continued
+					ul
+						li To create a plot, you will require two basic blocks. Click on the plot category to see the various kinds of plots available.
+						br
+						li First drag te kind of plot you want to create. For example drag the bar plot into the workspace. Next drag the data lists you want to visualize into the workspace.
+						br
+						li For a better visualization, use one of the built in datasets. Connect the list to bar plot block. Connect iris Length list block to X and class list block to Y
+						br
+						li Once you have connected the data list blocks with bar plot, drag the plot block from the plot category. Now connect the bar plot block to this newly dragged plot block.
+						br
+						li Now click on run to visualize the bar plot :).
+					img(src='media/plots.png',class="center", alt='list')
+				div(data-page='4', class="page-data",style='display:none;')
+
+					h3
+						strong Probability Mass Function
+					p
+					| In probability and statistics, a probability mass function (pmf) is a function that gives the probability that a discrete random variable is exactly equal to some value. The probability mass function is often the primary means of defining a discrete probability distributions.
+					p
+					| A 
+					strong PMF equation 
+					| looks like this:
+					br
+					| P(X = x).
+					br
+					| That just means “the probability that X takes on some value.
+					p
+					| It’s not a very useful equation on its own; What’s more useful is an equation that tells you the probability of some individual event happening. For example:
+					br
+					| P(X=1) = 0.2 * 0.2.
+					p
+					strong Experiment
+					|  :: Suppose I toss a fair die twice independently.
+					br
+					strong Random Variable
+					|  :: X = Minimum of the two outcomes
+					br
+					strong Sample space S = {(i, j)|1 ≤ i, j ≤ 6}.
+					br
+					| Please note that the sample space has 36 elements and hence element has probability 1/36.
+					br
+					| The values X can take are {1, 2, 3, 4, 5, 6}.
+					br
+					| X = i corresponds to the event {(i, i),(i, i + 1),(i + 1, i), . . . ,(i, 6),(6, i)}.
+					br
+					| Hence
+					br
+					| P(X = i) = (1 + (6 − i) ∗ 2)/36 =(13 − 2i)/36
+					p
+					br
+					| Thus we can write the pmf as
+					br
+					| pX(x) = (13 − 2x)/36
+					br
+					| for x ∈ {1, 2, . . . , 6}
+
+				div(data-page='5',class="page-data", style='display:none;')
+					p Coming Soon
+
+		include toolbox.html
+		#snackbar
