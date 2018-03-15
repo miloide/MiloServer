@@ -4,7 +4,7 @@ var app = express();
 var path = require('path');
 var http = require('http');
 var bodyParser = require('body-parser');
-var routes = require('./routes/index')
+var routes = require('./routes/index');
 const webpackHotMid = require("webpack-hot-middleware");
 const NODE_ENV = process.env.NODE_ENV ? process.env.NODE_ENV.toLowerCase() : 'development';
 
@@ -33,7 +33,7 @@ app.get('/', function(req, res){
 
 try {
   db.connect('mongodb://localhost:27017/miloDB');
-} catch(e){
+} catch (e){
   console.log(e.message);
 }
 
