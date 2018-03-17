@@ -1,7 +1,7 @@
 var webpack = require("webpack");
 var path = require("path");
 
-var OUT_DIR = path.join(__dirname,"public")
+var OUT_DIR = path.join(__dirname,"public");
 
 module.exports = {
   entry:[
@@ -24,6 +24,17 @@ module.exports = {
   resolve: {
     extensions: ['.js'],
   },
+  module: {
+   rules: [
+      {
+        test: /\.js$/,
+        exclude: /(node_modules)/,
+        use: {
+          loader: 'babel-loader',
+        }
+      }
+    ]
+  },
   plugins: [
     new webpack.ProvidePlugin({
       $: 'jquery',
@@ -35,4 +46,5 @@ module.exports = {
     new webpack.HotModuleReplacementPlugin(),
     new webpack.NoEmitOnErrorsPlugin(),
   ],
+  devtool: 'source-map'
 };
