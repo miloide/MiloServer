@@ -14,7 +14,20 @@ var config = {
   node: {
     fs: 'empty'
   },
-
+  module: {
+    rules: [
+       {
+         test: /\.js$/,
+         exclude: /(node_modules)/,
+         use: {
+           loader: 'babel-loader',
+           options: {
+             presets: ['env']
+           }
+         }
+       }
+     ]
+  },
 
   plugins: [
     new WebpackShellPlugin({

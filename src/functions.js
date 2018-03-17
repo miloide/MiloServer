@@ -128,12 +128,12 @@ WebCam.image = function(callback){
 WebCam.capture_ = function(){
     var canvas = getImageCanvas();
     var context =  canvas.getContext("2d");
-    const w = 227,h = 227;
+    var w = 227,h = 227;
     // Define the size of the rectangle that will be filled (basically the entire element)
     context.fillRect(0, 0, w, h);
     // Grab the image from the video
     context.drawImage(WebCam.video, 0, 0, w, h);
-    const url = canvas.toDataURL();
+    var url = canvas.toDataURL();
     return imgFromURL(url,true);
 };
 
@@ -141,7 +141,7 @@ WebCam.capture_ = function(){
  * Returns a singleton HTMLCanvasElement
  * @returns {HTMLCanvasElement}
  */
-const getImageCanvas = () => {
+function getImageCanvas(){
     var canvas = document.getElementById("ImageCanvas");
     if(canvas == undefined){
         canvas = document.createElement("canvas");
@@ -157,7 +157,7 @@ const getImageCanvas = () => {
  * @param {string} url Url for src attribute of generated <img> tag
  * @returns {HTMLImageElement}
  */
-const imgFromURL = (url,isWebCam) => {
+function imgFromURL(url,isWebCam){
     const w = 227,h = 227;
     var img = new Image(w,h);
     img.setAttribute("crossorigin","anonymous");
@@ -176,7 +176,7 @@ const imgFromURL = (url,isWebCam) => {
  * Render Image on UI
  * @param {HTMLImageElement} <img> tag to render
  */
-const imgShow = (imgTag) => {
+function imgShow(imgTag){
     $('#loadingDiv').show();
     if(typeof(imgTag)=="function"){
         imgTag(imgShow);
@@ -228,7 +228,7 @@ SqueezeNet.classify = function(imgTag){
  * @param {HTMLImageElement} imgTag HTML <img> tag with loaded image for classification
  * @private
  */
-SqueezeNet.classify_ = async function(imgTag) {  // jshint ignore:line
+SqueezeNet.classify_ = async (imgTag) => {  // jshint ignore:line
     const math = new dl.NDArrayMath('webgl', dl.safeMode);
     // squeezenet is loaded from https://unpkg.com/deeplearn-squeezenet
     const squeezeNet = new squeezenet.SqueezeNet(math);
