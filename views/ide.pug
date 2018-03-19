@@ -21,8 +21,14 @@ html
 								li
 									a(href='#') Download Project
 								li.divider(role='separator')
-								li
-									a(href='#') Login or SignUp
+								if locals.user
+									li
+										a(href='/users/logout') Logout
+								else
+									li
+										a(href='/users/login') Login
+									li
+										a(href='/users/register') Register
 					li.btn-group
 						li.dropdown
 							a.dropdown-toggle(href='#', data-toggle='dropdown', role='button', aria-haspopup='true', aria-expanded='false')
@@ -45,10 +51,10 @@ html
 								li.divider(role='separator')
 								li
 									span &nbsp Built In Datasets
-
-
 					li
 						a.runButton(href='#') Run
+
+
 				ul.nav.navbar-nav.navbar-right
 					li
 						img#loadingDiv(style="display: none;width:50px;",src="media/loading.gif")

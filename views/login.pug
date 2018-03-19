@@ -1,0 +1,16 @@
+extends layout.pug
+block content
+ .container
+  .card.card-container
+    // <img class="profile-img-card" src="//lh3.googleusercontent.com/-6V8xOA6M7BA/AAAAAAAAAAI/AAAAAAAAAAA/rzlHcD0KYwo/photo.jpg?sz=120" alt="" />
+    img#profile-img.profile-img-card(src='//ssl.gstatic.com/accounts/ui/avatar_2x.png')
+    p#profile-name.profile-name-card
+    form.form-signin(method='post', action='/users/login')
+      span#reauth-email.reauth-email
+      input#inputEmail.form-control(type='email', placeholder='Email address', required='', autofocus='')
+      input#inputPassword.form-control(type='password', placeholder='Password', required='')
+      #remember.checkbox
+        label
+          input(type='checkbox', value='remember-me')
+          |  Remember me
+      button.btn.btn-lg.btn-primary.btn-block.btn-signin(type='submit') Sign in

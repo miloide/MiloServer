@@ -1,6 +1,7 @@
 const routes = require('express').Router();
 var db = require('../database').getdb();
 var blockModel = require('../models/blocks.js');
+var userModel = require('../models/user.js');
 var bcrypt =  require('bcrypt');
 var salt = bcrypt.genSaltSync(10);
 
@@ -42,5 +43,7 @@ routes.get("/storage", function(req, res){
     //retrieve all values using find function
 
 });
+
+
 
 module.exports = routes;

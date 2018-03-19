@@ -1,0 +1,21 @@
+extends layout.pug
+block content
+  .container-fluid
+    .row
+      .col-xs-12.col-md-offset-4.col-md-4.card-div.text-center
+        h2 Create your Milo ID
+        hr
+        .col-xs-12.col-lg-6.col-lg-offset-2
+          form(method='post', action='/users/register')
+            .form-group
+              input.form-control(type='text', placeholder='Name', name='name',size=6)
+            .form-group
+              input.form-control(type='text', placeholder='Username', name='username',size=6)
+            .form-group
+              input.form-control(type='email', placeholder='Email', name='email',size=6)
+            .form-group
+              input.form-control(type='password', placeholder='Password', name='password',size=6)
+            .form-group           
+              input.form-control(type='password', placeholder='Confirm Password', name='password2',size=6)
+          button.btn.btn-success(type='submit') Sign Up
+        //- button.btn.btn-default(ty)
