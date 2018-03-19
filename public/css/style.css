@@ -596,10 +596,3 @@ However, delay the fade out process for 2.5 seconds */
 
 
 
-.card-div {
-    box-shadow: 0px 0px 20px #ddd;
-    border-radius: 10px;
-    padding: 20px 30px;
-    margin-top: 20px;
-    margin-bottom: 40px;
-}
