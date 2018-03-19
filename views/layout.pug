@@ -11,7 +11,12 @@ html
         link(rel="stylesheet", href="/css/layout.css")
         link(href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet")
     body(style="padding-top: 70px;")
-        block navigation
+        nav.navbar.navbar-fixed-top.navbar-default
+            .container-fluid
+                .navbar-header
+                    a.navbar-brand(href='#') Milo
+                #navigation.collapse.navbar-collapse
+                    block navigation
         block content
         footer.footer.navbar-default.navbar-fixed-bottom
             block footer
