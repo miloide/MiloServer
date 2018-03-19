@@ -51,8 +51,7 @@ app.use(expressValidator({
       var namespace = param.split('.')
       , root    = namespace.shift()
       , formParam = root;
-
-    while(namespace.length) {
+    while (namespace.length) {
       formParam += '[' + namespace.shift() + ']';
     }
     return {
@@ -93,7 +92,7 @@ app.get('/',isAuthenticated, function(req, res){
 
 try {
   db.connect('mongodb://localhost:27017/miloDB');
-} catch(e){
+} catch (e){
   console.log(e.message);
 }
 
