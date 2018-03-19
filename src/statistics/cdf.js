@@ -1,3 +1,24 @@
+
+function zip(arrays) {
+    return arrays[0].map(function(_,i){
+        return arrays.map(function(array){return array[i]});
+    });
+}
+/** 
+*   Represents a cumulative distribution function.
+
+    @param xs: sequence of values
+    @param ps: sequence of probabilities
+    @param name: string used as a graph label.
+*/
+
+function Cdf(xs = undefined, ps = undefined, name =''){
+    if(xs == undefined)
+        this.xs = [];
+    if(ps == undefined)
+        this.ps = [];
+    this.name = name;
+}
 Cdf.prototype.bisect = function (val) {
     var idx;
     if (this.length === 0) {
@@ -20,26 +41,13 @@ Cdf.prototype.insert = function (val, inPlace) {
     return this.slice(0, idx).concat([val], this.slice(idx));
 };
 
-function zip(arrays) {
-    return arrays[0].map(function(_,i){
-        return arrays.map(function(array){return array[i]});
-    });
-}
-
-function Cdf(xs = undefined, ps = undefined, name =''){
-    if(xs == undefined)
-        this.xs = [];
-    if(ps == undefined)
-        this.ps = [];
-    this.name = name;
-}
-
-Cdf.prototype.values = function(){
+Cdf.prototype.vals = function(){
     return this.xs;
 }
 
+//Returns a sorted sequence of (value, probability) pairs
 Cdf.prototype.items = function(){
-
+    return zip([this.xs,this.ps]);
 }
 
 Cdf.prototype.append = function(x, p){
@@ -47,15 +55,24 @@ Cdf.prototype.append = function(x, p){
     this.ps.push(p);
 }
 
+/**
+ *  Returns CDF(x), the probability that corresponds to value x.
+    @param x: number
+    returns: float probability
+ */
 Cdf.prototype.prob = function(x){
     if(x < this.x[0])
         return 0.0;
     var index = this.xs.bisect(x);
     var prob = this.ps[index];
     return prob;
-}
 
-Cdf.prototype.value = function(p){
+/**
+ *  Returns InverseCDF(p), the value that corresponds to probability p.
+    @param p: number in the range [0, 1]
+    returns: number value
+ */
+Cdf.prototype.val = function(p){
     if(p < 0 || p >1)
         throw "Probability p must be in range [0,1]";
     if(p == 0)
@@ -69,14 +86,25 @@ Cdf.prototype.value = function(p){
         return this.xs[index];
 }
 
+/**
+ *  Returns the value that corresponds to percentile p.
+    @param p: number in the range [0, 100]
+    returns:number value
+ */
+
 Cdf.prototype.percentile = function(p){
-    return this.value(p/100.0);
+    return this.val(p/100.0);
 }
 
+//Chooses a random value from this distribution
 Cdf.prototype.random = function(){
-    return this.value(Math.random());
+    return this.val(Math.random());
 }
 
+/**
+ *  Generates a random sample from this distribution.
+    @param n: int length of the sample
+ */
 Cdf.prototype.sample = function(n){
     this.random = [];
     for(var i = 0;i < n; i++){
@@ -85,6 +113,7 @@ Cdf.prototype.sample = function(n){
     return this.random;
 }
 
+//omputes the mean of a CDF
 Cdf.prototype.mean = function(){
     var old_p = 0;
     var total = 0.0;
@@ -97,7 +126,14 @@ Cdf.prototype.mean = function(){
     return total;
 }
 
+/**
+ *  Generates a sequence of points suitable for plotting.
+    An empirical CDF is a step function; linear interpolation
+    can be misleading.
+    returns:tuple of (xs, ps)
+ */
 Cdf.prototype.render = function(){
+
 
     var xs = [this.xs[0]];
     ps = [0.0];
