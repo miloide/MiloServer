@@ -6,13 +6,17 @@
     var r = t * Math.exp(-z * z - 1.26551223 + t * (1.00002368 +
             t * (0.37409196 + t * (0.09678418 + t * (-0.18628806 +
             t * (0.27886807 + t * (-1.13520398 + t * (1.48851587 +
-            t * (-0.82215223 + t * 0.17087277)))))))))
+            t * (-0.82215223 + t * 0.17087277)))))))));
     return x >= 0 ? r : 2 - r;
   };
 
   var ierfc = function(x) {
-    if (x >= 2) { return -100; }
-    if (x <= 0) { return 100; }
+    if (x >= 2) {
+ return -100;
+}
+    if (x <= 0) {
+ return 100;
+}
 
     var xx = (x < 1) ? x : 2 - x;
     var t = Math.sqrt(-2 * Math.log(xx / 2));
@@ -36,7 +40,7 @@
     this.mean = mean;
     this.variance = variance;
     this.standardDeviation = Math.sqrt(variance);
-  }
+  };
 
   // Probability density function
   Gaussian.prototype.pdf = function(x) {
@@ -56,25 +60,25 @@
 
   // Product distribution of this and d (scale for constant)
   Gaussian.prototype.mul = function(d) {
-    if (typeof(d) === "number") {
+    if (typeof (d) === "number") {
       return this.scale(d);
     }
     var precision = 1 / this.variance;
     var dprecision = 1 / d.variance;
     return fromPrecisionMean(
-        precision + dprecision, 
+        precision + dprecision,
         precision * this.mean + dprecision * d.mean);
   };
 
   // Quotient distribution of this and d (scale for constant)
   Gaussian.prototype.div = function(d) {
-    if (typeof(d) === "number") {
+    if (typeof (d) === "number") {
       return this.scale(1 / d);
     }
     var precision = 1 / this.variance;
     var dprecision = 1 / d.variance;
     return fromPrecisionMean(
-        precision - dprecision, 
+        precision - dprecision,
         precision * this.mean - dprecision * d.mean);
   };
 
@@ -96,20 +100,18 @@
   Gaussian.prototype.generate_list = function(func_name, list){
     var new_list = [];
     var func = (func_name == 'pdf')?this.pdf.bind(this):((func_name == 'cdf')? this.cdf.bind(this):this.ppf.bind(this));
-    console.log(func);
     list.forEach(function(element) {
-        new_list.push(func(element)); 
+        new_list.push(func(element));
     }, this);
-    return new_list; 
+    return new_list;
   };
 
   Gaussian.prototype.evaluate = function(opcode, list_var){
-    
-    if(list_var.push != undefined){
-      output = this.generate_list(opcode, list_var); 
-    }
-    else
-      output = this[opcode](list_var);
+
+    if (list_var.push != undefined){
+      output = this.generate_list(opcode, list_var);
+    } else
+      {output = this[opcode](list_var);}
     return output;
   };
   var gaussian = function(mean, variance) {
@@ -122,6 +124,10 @@
 
   exports(gaussian);
 })
-(typeof(exports) !== "undefined"
-    ? function(e) { module.exports = e; }
-    : function(e) { this["gaussian"] = e; });
+(typeof (exports) !== "undefined"
+    ? function(e) {
+ module.exports = e;
+}
+    : function(e) {
+ this["gaussian"] = e;
+});

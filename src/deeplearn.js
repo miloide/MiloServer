@@ -6,7 +6,7 @@
 
  var DeepLearn = {};
 
-DeepLearn.setup = ' var dl = deeplearn; \n \
+DeepLearn.setup = ' var dl = window.deeplearn; \n \
                     var graph = new dl.Graph(); \
                     \n var math = dl.ENV.math; \
                     \n var session =  new dl.Session(graph, math); \n';
