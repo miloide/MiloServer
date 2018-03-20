@@ -8,6 +8,7 @@
     "babel": "babel --presets es2015 js/main.js -o build/main.bundle.js",
     "test": "webpack -w --config webpack.config-test.js",
     "start": "node app.js",
+    "startProd": "NODE_ENV=production node app.js",
     "startDB": "mongod --fork --dbpath ../milo-data/ --logpath ../milo-data/mongo.log",
     "build": "NODE_ENV=production webpack --config ./webpack.config.js"
   },
