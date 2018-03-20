@@ -27,21 +27,28 @@ module.exports = function(passport){
         process.nextTick(function() {
 
             User.findOne({'name' : profile.id}, function(err, user) {
-                if (err)
+                if (err) {
                     return done(err);
+                }
                 if (user) {
                     return done(null, user);
                 } else {
                     var newUser = new User();
                     newUser.name    = profile.id;
                     newUser.token = token;
-                    newUser.username  = profile.displayName;
                     newUser.email = profile.emails[0].value; // pull the first email
+                    newUser.username  = newUser.email;
+                    if (configAuth.googleAuth.whiteList != undefined) {
+                        if (configAuth.googleAuth.whiteList[newUser.email]==undefined){
+                            return done(null,false);
+                        }
+                    }
 
                     // save the user
                     newUser.save(function(err) {
-                        if (err)
+                        if (err) {
                             throw err;
+                        }
                         return done(null, newUser);
                     });
                 }

@@ -6,6 +6,7 @@ block content
       .card.card-container
         img#logo-img.logo-img-card(src='/media/milo-icon.png')
         h3.text-center Welcome to Milo
+        .error.text-center.text-danger #{message}
         form.form-horizontal(method='post', action='/users/login')
           .form-group
             span#reauth-email.reauth-email
@@ -22,5 +23,5 @@ block content
         a(href="/users/auth/google")
           img.img-responsive(src='/media/google-signin.png',width="60%",style="margin:auto", alt='Login with Google')
         br
-        p.text-center or &nbsp
-          a(href="/users/register") Signup with Email
+        //- p.text-center or &nbsp
+        //-   a(href="/users/register") Signup with Email

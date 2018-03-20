@@ -2,15 +2,34 @@ var express = require('express');
 var router = express.Router();
 var passport = require('passport');
 var User = require('../models/user');
-router.get('/register', function(req, res){
+
+function isAuthenticated(req, res, next) {
+  if (req.isAuthenticated()){
+      return next();
+  }
+  // IF A USER ISN'T LOGGED IN, THEN REDIRECT THEM SOMEWHERE
+  res.redirect('/users/login');
+}
+
+
+router.get('/register',isAuthenticated,function(req, res){
   res.render('register');
 });
 
 router.get('/login', function(req, res){
-  res.render('login');
+  if (req.isAuthenticated()){
+      res.redirect('/');
+  }
+  const STATUS = {
+    "403": "There was an error logging you in or you are unauthorized!",
+    "500": "Check your username and password!",
+    "200":""
+  };
+  var message = STATUS[req.query.status || "200"];
+  res.render('login',{message:message});
 });
 
-router.post('/register', function(req, res){
+router.post('/register',isAuthenticated,function(req, res){
   var name = req.body.name;
   var email = req.body.email;
   var username = req.body.username;
@@ -45,7 +64,7 @@ router.post('/register', function(req, res){
   }
 });
 
-router.post('/login',passport.authenticate('local', {successRedirect:'/', failureRedirect:'/users/login',failureFlash: true}),
+router.post('/login',passport.authenticate('local', {successRedirect:'/', failureRedirect:'/users/login?status=500',failureFlash: true}),
   function(req, res) {
     res.redirect('/');
   });
@@ -66,13 +85,14 @@ router.get('/status', function(req, res) {
   });
 });
 
-router.get('/auth/google', passport.authenticate('google', { scope : ['profile', 'email'] }));
+router.get('/auth/google', passport.authenticate('google', {scope : ['profile', 'email']}));
 
 router.get('/auth/google/callback',
         passport.authenticate('google', {
-                successRedirect : '/',
-                failureRedirect : '/register' ,
+                failureRedirect : '/users/login?status=403' ,
                 failureFlash : true
-        }));
+        }),function(req,res){
+          res.redirect('/');
+        });
 
 module.exports = router;

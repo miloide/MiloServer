@@ -23,7 +23,7 @@ html
 								li.divider(role='separator')
 								if locals.user
 									li
-										a(href='/users/logout') Logout
+										a(href='/users/logout') Logout #{locals.user.name}
 								else
 									li
 										a(href='/users/login') Login
