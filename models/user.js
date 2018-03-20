@@ -18,6 +18,11 @@ var UserSchema = new mongoose.Schema({
     type: String,
     required: false
   },
+  googleID: {
+    type: String,
+    required: false,
+    trim: true
+  },
   username: {
     type: String,
     unique: true,
