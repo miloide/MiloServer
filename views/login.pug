@@ -1,0 +1,26 @@
+extends layout.pug
+block content
+ .container
+  .row
+    .col-sm-6.col-sm-offset-3
+      .card.card-container
+        img#logo-img.logo-img-card(src='/media/milo-icon.png')
+        h3.text-center Welcome to Milo
+        form.form-horizontal(method='post', action='/users/login')
+          .form-group
+            span#reauth-email.reauth-email
+          .form-group
+            input#inputEmail.form-control(type='text',name="username", placeholder='Username', required='', autofocus='')
+          .form-group
+            input#inputPassword.form-control(type='password',name="password", placeholder='Password', required='')
+          .form-group
+            #remember.checkbox
+              label
+                input(type='checkbox', value='remember-me')
+                |  Remember me
+          button.btn.btn-lg.btn-success.btn-block.btn-signin(type='submit') Sign in
+        a(href="#")
+          img.img-responsive(src='/media/google-signin.png',width="60%",style="margin:auto", alt='Login with Google')
+        br
+        p.text-center or &nbsp
+          a(href="/users/register") Signup with Email

@@ -6,6 +6,11 @@ var http = require('http');
 var bodyParser = require('body-parser');
 var routes = require('./routes/index');
 const webpackHotMid = require("webpack-hot-middleware");
+var expressValidator = require('express-validator');
+var flash = require('connect-flash');
+var session = require('express-session');
+var passport = require('passport');
+var LocalStrategy = require('passport-local').Strategy;
 const NODE_ENV = process.env.NODE_ENV ? process.env.NODE_ENV.toLowerCase() : 'development';
 
 if (NODE_ENV  == 'development'){
@@ -20,16 +25,71 @@ if (NODE_ENV  == 'development'){
   }));
   app.use(webpackHotMid(compiler));
 }
+
 app.set('views', './views');
 app.set('view engine', 'pug');
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
+app.use(require('express-session')({
+    secret: 'milo',
+    resave: false,
+    saveUninitialized: false
+}));
 
-app.get('/', function(req, res){
-    res.render('ide');
+app.use(passport.initialize());
+app.use(passport.session());
+
+var User = require('./models/user');
+// configure passport
+passport.use(new LocalStrategy(User.authenticate()));
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser())
+
+app.use(expressValidator({
+  errorFormatter: function(param, msg, value) {
+      var namespace = param.split('.')
+      , root    = namespace.shift()
+      , formParam = root;
+    while (namespace.length) {
+      formParam += '[' + namespace.shift() + ']';
+    }
+    return {
+      param : formParam,
+      msg   : msg,
+      value : value
+    };
+  }
+}));
+
+
+app.use(flash());
+var users = require('./routes/users');
+app.use('/users', users);
+app.use(function (req, res, next) {
+  res.locals.success_msg = req.flash('success_msg');
+  res.locals.error_msg = req.flash('error_msg');
+  res.locals.error = req.flash('error');
+  res.locals.user = req.user || null;
+  next();
 });
 
+function isAuthenticated(req, res, next) {
+  // do any checks you want to in here
+  // CHECK THE USER STORED IN SESSION FOR A CUSTOM VARIABLE
+  // you can do this however you want with whatever variables you set up
+  if (req.isAuthenticated()){
+      return next();
+  }
+
+  // IF A USER ISN'T LOGGED IN, THEN REDIRECT THEM SOMEWHERE
+  res.redirect('/users/login');
+}
+
+
+app.get('/',isAuthenticated, function(req, res){
+    res.render('ide');
+});
 
 try {
   db.connect('mongodb://localhost:27017/miloDB');
