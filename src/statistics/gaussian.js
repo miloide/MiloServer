@@ -124,10 +124,10 @@
 
   exports(gaussian);
 })
-(typeof (exports) !== "undefined"
-    ? function(e) {
- module.exports = e;
-}
-    : function(e) {
- this["gaussian"] = e;
-});
+(typeof (exports) !== "undefined"?
+  function(e){
+    module.exports = e;
+  }:function(e){
+    this["gaussian"] = e;
+  }
+);
