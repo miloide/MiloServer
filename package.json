@@ -8,6 +8,7 @@
     "babel": "babel --presets es2015 js/main.js -o build/main.bundle.js",
     "test": "webpack -w --config webpack.config-test.js",
     "start": "node app.js",
+    "startProd": "NODE_ENV=production node app.js",
     "startDB": "mongod --fork --dbpath ../milo-data/ --logpath ../milo-data/mongo.log",
     "build": "NODE_ENV=production webpack --config ./webpack.config.js"
   },
@@ -24,7 +25,8 @@
     "eslint": "^4.18.0",
     "expose-loader": "^0.7.4",
     "express": "^4.14.0",
-    "express-session": "^1.15.1",
+    "express-session": "^1.15.6",
+    "express-validator": "*",
     "file-system": "^2.2.2",
     "formidable": "^1.0.17",
     "fs-extra": "^5.0.0",
@@ -33,7 +35,10 @@
     "milo-blocks": "file:../milo-blocks/",
     "mongoose": "^4.9.1",
     "morgan": "^1.8.1",
+    "passport": "^0.4.0",
+    "passport-google-oauth": "^1.0.0",
     "passport-local": "^1.0.0",
+    "passport-local-mongoose": "^5.0.0",
     "pug": "^2.0.0-rc.4",
     "serve-index": "^1.0.0",
     "sweetalert": "^2.1.0"
