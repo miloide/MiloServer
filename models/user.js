@@ -14,6 +14,15 @@ var UserSchema = new mongoose.Schema({
     required: true,
     trim: true
   },
+  token: {
+    type: String,
+    required: false
+  },
+  googleID: {
+    type: String,
+    required: false,
+    trim: true
+  },
   username: {
     type: String,
     unique: true,
