@@ -2,8 +2,6 @@ var express = require('express');
 var router = express.Router();
 var passport = require('passport');
 var User = require('../models/user');
-
-
 router.get('/register', function(req, res){
   res.render('register');
 });
@@ -57,8 +55,6 @@ router.get('/logout', function(req, res){
   res.redirect('/');
 });
 
-
-
 router.get('/status', function(req, res) {
   if (!req.isAuthenticated()) {
     return res.status(200).json({
@@ -69,5 +65,14 @@ router.get('/status', function(req, res) {
     status: true
   });
 });
+
+router.get('/auth/google', passport.authenticate('google', { scope : ['profile', 'email'] }));
+
+router.get('/auth/google/callback',
+        passport.authenticate('google', {
+                successRedirect : '/',
+                failureRedirect : '/register' ,
+                failureFlash : true
+        }));
 
 module.exports = router;

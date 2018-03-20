@@ -14,6 +14,10 @@ var UserSchema = new mongoose.Schema({
     required: true,
     trim: true
   },
+  token: {
+    type: String,
+    required: false
+  },
   username: {
     type: String,
     unique: true,
