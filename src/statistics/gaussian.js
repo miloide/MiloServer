@@ -12,11 +12,11 @@
 
   var ierfc = function(x) {
     if (x >= 2) {
- return -100;
-}
+      return -100;
+    }
     if (x <= 0) {
- return 100;
-}
+      return 100;
+    }
 
     var xx = (x < 1) ? x : 2 - x;
     var t = Math.sqrt(-2 * Math.log(xx / 2));
