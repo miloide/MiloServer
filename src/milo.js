@@ -3,19 +3,18 @@
 var Helpers = require('./helpers');
 var clearOutput = require('./functions.js').clearOutput;
 var MSG = require('./strings');
-var Datasets = require('./datasets');
-var BlocklyStorage = window.BlocklyStorage = require('./storage');
-
-var DeepLearn = require('./deeplearn');
 var swal = require('sweetalert');
+var utils = require('./functions');
+var sandbox = require('./sandbox');
 // Export globally
 var $ = window.$ = require('jquery');
 window.jQuery  = window.$;
-window.Datasets = Datasets;
+var BlocklyStorage = window.BlocklyStorage = require('./storage');
+var Datasets  = window.Datasets = require('./datasets');
 var Blockly = window.Blockly = require('milo-blocks');
-window.DeepLearn = DeepLearn;
 
-var utils = require('./functions')
+
+
 for (var key in utils) {
   global[key] = utils[key];
 }
@@ -337,29 +336,7 @@ Milo.init = function() {
 			wheel: false
 		}
 	});
-	//var workspaceDiv = document.getElementById('content_workspace');
-	//var container = document.getElementById('content_area');
-	// var onresize = function(e) {
-	// 	// Compute the absolute coordinates and dimensions of blocklyArea.
-	// 	var element = container;
-	// 	var x = 0;
-	// 	var y = 0;
-	// 	do {
-	// 		x += element.offsetLeft;
-	// 		y += element.offsetTop;
-	// 		element = element.offsetParent;
-	// 	} while (element);
-	// 	// Position blocklyDiv over blocklyArea.
-	// 	workspaceDiv.style.left = x + 'px';
-	// 	workspaceDiv.style.top = y + 'px';
-	// 	workspaceDiv.style.width = container.offsetWidth + 'px';
-	// 	workspaceDiv.style.height = container.offsetHeight + 'px';
-	// };
-	// window.addEventListener('resize', onresize, false);
-	// onresize();
-	// Blockly.svgResize(Milo.workspace);
-	// Add to reserved word list: Local variables in execution environment (runJS)
-	// and the infinite loop detection function.
+
 	Blockly.JavaScript.addReservedWords(
 		'code,jscode,setup,dl,graph,math,session,DeepLearn,Data,WebCam,SqueezeNet,timeouts,checkTimeout'
 	);
@@ -409,9 +386,6 @@ Milo.init = function() {
 			'</a></li>'
 		);
 	}
-
-	//onresize();
-	//Blockly.svgResize(Milo.workspace);
 
 	// Lazy-load the syntax-highlighting.
 	window.setTimeout(Milo.importPrettify, 1);
@@ -466,28 +440,13 @@ Milo.runJS = function() {
 
 	clearOutput();
 	$('#sidebar').removeClass(sidebar-open);
-	Blockly.JavaScript.INFINITE_LOOP_TRAP = '  checkTimeout();\n';
-	var timeouts = 0;
-	var checkTimeout = function() {
-		if (timeouts++ > 1000000) {
-			throw MSG['timeout'];
-		}
-	};
 	var code = Blockly.JavaScript.workspaceToCode(Milo.workspace);
 	Blockly.JavaScript.INFINITE_LOOP_TRAP = null;
-	try {
-		if(!window.navigator.onLine){
-			Helpers.Network.showOfflineAlert();
-		}
-		var setup =  DeepLearn.setup;
-		var jscode = setup + code;
-		eval(jscode);
-		$("#console_holder").show();
-
-	} catch (e) {
-		console.log(jscode);
-		Helpers.showAlert("Error",MSG['badCode'].replace('%1', e));
+	if (!window.navigator.onLine){
+		Helpers.Network.showOfflineAlert();
 	}
+	sandbox.run(code);
+	$("#console_holder").show();
 };
 
 /**

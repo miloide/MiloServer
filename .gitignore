@@ -42,6 +42,9 @@ public/bundle.js.gz
 test.bundle.js
 test.bundle.js.map
 
+# configuration
+config/credentials.js
+
 # Typescript v1 declaration files
 typings/
 
