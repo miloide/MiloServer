@@ -205,7 +205,7 @@ Milo.selected = 'blocks';
 Milo.tabClick = function(clickedName) {
 	// If the XML tab was open, save and render the content.
 	if (document.getElementById('tab_xml').className == 'tabon') {
-		var xmlTextarea = document.getElementById('content_xml');
+		var xmlTextarea = document.getElementById('content_xml_text');
 		var xmlText = xmlTextarea.value;
 		var xmlDom = null;
 		try {
