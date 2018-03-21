@@ -97,6 +97,17 @@
     return gaussian(this.mean * c, this.variance * c * c);
   };
 
+  Gaussian.prototype.render = function(){
+    var maxRange = this.mean + 5;
+    var minRange = this.mean - 5;
+    var x_ = [], y_ = [];
+    for (var itr = minRange; itr < maxRange; itr +=0.1){
+        x_.push(itr);
+        y_.push(this.pdf(itr));
+    }
+    return [x_,y_];
+  };
+
   Gaussian.prototype.generate_list = function(func_name, list){
     var new_list = [];
     var func = (func_name == 'pdf')?this.pdf.bind(this):((func_name == 'cdf')? this.cdf.bind(this):this.ppf.bind(this));

@@ -171,6 +171,7 @@ Pmf.prototype.exp = function(){
     }
 };
 
+
 function Hist(dict, name=''){
      this.dictwrapper = new DictWrapper(dict,name);
 }

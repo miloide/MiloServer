@@ -4,7 +4,8 @@ function zip(arrays) {
         return arrays.map(function(array){return array[i]});
     });
 }
-/** 
+
+/**
 *   Represents a cumulative distribution function.
 
     @param xs: sequence of values
@@ -19,7 +20,12 @@ function Cdf(xs = undefined, ps = undefined, name =''){
         this.ps = [];
     this.name = name;
 }
-Cdf.prototype.bisect = function (val) {
+
+/**
+ *  Allows maintaining sort order on insertion by providing the index to insert at
+ *  @param val:
+ */
+Array.prototype.bisect = function ( val) {
     var idx;
     if (this.length === 0) {
         return 0;
@@ -32,31 +38,38 @@ Cdf.prototype.bisect = function (val) {
     return idx;
 };
 
-Cdf.prototype.insert = function (val, inPlace) {
+/**
+ * Inserts value to array and support inplace insertion
+ */
+Array.prototype.insert = function (val, inPlace) {
     var idx = this.bisect(val);
     if (inPlace) {
-        this.splice(idx, 0, val);
+        this.splice(idx, 0, val); // splice takes index, number of items to delete from index, and items (array or number) to insert at index
         return this;
     }
     return this.slice(0, idx).concat([val], this.slice(idx));
 };
 
-Cdf.prototype.vals = function(){
+Cdf.prototype.values = function(){
     return this.xs;
-}
+};
+
+Cdf.prototype.probabilities = function(){
+    return this.ps;
+};
 
 //Returns a sorted sequence of (value, probability) pairs
 Cdf.prototype.items = function(){
     return zip([this.xs,this.ps]);
-}
+};
 
 Cdf.prototype.append = function(x, p){
     this.xs.push(x);
     this.ps.push(p);
-}
+};
 
 /**
- *  Returns CDF(x), the probability that corresponds to value x.
+ *  Returns CDF(x),iethe probability that corresponds to value x.
     @param x: number
     returns: float probability
  */
@@ -66,13 +79,15 @@ Cdf.prototype.prob = function(x){
     var index = this.xs.bisect(x);
     var prob = this.ps[index];
     return prob;
+};
 
 /**
  *  Returns InverseCDF(p), the value that corresponds to probability p.
     @param p: number in the range [0, 1]
     returns: number value
  */
-Cdf.prototype.val = function(p){
+
+Cdf.prototype.inverse = function(p){
     if(p < 0 || p >1)
         throw "Probability p must be in range [0,1]";
     if(p == 0)
@@ -84,7 +99,7 @@ Cdf.prototype.val = function(p){
         return this.xs[index-1];
     else
         return this.xs[index];
-}
+};
 
 /**
  *  Returns the value that corresponds to percentile p.
@@ -93,13 +108,12 @@ Cdf.prototype.val = function(p){
  */
 
 Cdf.prototype.percentile = function(p){
-    return this.val(p/100.0);
-}
-
+    return this.inverse(p/100.0);
+};
 //Chooses a random value from this distribution
 Cdf.prototype.random = function(){
-    return this.val(Math.random());
-}
+    return this.inverse(Math.random());
+};
 
 /**
  *  Generates a random sample from this distribution.
@@ -107,11 +121,11 @@ Cdf.prototype.random = function(){
  */
 Cdf.prototype.sample = function(n){
     this.random = [];
-    for(var i = 0;i < n; i++){
+    for (var i = 0;i < n; i++){
         this.random.push(Math.random());
     }
     return this.random;
-}
+};
 
 //omputes the mean of a CDF
 Cdf.prototype.mean = function(){
@@ -124,7 +138,7 @@ Cdf.prototype.mean = function(){
         old_p = p;
     }
     return total;
-}
+};
 
 /**
  *  Generates a sequence of points suitable for plotting.
@@ -151,7 +165,7 @@ Cdf.prototype.render = function(){
         }
     }
     return [xs,ps];
-}
+};
 
 function MakeCdfFromItems(items, name=''){
     var sum = 0.0;
@@ -168,22 +182,24 @@ function MakeCdfFromItems(items, name=''){
         ps.push(c/total);
     cdf = new Cdf(xs,ps,name);
     return cdf;
-}
+};
+
 function MakeCdfFromHist(hist, name=''){
     return MakeCdfFromItems(hist.dictwrapper.getPair());
-}
+};
 
 function makeCdfFromPmf(pmf,name=''){
     if(name=''){
         name=pmf.dictwrapper.name;
     }
     return MakeCdfFromItems(pmf.dictwrapper.getPair(), name);
-}
+};
 
 function MakeCdfFromList(seq,name=''){
     var hist = makeHistFromList(seq);
     return MakeCdfFromHist(hist,name);
-}
+};
+
 module.exports = {
     makeCdfFromPmf,
     MakeCdfFromHist,
