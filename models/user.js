@@ -29,6 +29,11 @@ var UserSchema = new mongoose.Schema({
     required: true,
     trim: true
   },
+  role: {
+    type: String,
+    required: true,
+    trim: true
+  },
 },{collection: 'UserAuth'});
 
 UserSchema.plugin(passportLocalMongoose);

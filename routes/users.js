@@ -34,6 +34,7 @@ router.post('/register',isAuthenticated,function(req, res){
   var email = req.body.email;
   var username = req.body.username;
   var password = req.body.password;
+  var role = req.body.optrole == "faculty"? "faculty": "student";
   req.checkBody('name', 'Name is required').notEmpty();
   req.checkBody('email', 'Email is required').notEmpty();
   req.checkBody('email', 'Email is not valid').isEmail();
@@ -49,6 +50,7 @@ router.post('/register',isAuthenticated,function(req, res){
           username: username,
           email: email,
           name: name,
+          role: role
       }),
       password, function(err, account) {
         if (err) {
