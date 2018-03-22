@@ -37,6 +37,7 @@ module.exports = function(passport){
                     newUser.googleID    = profile.id;
                     newUser.name = profile.displayName;
                     newUser.token = token;
+                    newUser.role = "student";
                     newUser.email = profile.emails[0].value; // pull the first email
                     newUser.username  = newUser.email;
                     if (configAuth.googleAuth.whiteList != undefined) {
