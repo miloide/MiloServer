@@ -10,6 +10,8 @@ var expressValidator = require('express-validator');
 var flash = require('connect-flash');
 var session = require('express-session');
 var passport = require('passport');
+var users = require('./routes/users');
+var editor = require('./routes/editor');
 const NODE_ENV = process.env.NODE_ENV ? process.env.NODE_ENV.toLowerCase() : 'development';
 
 if (NODE_ENV  == 'development'){
@@ -54,15 +56,11 @@ app.use(expressValidator({
   }
 }));
 app.use(flash());
-var users = require('./routes/users');
+
+// Custom routes
 app.use('/users', users);
-app.use(function (req, res, next) {
-  res.locals.success_msg = req.flash('success_msg');
-  res.locals.error_msg = req.flash('error_msg');
-  res.locals.error = req.flash('error');
-  res.locals.user = req.user || null;
-  next();
-});
+app.use('/editor', editor);
+
 
 function isAuthenticated(req, res, next) {
   if (req.isAuthenticated()){
@@ -74,7 +72,7 @@ function isAuthenticated(req, res, next) {
 
 
 app.get('/',isAuthenticated, function(req, res){
-    res.render('ide');
+    res.redirect('/users/projects');
 });
 
 try {

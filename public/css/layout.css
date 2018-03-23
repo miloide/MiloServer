@@ -2,6 +2,10 @@ body, html {
     height: 100%;
 }
 
+.material-icons {
+    vertical-align: middle !important;
+    padding-bottom: 3px;
+}
 
 .card-div {
 

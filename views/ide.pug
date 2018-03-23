@@ -5,13 +5,12 @@ html
 		nav.navbar.navbar-default
 			.navbar-header
 				a.navbar-brand(href='#') Milo
-			// Collect the nav links, forms, and other content for toggling
 			#navigation.collapse.navbar-collapse
 				ul.nav.navbar-nav
 					li.btn-group
 						li.dropdown
 							a.dropdown-toggle(href='#', data-toggle='dropdown', role='button', aria-haspopup='true', aria-expanded='false')
-								| Project
+								| File
 								span.caret
 							ul.dropdown-menu
 								li
@@ -20,23 +19,10 @@ html
 									a(href='#') Load project
 								li
 									a(href='#') Download Project
-								li.divider(role='separator')
-								if locals.user
-									li
-										span &nbsp Hi #{locals.user.name}
-										br
-										span &nbsp Account Type:  #{locals.user.role}
-									li
-										a(href='/users/logout') Logout
-								else
-									li
-										a(href='/users/login') Login
-									li
-										a(href='/users/register') Register
 					li.btn-group
 						li.dropdown
 							a.dropdown-toggle(href='#', data-toggle='dropdown', role='button', aria-haspopup='true', aria-expanded='false')
-								| Editor
+								| Workspace
 								span.caret
 							ul.dropdown-menu
 								li
@@ -57,11 +43,14 @@ html
 									span &nbsp Built In Datasets
 					li
 						a.runButton(href='#') Run
+					li.text-center
+						a
+							strong #{project.title}
 
 
 				ul.nav.navbar-nav.navbar-right
 					li
-						img#loadingDiv(style="display: none;width:50px;",src="media/loading.gif")
+						img#loadingDiv(style="display: none;width:50px;",src="/media/loading.gif")
 					li
 						select#languageMenu(style="display: none;")
 					li
@@ -69,6 +58,26 @@ html
 							span.icon-bar
 							span.icon-bar
 							span.icon-bar
+					li.btn-group
+						li.dropdown
+							a.dropdown-toggle(href='#', data-toggle='dropdown', role='button', aria-haspopup='true', aria-expanded='false')
+								i.material-icons account_circle
+								span.caret
+							ul.dropdown-menu
+								if user
+									li
+										span &nbsp Hi #{user.name}
+										br
+										span &nbsp Account Type:  #{user.role}
+									li
+										a(href='/users/projects') Dashboard
+									li
+										a(href='/users/logout') Logout
+								else
+									li
+										a(href='/users/login') Login
+									li
+										a(href='/users/register') Register
 
 
 			br
@@ -168,7 +177,7 @@ html
 							| and click on create variable. You will be prompted with an alert. Add the variable name and then you can see blocks for the new variable are created.
 							li Took a look at these blocks!
 							br
-					img(src='media/milo.png',alt='Milo Blocks' class="center")
+					img(src='/media/milo.png',alt='Milo Blocks' class="center")
 
 				div(data-page='2', class="page-data",style='display:none;')
 					h3
@@ -182,7 +191,7 @@ html
 						br
 						li Take a look at the example below to see how list can be created!
 
-					img(src='media/lists.png',class="center", alt='list')
+					img(src='/media/lists.png',class="center", alt='list')
 
 					ul
 						br
@@ -202,7 +211,7 @@ html
 						li Once you have connected the data list blocks with bar plot, drag the plot block from the plot category. Now connect the bar plot block to this newly dragged plot block.
 						br
 						li Now click on run to visualize the bar plot :).
-					img(src='media/plots.png',class="center", alt='list')
+					img(src='/media/plots.png',class="center", alt='list')
 				div(data-page='4', class="page-data",style='display:none;')
 
 					h3
@@ -252,3 +261,5 @@ html
 
 		include toolbox.html
 		#snackbar
+		#init_xml_text(style="display:none")
+			|	#{project.xml}

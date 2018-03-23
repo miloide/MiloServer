@@ -594,5 +594,7 @@ However, delay the fade out process for 2.5 seconds */
   max-height: 600px;
 }
 
-
-
+.material-icons {
+  vertical-align: middle !important;
+  padding-bottom: 3px;
+}

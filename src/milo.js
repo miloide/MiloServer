@@ -76,10 +76,15 @@ Milo.isRtl = function() {
 };
 
 /**
- * Load blocks saved on App Engine Storage or in session/local storage.
+ * Load blocks saved on the cloud or in session/local storage.
  * @param {string} defaultXml Text representation of default blocks.
  */
-Milo.loadBlocks = function(defaultXml) {
+Milo.loadBlocks = function(defaultXml,override=false) {
+	if (override){
+		var xml = Blockly.Xml.textToDom(defaultXml);
+		Blockly.Xml.domToWorkspace(xml, Milo.workspace);
+		return;
+	}
 	try {
 		var loadOnce = window.sessionStorage.loadOnceBlocks;
 	} catch(e) {
@@ -156,7 +161,7 @@ Milo.bindClick = function(el, func) {
  */
 Milo.importPrettify = function() {
 	var script = document.createElement('script');
-	script.setAttribute('src', 'js/run_prettify.js');
+	script.setAttribute('src', '/js/run_prettify.js');
 	document.head.appendChild(script);
 };
 
@@ -288,34 +293,6 @@ Milo.renderContent = function() {
 Milo.init = function() {
 	Milo.initLanguage();
 
-	// var onresize = function(e) {
-	// 	var bBox = Milo.getBBox_(container);
-	// 	var el = document.getElementById('content_workspace');
-	// 	el.style.top = bBox.y + 'px';
-	// 	el.style.left = bBox.x + 'px';
-	// 	// Height and width need to be set, read back, then set again to
-	// 	// compensate for scrollbars.
-	// 	el.style.height = bBox.height + 'px';
-	// 	el.style.height = (2 * bBox.height - el.offsetHeight) + 'px';
-	// 	el.style.width = bBox.width + 'px';
-	// 	el.style.width = (2 * bBox.width - el.offsetWidth) + 'px';
-
-	// 	// Make the 'Blocks' tab line up with the toolbox.
-	// 	// if (Milo.workspace && Milo.workspace.toolbox_.width) {
-	// 	// 	document.getElementById('tab_blocks').style.minWidth =
-	// 	// 			(Milo.workspace.toolbox_.width - 38) + 'px';
-	// 				// Account for the 19 pixel margin and on each side.
-	// };
-	//window.addEventListener('resize', onresize, false);
-
-	// The toolbox XML specifies each category name using Blockly's messaging
-	// format (eg. `<category name="%{BKY_CATLOGIC}">`).
-	// These message keys need to be defined in `Blockly.Msg` in order to
-	// be decoded by the library. Therefore, we'll use the `MSG` dictionary that's
-	// been defined for each language to import each category name message
-	// into `Blockly.Msg`.
-	// TODO: Clean up the message files so this is done explicitly instead of
-	// through this for-loop.
 	for (var messageKey in MSG) {
 		if (messageKey.indexOf('cat') == 0) {
 			Blockly.Msg[messageKey.toUpperCase()] = MSG[messageKey];
@@ -329,7 +306,7 @@ Milo.init = function() {
 	var toolboxXml = Blockly.Xml.textToDom(toolboxText);
 
 	Milo.workspace = Blockly.inject('content_workspace', {
-		media: 'media/',
+		media: '/media/',
 		toolbox: toolboxXml,
 		zoom: {
 			controls: true,
@@ -345,8 +322,17 @@ Milo.init = function() {
 	Milo.workspace.registerToolboxCategoryCallback('DATASETS',Datasets.flyoutCallback);
 	// Per https://groups.google.com/d/msg/blockly/Ux9OQuyJ9XE/8PvZt73aBgAJ need to update due to bug.
 	Milo.workspace.updateToolbox(document.getElementById('toolbox'));
-
-	Milo.loadBlocks('');
+	function isID(input) {
+		return /^\w+$/i.test(input);
+	}
+	if (isID(window.location.href.split('editor/')[1])) {
+		var xmlText = $("#init_xml_text").text().trim();
+		if (xmlText.length !=0)	{
+			Milo.loadBlocks(xmlText,true);
+		} else {
+			Milo.loadBlocks('');
+		}
+	}
 
 	if ('BlocklyStorage' in window) {
 		// Hook a save function onto unload.
