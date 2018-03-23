@@ -1,3 +1,4 @@
+var zip = require('../datasets').zip;
 function DictWrapper(dict, name = ''){
     if (dict == undefined){
         this.dict = {};
@@ -12,25 +13,36 @@ DictWrapper.prototype.getDict = function(){
 };
 
 DictWrapper.prototype.values = function(){
-    return Object.keys(this.dict);
+    return Object.keys(this.dict).map(parseFloat);
 };
+
+DictWrapper.prototype.getPair = function(){
+    var keys = this.values();
+    var values = this.items();
+    var pair = [];
+    for(var i = 0 ;i < keys.length; i++){
+        pair.push([keys[i],values[i]]);
+    }
+    return pair;
+};
+
+DictWrapper.prototype.render = function(label, colour){
+
+    var code = '{\n'+
+      '"type":"bar",\n'+
+      '"name":"'+ label +'"'+
+      ',\n"x":'+ this.values() +
+      ',\n"y":'+ this.items() +
+      ',\n"marker": {"color":"'+ colour +'"}'+
+      '\n},\n'
+    ;
+    return code;
+}
 
 DictWrapper.prototype.items = function(){
     return Object.values(this.dict);
 };
-DictWrapper.prototype.getPair =function(){
-    return Object.getOwnPropertyNames(this.dict).map(function(e) {
-        return [e, this.dict[e]];
-    });
-};
 
-DictWrapper.prototype.render = function(){
-    var sorted = [];
-    for (var key in this.dict){
-        sorted[sorted.length] = this.dict[key];
-    }
-    return sorted.sort();
-};
 
 DictWrapper.prototype.print = function(){
     for (var key in this.dict){
@@ -231,7 +243,7 @@ function makePmfFromCdf(cdf, name=undefined){
     }
     var pmf = new Pmf(name = name);
     var prev = 0.0;
-    var items = cdf.dictwrapper.getPair();
+    var items = zip(cdf.xs, cdf.ps);
     for (var pair in items){
         pmf.incr(items[pair][0], items[pair][1]-prev);
         prev = items[pair][1];

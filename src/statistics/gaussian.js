@@ -97,7 +97,7 @@
     return gaussian(this.mean * c, this.variance * c * c);
   };
 
-  Gaussian.prototype.render = function(){
+  Gaussian.prototype.render = function(label, color){
     var maxRange = this.mean + 5;
     var minRange = this.mean - 5;
     var x_ = [], y_ = [];
@@ -105,7 +105,14 @@
         x_.push(itr);
         y_.push(this.pdf(itr));
     }
-    return [x_,y_];
+    var plotOptions = {
+      'type': 'scatter',
+      'name': label,
+      'x': x_,
+      'y':y_,
+      'marker':{'color':color}
+    };
+    return plotOptions;
   };
 
   Gaussian.prototype.generate_list = function(func_name, list){

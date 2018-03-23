@@ -1,9 +1,7 @@
+var pmf = require('./pmf').pmf;
+var makeHistFromList = require('./pmf').makeHistFromList;
+var zip = require('../datasets').zip;
 
-function zip(arrays) {
-    return arrays[0].map(function(_,i){
-        return arrays.map(function(array){return array[i]});
-    });
-}
 
 /**
 *   Represents a cumulative distribution function.
@@ -13,11 +11,9 @@ function zip(arrays) {
     @param name: string used as a graph label.
 */
 
-function Cdf(xs = undefined, ps = undefined, name =''){
-    if(xs == undefined)
-        this.xs = [];
-    if(ps == undefined)
-        this.ps = [];
+function Cdf(xs = [], ps = [], name =''){
+    this.xs = xs;
+    this.ps = ps;
     this.name = name;
 }
 
@@ -25,13 +21,13 @@ function Cdf(xs = undefined, ps = undefined, name =''){
  *  Allows maintaining sort order on insertion by providing the index to insert at
  *  @param val:
  */
-Array.prototype.bisect = function ( val) {
+Cdf.prototype.bisect = function (arr, val) {
     var idx;
-    if (this.length === 0) {
+    if (arr.length === 0) {
         return 0;
     }
-    for (idx=0; idx < this.length; idx++) {
-        if (val < this[idx]) {
+    for (idx=0; idx < arr.length; idx++) {
+        if (val < arr[idx]) {
             return idx;
         }
     }
@@ -41,13 +37,13 @@ Array.prototype.bisect = function ( val) {
 /**
  * Inserts value to array and support inplace insertion
  */
-Array.prototype.insert = function (val, inPlace) {
-    var idx = this.bisect(val);
+Cdf.prototype.insert = function (arr, val, inPlace) {
+    var idx = arr.bisect(arr, val);
     if (inPlace) {
-        this.splice(idx, 0, val); // splice takes index, number of items to delete from index, and items (array or number) to insert at index
+        arr.splice(idx, 0, val); // splice takes index, number of items to delete from index, and items (array or number) to insert at index
         return this;
     }
-    return this.slice(0, idx).concat([val], this.slice(idx));
+    return arr.slice(0, idx).concat([val], arr.slice(idx));
 };
 
 Cdf.prototype.values = function(){
@@ -73,11 +69,11 @@ Cdf.prototype.append = function(x, p){
     @param x: number
     returns: float probability
  */
-Cdf.prototype.prob = function(x){
-    if(x < this.x[0])
+Cdf.prototype.probability = function(x){
+    if(x < this.xs[0])
         return 0.0;
-    var index = this.xs.bisect(x);
-    var prob = this.ps[index];
+    var index = this.bisect(this.xs, x);
+    var prob = this.ps[index-1];
     return prob;
 };
 
@@ -94,7 +90,7 @@ Cdf.prototype.inverse = function(p){
         return this.xs[0];
     if(p == 1)
         return this.xs[len(this.xs)];
-    index = this.ps.bisect(p);
+    index = this.bisect(this.ps, p);
     if(p == this.ps[index-1])
         return this.xs[index-1];
     else
@@ -146,9 +142,7 @@ Cdf.prototype.mean = function(){
     can be misleading.
     returns:tuple of (xs, ps)
  */
-Cdf.prototype.render = function(){
-
-
+Cdf.prototype.render = function(label, colour){
     var xs = [this.xs[0]];
     ps = [0.0];
     var iterator = this.ps.entries();
@@ -164,22 +158,31 @@ Cdf.prototype.render = function(){
             throw err;
         }
     }
-    return [xs,ps];
+    var code = '{\n'+
+        '"type":"scatter",\n'+
+        '"name":"'+ label +'"'+
+        ',\n"x":'+ xs +
+        ',\n"y":'+ ps +
+        ',\n"marker": {"color":"'+ colour +'"}'+
+        '\n},\n'
+    ;
+    return code;
 };
 
 function MakeCdfFromItems(items, name=''){
     var sum = 0.0;
-    xs = [];
-    cs = [];
-    for(var item in items.sort()){
-        sum += item[1];
-        xs.push(item[0]);
+    var xs = [];
+    var cs = [];
+    for(var i = 0; i < items.length; i++){
+        sum += items[i][1];
+        xs.push(items[i][0]);
         cs.push(sum);
     }
+    console.log(xs, cs);
     var total = parseFloat(sum);
     var ps = [];
     for(var c in cs)
-        ps.push(c/total);
+        ps.push(cs[c]/total);
     cdf = new Cdf(xs,ps,name);
     return cdf;
 };
@@ -201,10 +204,10 @@ function MakeCdfFromList(seq,name=''){
 };
 
 module.exports = {
+    Cdf,
     makeCdfFromPmf,
     MakeCdfFromHist,
     MakeCdfFromItems,
     MakeCdfFromList,
     zip,
-    Cdf
 };

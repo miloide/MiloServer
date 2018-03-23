@@ -6,6 +6,12 @@ var MSG = require('./strings');
 var swal = require('sweetalert');
 var utils = require('./functions');
 var sandbox = require('./sandbox');
+var cdf = require('./statistics/cdf');
+var pmf = require('./statistics/pmf');
+
+
+window.cdf = window.realCDF = cdf;
+window.pmf = pmf;
 // Export globally
 var $ = window.$ = require('jquery');
 window.jQuery  = window.$;
