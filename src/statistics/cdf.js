@@ -46,6 +46,7 @@ Cdf.prototype.insert = function (arr, val, inPlace) {
     return arr.slice(0, idx).concat([val], arr.slice(idx));
 };
 
+
 Cdf.prototype.values = function(){
     return this.xs;
 };

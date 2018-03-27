@@ -113,6 +113,10 @@ Pmf.prototype.probs = function(){
     return this.dictwrapper.values();
 };
 
+Pmf.prototype.render = function(label, colour){
+    return this.dictwrapper.render(label,colour);
+};
+
 Pmf.prototype.prob = function(x){
     return this.dictwrapper.dict[x];
 };
@@ -201,6 +205,10 @@ Hist.prototype.freq = function(x){
 
 Hist.prototype.freqs = function(){
    return this.dictwrapper.values();
+};
+
+Hist.prototype.render = function(label, colour){
+    return this.dictwrapper.render(label,colour);
 };
 
 function makeHistFromList(t, name =''){
