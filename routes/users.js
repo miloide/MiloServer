@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 var passport = require('passport');
 var User = require('../models/user');
+var project = require('../models/project');
 
 function isAuthenticated(req, res, next) {
   if (req.isAuthenticated()){
@@ -30,7 +31,15 @@ router.get('/login', function(req, res){
 });
 
 router.get('/projects',isAuthenticated, function(req, res){
-    res.render('dashboard',{user: req.user});
+    project.find({owner : req.user.username}, function(err, data){
+      if (err){
+        return res.status(500).json({
+        err: err
+        });
+      }
+      console.log(data.length);
+      res.render('dashboard',{user: req.user, projects : data});
+    });
 });
 
 router.post('/register',isAuthenticated,function(req, res){

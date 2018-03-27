@@ -28,6 +28,7 @@
 var BlocklyStorage = {};
 var Blockly = require('milo-blocks');
 var Helpers = require('./helpers');
+var $ = require('jquery');
 var swal = require('sweetalert');
 /**
  * Backup code blocks to localStorage.
@@ -115,7 +116,15 @@ BlocklyStorage.makeRequest_ = function(url, name, content, workspace) {
   BlocklyStorage.httpRequest_.open('POST', url);
   BlocklyStorage.httpRequest_.setRequestHeader('Content-Type',
       'application/x-www-form-urlencoded');
-  BlocklyStorage.httpRequest_.send(name + '=' + encodeURIComponent(content));
+  var data = new FormData();
+  data.append(name,content);
+
+  if (name == 'xml'){
+    var projectName = $("#project_name").val();
+    data.append('projectName',projectName);
+  }
+
+  BlocklyStorage.httpRequest_.send(data);
   BlocklyStorage.httpRequest_.workspace = workspace;
 };
 
@@ -135,8 +144,6 @@ BlocklyStorage.handleRequest_ = function() {
       var data = BlocklyStorage.httpRequest_.responseText.trim();
       if (BlocklyStorage.httpRequest_.name == 'xml') {
         window.location.hash = data;
-        // BlocklyStorage.alert(BlocklyStorage.LINK_ALERT.replace('%1',
-        //     window.location.href));
         Helpers.showAlert("Share your milo blocks with this link",
               BlocklyStorage.LINK_ALERT.replace('%1',window.location.href),
               "success"

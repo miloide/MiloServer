@@ -1,18 +1,24 @@
 const routes = require('express').Router();
 var Blocks = require('../models/blocks.js');
+var Project = require('../models/project.js');
 var bcrypt =  require('bcrypt');
 var salt = bcrypt.genSaltSync(10);
 
 routes.post('/storage', function(req, res){
     var content = req.body;
+    console.log(content);
     var key = Object.keys(content)[0];
     var value = content[key];
-
     if (key == 'xml'){
+        var projectName = content['projectName'];
         var hash = bcrypt.hashSync(value, salt);
-        var instance = new Blocks({xml:value, hash:hash});
-        console.log(hash);
-        instance.save(function(err){
+        var project = new Project({
+                                    projectName:projectName,
+                                    owner:req.user.username,
+                                    block:{xml:value, hash:hash},
+                                    public:true
+                                });
+        project.save(function(err){
             if (err) {
                 return res.status(500).send(err);
             }

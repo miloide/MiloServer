@@ -44,8 +44,7 @@ html
 					li
 						a.runButton(href='#') Run
 					li.text-center
-						a
-							strong #{project.title}
+							input#project_name.form-control(type="text",placeholder="Untitled Project", value=project.title)
 
 
 				ul.nav.navbar-nav.navbar-right

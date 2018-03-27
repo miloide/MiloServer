@@ -59,13 +59,14 @@ block content
 				.tbl-body
 					table.table.table-responsive(style="width:100%")
 						tbody
-							while n < 10
+
+							while n < projects.length
 								tr
 									td= n++
 									td
-										a(href='/editor/' + n) Hello World
+										a(href='/editor/' + n) #{projects[n-1].projectName}
 									td Me
-									td March 23, 2018
+									td #{projects[n-1].block.updated_at}
 									td
 										.dropdown
 											a(href='/editor/' + n)
