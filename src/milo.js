@@ -9,10 +9,6 @@ var sandbox = require('./sandbox');
 var cdf = require('./statistics/cdf');
 var pmf = require('./statistics/pmf');
 
-window.plot = require('./plot');
-window.gaussian = require('./statistics/gaussian');
-window.cdf = window.realCDF = cdf;
-window.pmf = pmf;
 // Export globally
 var $ = window.$ = require('jquery');
 window.jQuery  = window.$;

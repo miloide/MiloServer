@@ -179,7 +179,6 @@ function MakeCdfFromItems(items, name=''){
         xs.push(items[i][0]);
         cs.push(sum);
     }
-    console.log(xs, cs);
     var total = parseFloat(sum);
     var ps = [];
     for(var c in cs)
