@@ -6,19 +6,22 @@ var OUT_DIR = path.join(__dirname,"public");
 
 module.exports = {
   entry: [
-    './src/deeplearn.js',
-    './src/storage.js',
-    './src/datasets.js',
-    './src/statistics/pmf.js',
-    './src/helpers.js',
-    './src/functions.js',
-    './src/codegen.js',
-    './src/blocks.js',
     './src/milo.js',
   ],
   output: {
     path: OUT_DIR,
     filename: 'bundle.js',
+  },
+  module: {
+    rules: [
+       {
+         test: /\.js$/,
+         exclude: /(node_modules)/,
+         use: {
+          loader: 'babel-loader',
+        }
+       }
+    ]
   },
   resolve: {
     extensions: ['.js'],
