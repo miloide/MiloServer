@@ -6,17 +6,12 @@ var MSG = require('./strings');
 var swal = require('sweetalert');
 var utils = require('./functions');
 var sandbox = require('./sandbox');
-var cdf = require('./statistics/cdf');
-var pmf = require('./statistics/pmf');
-
 // Export globally
 var $ = window.$ = require('jquery');
 window.jQuery  = window.$;
 var BlocklyStorage = window.BlocklyStorage = require('./storage');
 var Datasets  = window.Datasets = require('./datasets');
 var Blockly = window.Blockly = require('milo-blocks');
-
-
 
 for (var key in utils) {
   global[key] = utils[key];
