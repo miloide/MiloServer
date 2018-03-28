@@ -115,9 +115,23 @@
       <block type="stats_pmf_operations">
         <field name="NAME">mean</field>
       </block>
+      <block type="stats_cdf_get"></block>
+      <block type="stats_cdf_insert"></block>
+      <block type="stats_construct_cdf"></block>
       <block type="lists_sort"></block>
     </category>
     <category name="Plot"  colour="%{BKY_SCATTER_HUE}">
+      <block type="plot_show"></block>
+      <block type="plot_title">
+        <field name="NAME">My Plot</field>
+      </block>
+      <block type="plot_x_title">
+        <field name="NAME">My Plot</field>
+      </block>
+      <block type="plot_y_title">
+        <field name="NAME">My Plot</field>
+      </block>
+      <block type="plot_distributions"></block>
       <block type="plot_scatter">
         <field name="HUE">#ffffff</field>
         <field name="Connect">TRUE</field>
@@ -125,25 +139,14 @@
       <block type="straight_line">
           <field name="slope"></field>
       </block>
-      <block type="function_plot"></block>
-      <block type="function_plot_x_var"></block>
-
       <block type="plot_histogram">
         <field name="HUE">#ffffff</field>
       </block>
       <block type="plot_bar">
         <field name="HUE">#ffffff</field>
       </block>
-      <block type="plot_title">
-        <field name="NAME">My Plot</field>
-      </block>
-      <block type="plot_show"></block>
-      <block type="plot_x_title">
-        <field name="NAME">My Plot</field>
-      </block>
-      <block type="plot_y_title">
-        <field name="NAME">My Plot</field>
-      </block>
+      <block type="function_plot"></block>
+      <block type="function_plot_x_var"></block>
       <block type="function_plot_y">
         <field name="range_min">0</field>
         <field name="range_max">0</field>

@@ -28,6 +28,21 @@ use miloDB
 db.dummy.insert({'v':'1.0'});
 ```
 
+## Add Oauth2 Credentials
+
+Create a file called `credentials.js` in `config/`, and add the following:
+```
+module.exports = {
+    'googleAuth':{
+        'clientID' : 'CLIENT_ID',
+        'clientSecret' :'CLIENT_SECRET',
+        'devCallback' : 'http://localhost:5000/users/auth/google/callback',
+        'prodCallback': 'https://example.com/users/auth/google/callback'
+    }
+};
+
+```
+
 ## Running Milo Server
 
 To start the mongo deamon in the background
