@@ -57,10 +57,26 @@ function Plot() {
  * @param {string} data.isLine - whether to draw line through points or not
  */
 Plot.prototype.addDataItem = function(data) {
-    if (data.x == undefined){
-        Helpers.showAlert("Error", "Not enough data to plot!");
-        return;
+    if (data.x == undefined && data.name == "Function"){
+        var minRange = data.min == undefined? -10 :data.min;
+        var maxRange = data.max == undefined? 10 :data.max;
+        var incRange = data.inc == undefined? 1 :data.inc;
+        var x_ = [], y_ = [];
+        var x;
+        for (var itr = minRange; itr < maxRange; itr +=incRange){
+            x_.push(itr);
+            x = itr;
+            y_.push(eval(data.Function));
+        }
+        data.x = x_;
+        data.y = y_;
     }
+
+    if (data.x == undefined) {
+     //       Helpers.showAlert("Error", "Not enough data to plot!");
+            return;
+    }
+
     if (data.type == "scatter") {
         if (data.x == undefined || data.y == undefined){
           Helpers.showAlert("Error", "Not enough data");
