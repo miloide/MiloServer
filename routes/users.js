@@ -2,12 +2,13 @@ var express = require('express');
 var router = express.Router();
 var passport = require('passport');
 var User = require('../models/user');
+var project = require('../models/project');
 
 function isAuthenticated(req, res, next) {
   if (req.isAuthenticated()){
       return next();
   }
-  // IF A USER ISN'T LOGGED IN, THEN REDIRECT THEM SOMEWHERE
+  // IF A USER ISN'T LOGGED IN, THEN REDIRECT THEM to login
   res.redirect('/users/login');
 }
 
@@ -27,6 +28,17 @@ router.get('/login', function(req, res){
   };
   var message = STATUS[req.query.status || "200"];
   res.render('login',{message:message});
+});
+
+router.get('/projects',isAuthenticated, function(req, res){
+    project.find({owner : req.user.username}, function(err, data){
+      if (err){
+        return res.status(500).json({
+        err: err
+        });
+      }
+      res.render('dashboard',{user: req.user, projects : data});
+    });
 });
 
 router.post('/register',isAuthenticated,function(req, res){

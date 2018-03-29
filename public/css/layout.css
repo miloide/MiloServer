@@ -2,6 +2,10 @@ body, html {
     height: 100%;
 }
 
+.material-icons {
+    vertical-align: middle !important;
+    padding-bottom: 3px;
+}
 
 .card-div {
 
@@ -128,4 +132,50 @@ body, html {
 .forgot-password:active,
 .forgot-password:focus{
     color: rgb(12, 97, 33);
+}
+
+.navbar-brand {
+    padding: 0px; /* firefox bug fix */
+}
+
+.navbar-brand>img {
+    height: 90%;
+    margin-top: 5px;
+    width: auto;
+    margin-left: 5px;
+    border-radius: 30px;
+    background-color: #0f095a;
+}
+
+/* Table Styles */
+.header-fixed {
+    width: 100%
+}
+
+.header-fixed > thead,
+.header-fixed > tbody,
+.header-fixed > thead > tr,
+.header-fixed > tbody > tr,
+.header-fixed > thead > tr > th,
+.header-fixed > tbody > tr > td {
+    display: block;
+}
+
+.header-fixed > tbody > tr:after,
+.header-fixed > thead > tr:after {
+    content: ' ';
+    display: block;
+    visibility: hidden;
+    clear: both;
+}
+
+.header-fixed > tbody {
+    overflow-y: auto;
+    height: 650px;
+}
+
+.header-fixed > tbody > tr > td,
+.header-fixed > thead > tr > th {
+    width: 20%;
+    float: left;
 }

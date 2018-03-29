@@ -1,40 +1,22 @@
 /**
- * @license
- * Visual Blocks Editor
- *
- * Copyright 2012 Google Inc.
- * https://developers.google.com/blockly/
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * @fileoverview Loading and saving blocks with localStorage and server-side DB.
  */
 
-/**
- * @fileoverview Loading and saving blocks with localStorage and cloud storage.
- * @author q.neutron@gmail.com (Quynh Neutron)
- */
-'use strict';
+ 'use strict';
 
-// Create a namespace.
-var BlocklyStorage = {};
+// Create a namespace for storage related operations.
+var MiloStorage = {};
+
 var Blockly = require('milo-blocks');
 var Helpers = require('./helpers');
-var swal = require('sweetalert');
+var $ = require('jquery');
+
 /**
  * Backup code blocks to localStorage.
  * @param {!Blockly.WorkspaceSvg} workspace Workspace.
  * @private
  */
-BlocklyStorage.backupBlocks_ = function(workspace) {
+MiloStorage.backupBlocks_ = function(workspace) {
   if ('localStorage' in window) {
     var xml = Blockly.Xml.workspaceToDom(workspace);
     // Gets the current URL, not including the hash.
@@ -45,115 +27,94 @@ BlocklyStorage.backupBlocks_ = function(workspace) {
 
 /**
  * Bind the localStorage backup function to the unload event.
- * @param {Blockly.WorkspaceSvg=} opt_workspace Workspace.
+ * @param {Blockly.WorkspaceSvg=} optWorkspace Workspace override option.
  */
-BlocklyStorage.backupOnUnload = function(opt_workspace) {
-  var workspace = opt_workspace || Blockly.getMainWorkspace();
-  window.addEventListener('unload',
-      function() {BlocklyStorage.backupBlocks_(workspace);}, false);
+MiloStorage.backupOnUnload = function(optWorkspace) {
+  var workspace = optWorkspace || Blockly.getMainWorkspace();
+  window.addEventListener('unload',function(){
+    MiloStorage.backupBlocks_(workspace);
+  }, false);
 };
 
 /**
  * Restore code blocks from localStorage.
- * @param {Blockly.WorkspaceSvg=} opt_workspace Workspace.
+ * @param {Blockly.WorkspaceSvg=} optWorkspace Workspace override option.
  */
-BlocklyStorage.restoreBlocks = function(opt_workspace) {
+MiloStorage.restoreBlocks = function(optWorkspace) {
   var url = window.location.href.split('#')[0];
   if ('localStorage' in window && window.localStorage[url]) {
-    var workspace = opt_workspace || Blockly.getMainWorkspace();
+    var workspace = optWorkspace || Blockly.getMainWorkspace();
     var xml = Blockly.Xml.textToDom(window.localStorage[url]);
-    xml = BlocklyStorage.pruneUndefined(xml);
+    xml = MiloStorage.pruneUndefined(xml);
     Blockly.Xml.domToWorkspace(xml, workspace);
   }
 };
 
 /**
- * Save blocks to database and return a link containing key to XML.
- * @param {Blockly.WorkspaceSvg=} opt_workspace Workspace.
+ * Save project to database
+ * @param {Blockly.WorkspaceSvg=} optWorkspace Workspace override option.
  */
-BlocklyStorage.link = function(opt_workspace) {
-  var workspace = opt_workspace || Blockly.getMainWorkspace();
+MiloStorage.save = function(optWorkspace,showAlert=false) {
+  var workspace = optWorkspace || Blockly.getMainWorkspace();
   var xml = Blockly.Xml.workspaceToDom(workspace);
   var data = Blockly.Xml.domToText(xml);
-  BlocklyStorage.makeRequest_('/storage', 'xml', data, workspace);
+  var projectName = $("#projectName").html();
+  $.post( "/storage",{
+    'type': "save",
+    'projectName': projectName,
+    'projectKey': MiloStorage.projectKey || '',
+    'xml': data
+  }).done(function(response){
+      if (response.status != 200){
+        Helpers.showAlert("Project Save Failed!",
+                  '\nError Code: '+response.status,"error"
+        );
+        return;
+      }
+      MiloStorage.projectKey = response.key;
+      window.location.hash = response.key;
+      if (showAlert){
+        Helpers.showAlert("",
+              "Your project was saved successfully!",
+              "success"
+        );
+      }
+      $('#statusBar').html('All changes saved!');
+      setTimeout(function(){
+        $('#statusBar').html('');
+      },1500);
+      MiloStorage.monitorChanges_(workspace);
+    });
 };
 
 /**
  * Retrieve XML text from database using given key.
  * @param {string} key Key to XML, obtained from href.
- * @param {Blockly.WorkspaceSvg=} opt_workspace Workspace.
+ * @param {Blockly.WorkspaceSvg=} optWorkspace Workspace override option.
  */
-BlocklyStorage.retrieveXml = function(key, opt_workspace) {
-  var workspace = opt_workspace || Blockly.getMainWorkspace();
-  BlocklyStorage.makeRequest_('/storage', 'key', key, workspace);
-};
+MiloStorage.retrieveXml = function(key, optWorkspace) {
+  var workspace = optWorkspace || Blockly.getMainWorkspace();
+  // MiloStorage.makeRequest_('/storage', 'key', key, workspace);
 
-/**
- * Global reference to current AJAX request.
- * @type {XMLHttpRequest}
- * @private
- */
-BlocklyStorage.httpRequest_ = null;
-
-/**
- * Fire a new AJAX request.
- * @param {string} url URL to fetch.
- * @param {string} name Name of parameter.
- * @param {string} content Content of parameter.
- * @param {!Blockly.WorkspaceSvg} workspace Workspace.
- * @private
- */
-BlocklyStorage.makeRequest_ = function(url, name, content, workspace) {
-  if (BlocklyStorage.httpRequest_) {
-    // AJAX call is in-flight.
-    BlocklyStorage.httpRequest_.abort();
-  }
-  BlocklyStorage.httpRequest_ = new XMLHttpRequest();
-  BlocklyStorage.httpRequest_.name = name;
-  BlocklyStorage.httpRequest_.onreadystatechange =
-      BlocklyStorage.handleRequest_;
-  BlocklyStorage.httpRequest_.open('POST', url);
-  BlocklyStorage.httpRequest_.setRequestHeader('Content-Type',
-      'application/x-www-form-urlencoded');
-  BlocklyStorage.httpRequest_.send(name + '=' + encodeURIComponent(content));
-  BlocklyStorage.httpRequest_.workspace = workspace;
-};
-
-/**
- * Callback function for AJAX call.
- * @private
- */
-BlocklyStorage.handleRequest_ = function() {
-  if (BlocklyStorage.httpRequest_.readyState == 4) {
-    if (BlocklyStorage.httpRequest_.status != 200) {
-      swal("Project Save Failed!",
-                  '\nhttpRequest_.status: '+
-                  BlocklyStorage.httpRequest_.status,"error"
-      );
-
-    } else {
-      var data = BlocklyStorage.httpRequest_.responseText.trim();
-      if (BlocklyStorage.httpRequest_.name == 'xml') {
-        window.location.hash = data;
-        // BlocklyStorage.alert(BlocklyStorage.LINK_ALERT.replace('%1',
-        //     window.location.href));
-        Helpers.showAlert("Share your milo blocks with this link",
-              BlocklyStorage.LINK_ALERT.replace('%1',window.location.href),
-              "success"
+  $.post( "/storage",{
+    'type': "load",
+    'projectKey': key,
+  }).done(function(response){
+      if (response.status != 200){
+        Helpers.showAlert("Failed to load project",
+                  '\nError Code: '+response.status,"error"
         );
-      } else if (BlocklyStorage.httpRequest_.name == 'key') {
-        if (!data.length) {
-          BlocklyStorage.alert(BlocklyStorage.HASH_ERROR.replace('%1',
-              window.location.hash));
-        } else {
-          BlocklyStorage.loadXml_(data, BlocklyStorage.httpRequest_.workspace);
-        }
+        // clear the key from url
+        window.location.hash = '';
+        return;
       }
-      BlocklyStorage.monitorChanges_(BlocklyStorage.httpRequest_.workspace);
-    }
-    BlocklyStorage.httpRequest_ = null;
-  }
+      $("#projectName").html(response.project.projectName);
+      MiloStorage.loadXml_(response.xml, workspace);
+      MiloStorage.projectKey = response.projectKey;
+      MiloStorage.monitorChanges_(workspace);
+  });
 };
+
 
 /**
  * Start monitoring the workspace.  If a change is made that changes the XML,
@@ -162,18 +123,18 @@ BlocklyStorage.handleRequest_ = function() {
  * @param {!Blockly.WorkspaceSvg} workspace Workspace.
  * @private
  */
-BlocklyStorage.monitorChanges_ = function(workspace) {
+MiloStorage.monitorChanges_ = function(workspace) {
   var startXmlDom = Blockly.Xml.workspaceToDom(workspace);
   var startXmlText = Blockly.Xml.domToText(startXmlDom);
+  var bindData = workspace.addChangeListener(change);
   function change() {
     var xmlDom = Blockly.Xml.workspaceToDom(workspace);
     var xmlText = Blockly.Xml.domToText(xmlDom);
     if (startXmlText != xmlText) {
-      window.location.hash = '';
+      $('#statusBar').html('You have unsaved changes');
       workspace.removeChangeListener(bindData);
     }
   }
-  var bindData = workspace.addChangeListener(change);
 };
 
 /**
@@ -182,16 +143,16 @@ BlocklyStorage.monitorChanges_ = function(workspace) {
  * @param {!Blockly.WorkspaceSvg} workspace Workspace.
  * @private
  */
-BlocklyStorage.loadXml_ = function(xml, workspace) {
+MiloStorage.loadXml_ = function(xml, workspace) {
   try {
     xml = Blockly.Xml.textToDom(xml);
   } catch (e) {
-    BlocklyStorage.alert(BlocklyStorage.XML_ERROR + '\nXML: ' + xml);
+    MiloStorage.alert(MiloStorage.XML_ERROR + '\nXML: ' + xml);
     return;
   }
   // Clear the workspace to avoid merge.
   workspace.clear();
-  xml = BlocklyStorage.pruneUndefined(xml);
+  xml = MiloStorage.pruneUndefined(xml);
   Blockly.Xml.domToWorkspace(xml, workspace);
 };
 
@@ -200,7 +161,7 @@ BlocklyStorage.loadXml_ = function(xml, workspace) {
  * Designed to be overridden if an app has custom dialogs, or a butter bar.
  * @param {string} message Text to alert.
  */
-BlocklyStorage.alert = function(message) {
+MiloStorage.alert = function(message) {
   window.alert(message);
 };
 
@@ -208,7 +169,7 @@ BlocklyStorage.alert = function(message) {
  * Removes blocks which aren't currently defined
  * @param {XMLDomElement} xml
  */
-BlocklyStorage.pruneUndefined = function(xml){
+MiloStorage.pruneUndefined = function(xml){
   var jqueryXml = $(xml);
   var toRemove = [];
   jqueryXml.find("block[type$='_get']").each(function(i,e) {
@@ -220,6 +181,6 @@ BlocklyStorage.pruneUndefined = function(xml){
     jqueryXml.find("block[type='"+val+"']").remove();
   });
   return jqueryXml[0];
-}
+};
 
-module.exports = BlocklyStorage;
+module.exports = MiloStorage;

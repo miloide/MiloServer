@@ -4,28 +4,86 @@ html
 	body
 		nav.navbar.navbar-default
 			.navbar-header
-				a.navbar-brand(href='#') Milo
-			// Collect the nav links, forms, and other content for toggling
+				a.navbar-brand
+					img(src='/media/icon.png')
 			#navigation.collapse.navbar-collapse
 				ul.nav.navbar-nav
+					li
+						a#projectName(style="cursor:default")
+							| Untitled Project
+						#editProjectName(style="margin-top: 8px;margin-left: 8px; display: none;")
+							.form-group(style="display: inline-flex;")
+								input#editProjectInput.form-control(
+									type="text",
+									placeholder="Untitled Project",
+									value='Untitled Project')
+								button#editProjectSaveButton.btn.btn-xs.btn-success
+									i.material-icons save
+
+
 					li.btn-group
 						li.dropdown
-							a.dropdown-toggle(href='#', data-toggle='dropdown', role='button', aria-haspopup='true', aria-expanded='false')
-								| Project
+							a.dropdown-toggle(style="cursor:pointer", data-toggle='dropdown', role='button', aria-haspopup='true', aria-expanded='false')
+								| File
 								span.caret
 							ul.dropdown-menu
 								li
-									a#linkButton(href='#') Save
+									a#saveButton(style="cursor:pointer") Save Project
 								li
-									a(href='#') Load project
+									a#renameButton(style="cursor:pointer") Rename Project
 								li
-									a(href='#') Download Project
+									a(style="cursor:pointer") Reload Project
+								li
+									a(style="cursor:pointer") Download Project
+					li.btn-group
+						li.dropdown
+							a.dropdown-toggle(style="cursor:pointer", data-toggle='dropdown', role='button', aria-haspopup='true', aria-expanded='false')
+								| Workspace
+								span.caret
+							ul.dropdown-menu
+								li
+									a.runButton(style="cursor:pointer") Run
 								li.divider(role='separator')
-								if locals.user
+								li
+									a#trashButton(style="cursor:pointer") Reset
+					li.btn-group
+						li.dropdown
+							a.dropdown-toggle(style="cursor:pointer", data-toggle='dropdown', role='button', aria-haspopup='true', aria-expanded='false')
+								| Datasets
+								span.caret
+							ul#menuDatasetImport.dropdown-menu
+								li
+									a(style="cursor:pointer" onclick='Datasets.triggerClick()') Upload
+								li.divider(role='separator')
+								li
+									span &nbsp Built In Datasets
+					li
+						a.runButton(style="cursor:pointer") Run
+
+
+				ul.nav.navbar-nav.navbar-right
+					li
+						h6#statusBar(style="margin-top: 20px;")
+					li
+						img#loadingDiv(style="display: none;width:50px;",src="/media/loading.gif")
+					li
+						button#sidebarToggleButton.navbar-toggle.toggle-right(type='button', data-toggle='sidebar', data-target='.sidebar-right')
+							span.icon-bar
+							span.icon-bar
+							span.icon-bar
+					li.btn-group
+						li.dropdown
+							a.dropdown-toggle(style="cursor:pointer", data-toggle='dropdown', role='button', aria-haspopup='true', aria-expanded='false')
+								i.material-icons account_circle
+								span.caret
+							ul.dropdown-menu
+								if user
 									li
-										span &nbsp Hi #{locals.user.name}
+										span &nbsp Hi #{user.name}
 										br
-										span &nbsp Account Type:  #{locals.user.role}
+										span &nbsp Account Type:  #{user.role}
+									li
+										a(href='/users/projects') Dashboard
 									li
 										a(href='/users/logout') Logout
 								else
@@ -33,60 +91,24 @@ html
 										a(href='/users/login') Login
 									li
 										a(href='/users/register') Register
-					li.btn-group
-						li.dropdown
-							a.dropdown-toggle(href='#', data-toggle='dropdown', role='button', aria-haspopup='true', aria-expanded='false')
-								| Editor
-								span.caret
-							ul.dropdown-menu
-								li
-									a.runButton(href='#') Run
-								li.divider(role='separator')
-								li
-									a#trashButton(href='#') Reset
-					li.btn-group
-						li.dropdown
-							a.dropdown-toggle(href='#', data-toggle='dropdown', role='button', aria-haspopup='true', aria-expanded='false')
-								| Datasets
-								span.caret
-							ul#menuDatasetImport.dropdown-menu
-								li
-									a(href='#' onclick='Datasets.triggerClick()') Upload
-								li.divider(role='separator')
-								li
-									span &nbsp Built In Datasets
-					li
-						a.runButton(href='#') Run
-
-
-				ul.nav.navbar-nav.navbar-right
-					li
-						img#loadingDiv(style="display: none;width:50px;",src="media/loading.gif")
-					li
-						select#languageMenu(style="display: none;")
-					li
-						button#sidebarToggleButton.navbar-toggle.toggle-right(type='button', data-toggle='sidebar', data-target='.sidebar-right')
-							span.icon-bar
-							span.icon-bar
-							span.icon-bar
 
 
 			br
 			ul.nav.nav-tabs
 				li.active(role='presentation')
-					a#tab_blocks.tabon(href='#') Workspace
+					a#tab_blocks.tabon(style="cursor:pointer") Workspace
 				li(role='presentation')
-					a#tab_data.taboff(href='#') Data Explorer
+					a#tab_data.taboff(style="cursor:pointer") Data Explorer
 				li(role='presentation')
-					a#tab_javascript.taboff(href='#') Code
+					a#tab_javascript.taboff(style="cursor:pointer") Code
 				li(role='presentation')
-					a#tab_xml.taboff(href='#') Debug
+					a#tab_xml.taboff(style="cursor:pointer") Debug
 		#content_blocks.content
 			.container-fluid.zero-margin
 				.row
-					.col-lg-7
+					.col-sm-7
 						#content_workspace(style="height: 88vh; width: 100%;")
-					#outputs.col-lg-5.scroll.zero-margin.pull-right
+					#outputs.col-sm-5.scroll.zero-margin.pull-right
 						#graph_output(style="display: none")
 						#misc_output
 						#console_holder(style="display: none")
@@ -95,7 +117,7 @@ html
 		#content_data.content
 			.container-fluid
 				.row
-					.col-lg-4
+					.col-sm-4
 						h3 Data Explorer
 						p Select a dataset from the list below to view or import from the menu.
 						//- select#builtInDropdown
@@ -109,13 +131,13 @@ html
 						//- .col-lg-12
 						//- h4 Loaded Datasets (click to view)
 						ul#dataset_list
-					#explorer.col-lg-7
-						.col-lg-12
+					#explorer.col-sm-7
+						.col-sm-12
 							#dataset_output
 		#content_javascript.content
 			.container-fluid
 				.row
-					.col-lg-6
+					.col-sm-6
 						h3 Generated JS
 						pre#source_javascript.code
 		#content_xml.content
@@ -124,25 +146,28 @@ html
 					.col-sm-12
 						h3 Generated XML
 						textarea#content_xml_text(wrap="off",cols=100, rows=20)
-		#sidebar.col-xs-7.col-sm-3.col-md-3.sidebar.sidebar-right.sidebar-animate
-			h3 Milo Data Science Tutorial
-			p Go through each step and complete the marked exercise
+		#sidebar.col-xs-7.col-sm-5.col-md-5.sidebar.sidebar-right.sidebar-animate
+			.heading
+				a(onclick="$.sidebar.lockToggle()",style="cursor:pointer")
+					i.material-icons#pinHolder lock_open
+				h3 Milo Data Science Tutorial
+				p Go through each step and complete the marked exercise
 			.pagination-container
 				ul.pagination
 					li(data-page='-')
-						a(href='#') <
+						a(style="cursor:pointer") <
 					li.active(data-page='1')
-						a(href='#') 1
+						a(style="cursor:pointer") 1
 					li(data-page='2')
-						a(href='#') 2
+						a(style="cursor:pointer") 2
 					li(data-page='3')
-						a(href='#') 3
+						a(style="cursor:pointer") 3
 					li(data-page='4')
-						a(href='#') 4
+						a(style="cursor:pointer") 4
 					li(data-page='5')
-						a(href='#') 5
+						a(style="cursor:pointer") 5
 					li(data-page='+')
-						a(href='#') >
+						a(style="cursor:pointer") >
 
 
 
@@ -168,7 +193,7 @@ html
 							| and click on create variable. You will be prompted with an alert. Add the variable name and then you can see blocks for the new variable are created.
 							li Took a look at these blocks!
 							br
-					img(src='media/milo.png',alt='Milo Blocks' class="center")
+					img(src='/media/milo.png',alt='Milo Blocks' class="center")
 
 				div(data-page='2', class="page-data",style='display:none;')
 					h3
@@ -182,7 +207,7 @@ html
 						br
 						li Take a look at the example below to see how list can be created!
 
-					img(src='media/lists.png',class="center", alt='list')
+					img(src='/media/lists.png',class="center", alt='list')
 
 					ul
 						br
@@ -202,7 +227,7 @@ html
 						li Once you have connected the data list blocks with bar plot, drag the plot block from the plot category. Now connect the bar plot block to this newly dragged plot block.
 						br
 						li Now click on run to visualize the bar plot :).
-					img(src='media/plots.png',class="center", alt='list')
+					img(src='/media/plots.png',class="center", alt='list')
 				div(data-page='4', class="page-data",style='display:none;')
 
 					h3
@@ -252,3 +277,5 @@ html
 
 		include toolbox.html
 		#snackbar
+		#init_xml_text(style="display:none")
+			|	#{starterBlocks}

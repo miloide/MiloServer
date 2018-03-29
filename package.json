@@ -41,7 +41,8 @@
     "passport-local-mongoose": "^5.0.0",
     "pug": "^2.0.0-rc.4",
     "serve-index": "^1.0.0",
-    "sweetalert": "^2.1.0"
+    "sweetalert": "^2.1.0",
+    "uniqid": "^4.1.1"
   },
   "devDependencies": {
     "atomus": "^2.0.0",

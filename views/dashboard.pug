@@ -1,0 +1,99 @@
+extends layout.pug
+block headers
+	link(rel="stylesheet", href="/css/dashboard.css")
+block navigation
+	ul.nav.navbar-nav.navbar-right
+		li.btn-group
+			li.dropdown
+				a.dropdown-toggle(href='#', data-toggle='dropdown', role='button', aria-haspopup='true', aria-expanded='false')
+					i.material-icons account_circle
+					span.caret
+				ul.dropdown-menu
+					if user
+						li
+							span &nbsp; Hi #{user.name}
+							br
+							span &nbsp; Account Type:  #{user.role}
+						li
+							a(href='/users/logout') Logout
+					else
+						li
+							a(href='/users/login') Login
+						li
+							a(href='/users/register') Register
+block content
+	.container-fluid
+		.row
+			.col-sm-3.col-md-2.sidebar
+				ul.nav.nav-sidebar
+					li
+						a(href='/editor/')
+							i.material-icons add
+							| &nbsp; New Project
+				ul.nav.nav-sidebar(style="border-top: 1px solid #eee;")
+					li
+						a(href='')
+							i.material-icons group
+							| &nbsp; Shared with me
+					li
+						a(href='')
+							i.material-icons delete
+							| &nbsp; Trash
+				ul.nav.nav-sidebar(style="border-top: 1px solid #eee;")
+					li
+						a(href='')
+							i.material-icons feedback
+							| &nbsp; Feedback
+			.col-sm-9.col-sm-offset-3.col-md-10.col-md-offset-2.main
+				h2.sub-header My Projects
+				- var n = 0;
+				.tbl-projects
+					table.table.table-responsive.header-fixed(style="width:100%")
+						thead
+							tr
+								th #
+								th Project
+								th Owner
+								th Last Modified
+								th Actions
+						tbody
+							while n < projects.length
+								tr
+									td= ++n
+									td
+										| #{projects[n-1].projectName}
+									td Me
+									td #{projects[n-1].blocks.updated_at.toLocaleDateString()}
+									td
+										.dropdown
+											a(href='/editor/#' + projects[n-1].projectKey)
+												i.material-icons launch
+											a.dropdown-toggle(href='#', data-toggle='dropdown', role='button', aria-haspopup='true', aria-expanded='false')
+												i.material-icons more_vert
+											ul.dropdown-menu
+												li
+													a(href='#')
+														i.material-icons create
+														| &nbsp; Rename
+												li
+													a(href='#')
+														i.material-icons person_add
+														| &nbsp; Collaborators
+												li
+													a(href='#')
+														i.material-icons delete
+														| &nbsp; Delete
+							tr.lastrow
+								td &nbsp;
+								td &nbsp;
+								td &nbsp;
+								td &nbsp;
+								td &nbsp;
+							tr.lastrow
+								td &nbsp;
+								td &nbsp;
+								td &nbsp;
+								td &nbsp;
+								td &nbsp;
+
+

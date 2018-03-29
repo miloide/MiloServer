@@ -12,11 +12,13 @@ html
         link(rel="stylesheet", href="/css/layout.css")
         link(rel="icon" type="image/png" href="/media/icon.png")
         link(href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet")
+        block headers
     body(style="padding-top: 70px;")
         nav.navbar.navbar-fixed-top.navbar-default
             .container-fluid
                 .navbar-header
-                    a.navbar-brand(href='#') Milo
+                    a.navbar-brand(href='#')
+                        img(src='/media/icon.png')
                 #navigation.collapse.navbar-collapse
                     block navigation
         block content

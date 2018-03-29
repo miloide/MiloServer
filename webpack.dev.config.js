@@ -4,14 +4,13 @@ var path = require("path");
 var OUT_DIR = path.join(__dirname,"public");
 
 module.exports = {
-  entry:[
-    './src/milo.js',
-    "webpack-hot-middleware/client?reload=true"
-  ],
+  entry:{
+    ide: ['./src/milo.js',"webpack-hot-middleware/client?reload=true"]
+  },
   output: {
     path: OUT_DIR,
     publicPath: __dirname + "/public",
-    filename: 'bundle.js',
+    filename: '[name].js',
   },
   resolve: {
     extensions: ['.js'],
@@ -30,8 +29,6 @@ module.exports = {
   plugins: [
     new webpack.ProvidePlugin({
       $: 'jquery',
-      jQuery: 'jquery',
-      'window.jQuery': 'jquery',
       'Blockly':'milo-blocks'
     }),
     new webpack.optimize.OccurrenceOrderPlugin(),
