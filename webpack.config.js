@@ -5,12 +5,12 @@ var CompressionPlugin = require('compression-webpack-plugin');
 var OUT_DIR = path.join(__dirname,"public");
 
 module.exports = {
-  entry: [
-    './src/milo.js',
-  ],
+  entry: {
+    ide: ['./src/milo.js'],
+  },
   output: {
     path: OUT_DIR,
-    filename: 'bundle.js',
+    filename: '[name].js',
   },
   module: {
     rules: [
