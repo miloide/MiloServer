@@ -1,17 +1,19 @@
 var db = require('./config/database');
 var express = require('express');
-var app = express();
+const app = express();
 var path = require('path');
 var http = require('http');
 var bodyParser = require('body-parser');
-var routes = require('./routes/index');
+var projectStorage = require('./routes/store');
 const webpackHotMid = require("webpack-hot-middleware");
 var expressValidator = require('express-validator');
-var flash = require('connect-flash');
-var session = require('express-session');
 var passport = require('passport');
+var authConfig = require('./config/auth');
 var users = require('./routes/users');
 var editor = require('./routes/editor');
+
+
+
 const NODE_ENV = process.env.NODE_ENV ? process.env.NODE_ENV.toLowerCase() : 'development';
 
 if (NODE_ENV  == 'development'){
@@ -26,20 +28,29 @@ if (NODE_ENV  == 'development'){
   }));
   app.use(webpackHotMid(compiler));
 }
+
+
 app.set('views', './views');
 app.set('view engine', 'pug');
+
+
 app.use(express.static(path.join(__dirname, 'public')));
+
+// Handle forms
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
+
+
+// Setup Authentication backend
+// TODO: replace secret from credentials.js
 app.use(require('express-session')({
     secret: 'milo',
     resave: false,
     saveUninitialized: false
 }));
-
 app.use(passport.initialize());
 app.use(passport.session());
-require('./config/auth')(passport);
+authConfig(passport);
 app.use(expressValidator({
   errorFormatter: function(param, msg, value) {
       var namespace = param.split('.')
@@ -55,11 +66,12 @@ app.use(expressValidator({
     };
   }
 }));
-app.use(flash());
+
 
 // Custom routes
 app.use('/users', users);
 app.use('/editor', editor);
+app.use('/storage', projectStorage);
 
 
 function isAuthenticated(req, res, next) {
@@ -71,6 +83,7 @@ function isAuthenticated(req, res, next) {
 }
 
 
+// Root Handler
 app.get('/',isAuthenticated, function(req, res){
     res.redirect('/users/projects');
 });
@@ -81,7 +94,7 @@ try {
   console.log(e.message);
 }
 
-app.use('/', routes);
+
 var httpServer = http.createServer(app);
 
 httpServer.listen(5000, function(){

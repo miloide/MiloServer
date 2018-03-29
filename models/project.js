@@ -1,6 +1,5 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
-var blocks = require('./blocks.js');
 var storageSchema =new Schema({
     hash:{
         type: String,
@@ -25,15 +24,19 @@ var projectSchema = new Schema({
          type : String,
          required : true
      },
+     projectKey :{
+         type: String,
+         required: true
+     },
      owner : {
          type : String,
          required : true
      },
      collaborators : {
-         type  : Array,
-         required : false
+         type  : Schema.Types.Mixed,
+         default: {}
      },
-     block : storageSchema,
+     blocks : storageSchema,
 
      public : {
          type : Boolean,

@@ -37,7 +37,6 @@ router.get('/projects',isAuthenticated, function(req, res){
         err: err
         });
       }
-      console.log(data.length);
       res.render('dashboard',{user: req.user, projects : data});
     });
 });

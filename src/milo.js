@@ -8,11 +8,10 @@ var utils = require('./functions');
 var sandbox = require('./sandbox');
 // Export globally
 var $ = window.$ = require('jquery');
-window.jQuery  = window.$;
-var BlocklyStorage = window.BlocklyStorage = require('./storage');
+var MiloStorage = require('./storage');
 var Datasets  = window.Datasets = require('./datasets');
 var Blockly = window.Blockly = require('milo-blocks');
-
+var Project = require('./project');
 
 
 for (var key in utils) {
@@ -24,17 +23,6 @@ for (var key in utils) {
  */
 var Milo = {};
 
-/**
- * Lookup for names of supported languages.  Keys should be in ISO 639 format.
- */
-Milo.LANGUAGE_NAME = {
-	'en': 'English'
-};
-
-/**
- * List of RTL languages.
- */
-Milo.LANGUAGE_RTL = [];
 
 /**
  * Blockly's main workspace.
@@ -54,26 +42,6 @@ Milo.getStringParamFromUrl = function(name, defaultValue) {
 	return val ? decodeURIComponent(val[1].replace(/\+/g, '%20')) : defaultValue;
 };
 
-/**
- * Get the language of this user from the URL.
- * @return {string} User's language.
- */
-Milo.getLang = function() {
-	var lang = Milo.getStringParamFromUrl('lang', '');
-	if (Milo.LANGUAGE_NAME[lang] === undefined) {
-		// Default to English.
-		lang = 'en';
-	}
-	return lang;
-};
-
-/**
- * Is the current language (Milo.LANG) an RTL language?
- * @return {boolean} True if RTL, false if LTR.
- */
-Milo.isRtl = function() {
-	return Milo.LANGUAGE_RTL.indexOf(Milo.LANG) != -1;
-};
 
 /**
  * Load blocks saved on the cloud or in session/local storage.
@@ -85,60 +53,15 @@ Milo.loadBlocks = function(defaultXml,override=false) {
 		Blockly.Xml.domToWorkspace(xml, Milo.workspace);
 		return;
 	}
-	try {
-		var loadOnce = window.sessionStorage.loadOnceBlocks;
-	} catch(e) {
-		// Firefox sometimes throws a SecurityError when accessing sessionStorage.
-		// Restarting Firefox fixes this, so it looks like a bug.
-		var loadOnce = null;
-	}
-	if ('BlocklyStorage' in window && window.location.hash.length > 1) {
+
+	if (window.location.hash.length > 1) {
 		// An href with #key trigers an AJAX call to retrieve saved blocks.
-		BlocklyStorage.retrieveXml(window.location.hash.substring(1));
-	} else if (loadOnce) {
-		// Language switching stores the blocks during the reload.
-		delete window.sessionStorage.loadOnceBlocks;
-		var xml = Blockly.Xml.textToDom(loadOnce);
-		Blockly.Xml.domToWorkspace(xml, Milo.workspace);
-	} else if (defaultXml) {
-		// Load the editor with default starting blocks.
-		var xml = Blockly.Xml.textToDom(defaultXml);
-		Blockly.Xml.domToWorkspace(xml, Milo.workspace);
-	} else if ('BlocklyStorage' in window) {
+		MiloStorage.retrieveXml(window.location.hash.substring(1));
+	} else {
 		// Restore saved blocks in a separate thread so that subsequent
 		// initialization is not affected from a failed load.
-		window.setTimeout(BlocklyStorage.restoreBlocks, 0);
+		window.setTimeout(MiloStorage.restoreBlocks, 0);
 	}
-};
-
-/**
- * Save the blocks and reload with a different language.
- */
-Milo.changeLanguage = function() {
-	// Store the blocks for the duration of the reload.
-	// This should be skipped for the index page, which has no blocks and does
-	// not load Blockly.
-	// MSIE 11 does not support sessionStorage on file:// URLs.
-	if (typeof Blockly != 'undefined' && window.sessionStorage) {
-		var xml = Blockly.Xml.workspaceToDom(Milo.workspace);
-		var text = Blockly.Xml.domToText(xml);
-		window.sessionStorage.loadOnceBlocks = text;
-	}
-
-	var languageMenu = document.getElementById('languageMenu');
-	var newLang = encodeURIComponent(
-			languageMenu.options[languageMenu.selectedIndex].value);
-	var search = window.location.search;
-	if (search.length <= 1) {
-		search = '?lang=' + newLang;
-	} else if (search.match(/[?&]lang=[^&]*/)) {
-		search = search.replace(/([?&]lang=)[^&]*/, '$1' + newLang);
-	} else {
-		search = search.replace(/\?/, '?lang=' + newLang + '&');
-	}
-
-	window.location = window.location.protocol + '//' +
-			window.location.host + window.location.pathname + search;
 };
 
 
@@ -189,11 +112,6 @@ Milo.getBBox_ = function(element) {
 	};
 };
 
-/**
- * User's language (e.g. "en").
- * @type {string}
- */
-Milo.LANG = Milo.getLang();
 
 /**
  * List of tab names.
@@ -291,8 +209,11 @@ Milo.renderContent = function() {
  * Initialize Blockly.  Called on page load.
  */
 Milo.init = function() {
-	Milo.initLanguage();
 
+	// Initialize Sidebar Pagination
+	Helpers.paginationHandler();
+
+	// Handle Category names
 	for (var messageKey in MSG) {
 		if (messageKey.indexOf('cat') == 0) {
 			Blockly.Msg[messageKey.toUpperCase()] = MSG[messageKey];
@@ -322,41 +243,33 @@ Milo.init = function() {
 	Milo.workspace.registerToolboxCategoryCallback('DATASETS',Datasets.flyoutCallback);
 	// Per https://groups.google.com/d/msg/blockly/Ux9OQuyJ9XE/8PvZt73aBgAJ need to update due to bug.
 	Milo.workspace.updateToolbox(document.getElementById('toolbox'));
-	function isID(input) {
-		return /^\w+$/i.test(input);
-	}
-	if (isID(window.location.href.split('editor/')[1])) {
-		var xmlText = $("#init_xml_text").text().trim();
-		if (xmlText.length !=0)	{
-			Milo.loadBlocks(xmlText,true);
-		} else {
-			Milo.loadBlocks('');
-		}
+
+	var xmlText = $("#init_xml_text").text().trim();
+	if (xmlText.length !=0)	{
+		Milo.loadBlocks(xmlText,true);
+	} else {
+		Milo.loadBlocks('');
 	}
 
-	if ('BlocklyStorage' in window) {
-		// Hook a save function onto unload.
-		BlocklyStorage.backupOnUnload(Milo.workspace);
-	}
+	// Hook a save function onto unload.
+	MiloStorage.backupOnUnload(Milo.workspace);
+
 
 	Milo.tabClick(Milo.selected);
-
+	Milo.bindClick('renameButton',Project.rename);
 	Milo.bindClick('trashButton',function() {
 				Milo.discard();
 				Milo.renderContent();
 	});
 	$(".runButton").click(Milo.runJS);
-	// TODO(arjun): Enable link button once Node JS server is setup with DB Store
-	var linkButton = document.getElementById('linkButton');
-	if ('BlocklyStorage' in window) {
-		BlocklyStorage['HTTPREQUEST_ERROR'] = MSG['httpRequestError'];
-		BlocklyStorage['LINK_ALERT'] = MSG['linkAlert'];
-		BlocklyStorage['HASH_ERROR'] = MSG['hashError'];
-		BlocklyStorage['XML_ERROR'] = MSG['xmlError'];
-		Milo.bindClick(linkButton, function() {
-			BlocklyStorage.link(Milo.workspace);
-		});
-	}
+	var saveButton = document.getElementById('saveButton');
+	MiloStorage['HTTPREQUEST_ERROR'] = MSG['httpRequestError'];
+	MiloStorage['LINK_ALERT'] = MSG['linkAlert'];
+	MiloStorage['HASH_ERROR'] = MSG['hashError'];
+	MiloStorage['XML_ERROR'] = MSG['xmlError'];
+	Milo.bindClick(saveButton, function() {
+		MiloStorage.save(Milo.workspace);
+	});
 
 	for (var i = 0; i < Milo.TABS_.length; i++) {
 		var name = Milo.TABS_[i];
@@ -366,7 +279,7 @@ Milo.init = function() {
 	var defaultDatasets = Object.keys(Datasets.loaded);
 	for (var index in defaultDatasets){
 		$("#menuDatasetImport").append('<li id="'+defaultDatasets[index]+
-			'MenuItem"><a href="#" onclick="Datasets.importHelper(\''+
+			'MenuItem"><a style="cursor:pointer" onclick="Datasets.importHelper(\''+
 			defaultDatasets[index]+'\')">'+
 			defaultDatasets[index]+
 			'</a></li>'
@@ -378,43 +291,6 @@ Milo.init = function() {
 
 };
 
-/**
- * Initialize the page language.
- */
-Milo.initLanguage = function() {
-	// Set the HTML's language and direction.
-	var rtl = Milo.isRtl();
-	document.dir = rtl ? 'rtl' : 'ltr';
-	document.head.parentElement.setAttribute('lang', Milo.LANG);
-
-	// Sort languages alphabetically.
-	var languages = [];
-	for (var lang in Milo.LANGUAGE_NAME) {
-		languages.push([Milo.LANGUAGE_NAME[lang], lang]);
-	}
-	var comp = function(a, b) {
-		// Sort based on first argument ('English', 'Русский', '简体字', etc).
-		if (a[0] > b[0]) return 1;
-		if (a[0] < b[0]) return -1;
-		return 0;
-	};
-	languages.sort(comp);
-	// Populate the language selection menu.
-	var languageMenu = document.getElementById('languageMenu');
-	languageMenu.options.length = 0;
-	for (var i = 0; i < languages.length; i++) {
-		var tuple = languages[i];
-		var lang = tuple[tuple.length - 1];
-		var option = new Option(tuple[0], lang);
-		if (lang == Milo.LANG) {
-			option.selected = true;
-		}
-		languageMenu.options.add(option);
-	}
-	languageMenu.addEventListener('change', Milo.changeLanguage, true);
-	Helpers.paginationHandler();
-
-};
 
 /**
  * Execute the user's Milo.
@@ -425,7 +301,7 @@ Milo.initLanguage = function() {
 Milo.runJS = function() {
 
 	clearOutput();
-	$('#sidebar').removeClass(sidebar-open);
+	$('#sidebar').removeClass('sidebar-open');
 	var code = Blockly.JavaScript.workspaceToCode(Milo.workspace);
 	Blockly.JavaScript.INFINITE_LOOP_TRAP = null;
 	if (!window.navigator.onLine){
@@ -457,10 +333,6 @@ Milo.discard = function() {
 	clearOutput();
 };
 
-// Load the Code demo's language strings.
-// document.write('<script src="msg/' + Milo.LANG + '.js"></script>\n');
-// Load Blockly's language strings.
-//document.write('<script src="msg/js/' + Milo.LANG + '.js"></script>\n');
 
 window.addEventListener('load', Milo.init);
 

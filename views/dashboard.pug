@@ -46,30 +46,27 @@ block content
 							| &nbsp; Feedback
 			.col-sm-9.col-sm-offset-3.col-md-10.col-md-offset-2.main
 				h2.sub-header My Projects
-				.tbl-header
-					table.table.table-hover.table-striped.table-responsive(style="width:100%")
+				- var n = 0;
+				.tbl-projects
+					table.table.table-responsive.header-fixed(style="width:100%")
 						thead
-							tr.text-center
+							tr
 								th #
 								th Project
-								th.text-center Owner
+								th Owner
 								th Last Modified
 								th Actions
-					- var n = 0;
-				.tbl-body
-					table.table.table-responsive(style="width:100%")
 						tbody
-
 							while n < projects.length
 								tr
-									td= n++
+									td= ++n
 									td
-										a(href='/editor/' + n) #{projects[n-1].projectName}
+										| #{projects[n-1].projectName}
 									td Me
-									td #{projects[n-1].block.updated_at}
+									td #{projects[n-1].blocks.updated_at.toLocaleDateString()}
 									td
 										.dropdown
-											a(href='/editor/' + n)
+											a(href='/editor/#' + projects[n-1].projectKey)
 												i.material-icons launch
 											a.dropdown-toggle(href='#', data-toggle='dropdown', role='button', aria-haspopup='true', aria-expanded='false')
 												i.material-icons more_vert
@@ -87,16 +84,16 @@ block content
 														i.material-icons delete
 														| &nbsp; Delete
 							tr.lastrow
-								td &nbsp
-								td &nbsp
-								td &nbsp
-								td &nbsp
-								td &nbsp
+								td &nbsp;
+								td &nbsp;
+								td &nbsp;
+								td &nbsp;
+								td &nbsp;
 							tr.lastrow
-								td &nbsp
-								td &nbsp
-								td &nbsp
-								td &nbsp
-								td &nbsp
+								td &nbsp;
+								td &nbsp;
+								td &nbsp;
+								td &nbsp;
+								td &nbsp;
 
 

@@ -12,7 +12,11 @@ exports.connect = function(url) {
         console.log("Connected");
     });
     db.on('error', console.error.bind());
-    db.on('disconnected', exports.connect);
+    // TODO: Handle connection failure gracefully
+    db.on('disconnected', function(){
+        console.log("DB Disconnected");
+    });
+    // db.on('disconnected', exports.connect);
     state.db = db;
     console.log("connect" + state.db);
 };
