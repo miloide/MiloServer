@@ -1,12 +1,71 @@
-var plot = require('../plot.js');
+var Plot = require('../plot');
 var jsregression = jsregression || {};
-function setPlot(plot, type, data, model){
+var plotTheta;
 
-    plot.setData()
+function arrayMax(array) {
+  return array.reduce(function(a, b) {
+    return Math.max(a, b);
+  });
 }
-(function (jsr) {
-    'use strict';
-	var LinearRegression = function (config) {
+
+function arrayMin(array) {
+  return array.reduce(function(a, b) {
+    return Math.min(a, b);
+  });
+}
+function setPlotData(data){
+    var length = data['x'].length;
+    data['x'] = data['x'].map(function(item){
+        return parseFloat(item[1]);
+    });
+    data['y'] = data['y'].map(function(item){
+        return parseFloat(item);
+    });
+    var minPoint = arrayMin(data['x']);
+    var maxPoint = arrayMax(data.x);
+    var plotPoints_x = [minPoint, maxPoint];
+    var plotPoints_y = [];
+    return [data, plotPoints_x];
+}
+/**
+ * This function generates two random points
+ * based on theta and plots a straight line.
+ * It plots two scatter plot into one.
+ * @param {*} plot - Plot class
+ * @param {*} type  - type of plot to show
+ * @param {*} data  - data to plot
+ * @param {*} theta  - coeffeceints
+ */
+function showPlot(plot, plotPoints_x, data, theta, label){
+
+    var plotPoints_y = []
+    for(var i = 0;i < plotPoints_x.length; i++){
+        var y = plotPoints_x[i] * theta[1] + theta[0];
+        plotPoints_y.push(y);
+    }
+    var plotOptions = [
+    {
+      'type': 'scatter',
+      'name': label,
+      'x': data['x'],
+      'y': data['y'],
+      'marker':{'color':'#ffffff'},
+      'isLine': false
+    },
+    {
+      'type': 'scatter',
+      'name': label,
+      'x': plotPoints_x,
+      'y':plotPoints_y,
+      'marker':{'color':'#ffffff'},
+      'isLine': true
+    },
+    ];
+    plot.setData(plotOptions);
+    plot.react();
+}
+
+	function  LinearRegression(config) {
         config = config || {};
 
         if (!config.iterations) {
@@ -28,17 +87,18 @@ function setPlot(plot, type, data, model){
         this.trace = config.trace;
     };
 
-    LinearRegression.prototype.plot = function(plot, data){
-        var x_ = data.x;
-        var y_ = data.y;
-
-    }
     LinearRegression.prototype.fit = function (data) {
         var N = data.length, X = [], Y = [];
+        var constructPlot = false;
+        var plot;
+        plotTheta = new Array();
         this.dim = data[0].length;
-        var plot = new plot.Plot();
-
-
+        if (data[0]!=undefined){
+            if (data[0].length  == 2){
+                constructPlot = true;
+                plot = new Plot();
+            }
+        }
         for (var i=0; i < N; ++i) {
             var row = data[i];
             var x_i = [];
@@ -50,9 +110,8 @@ function setPlot(plot, type, data, model){
             Y.push(y_i);
             X.push(x_i);
         }
-
+        var plotPoints = setPlotData({'x': X, 'y' : Y});
         this.theta = [];
-
         for (var d = 0; d < this.dim; ++d) {
             this.theta.push(0.0);
         }
@@ -62,13 +121,20 @@ function setPlot(plot, type, data, model){
 
             for(var d = 0; d < this.dim; ++d) {
                 this.theta[d] = this.theta[d] - this.alpha * Vx[d];
-            }
 
-            if(this.trace) {
-                console.log('cost at iteration ' + k + ': ' + this.cost(X, Y, this.theta));
             }
+            var temp = this.theta;
+            console.log(temp);
+            if(constructPlot && (k < 10)){
+                plotTheta.push(temp);
+                console.log(this.theta, plotTheta);
+            }
+            // if(true) {
+            //     console.log('cost at iteration ' + k + ': ' + this.cost(X, Y, this.theta));
+            // }
         }
-
+        console.log(plotTheta);
+        this.visualize(plot, plotPoints);
         return {
             theta: this.theta,
             dim: this.dim,
@@ -79,6 +145,19 @@ function setPlot(plot, type, data, model){
                 iterations: this.iterations
             }
         };
+    };
+
+    LinearRegression.prototype.visualize = function(plot,plotPoints){
+        var j = 0;
+        console.log(plotTheta);
+        (function rePlot (i) {
+            setTimeout(function () {
+                showPlot(plot, plotPoints[1],plotPoints[0] , plotTheta[j++], "Linear Regression");
+                if (--i) {
+                    rePlot(i);
+                }
+            }, 2000);
+        })(plotTheta.length);
     };
 
     LinearRegression.prototype.grad = function(X, Y, theta) {
@@ -149,7 +228,6 @@ function setPlot(plot, type, data, model){
         return this.h(x_i, this.theta);
     };
 
-    jsr.LinearRegression = LinearRegression;
 
     var LogisticRegression = function(config) {
         var config = config || {};
@@ -282,8 +360,6 @@ function setPlot(plot, type, data, model){
         return sum;
     };
 
-    jsr.LogisticRegression = LogisticRegression;
-
     var MultiClassLogistic = function(config){
         var config = config || {};
         if(!config.alpha){
@@ -368,11 +444,8 @@ function setPlot(plot, type, data, model){
         return best_c;
     }
 
-    jsr.MultiClassLogistic = MultiClassLogistic;
-
-})(jsregression);
-
-var module = module || {};
-if(module) {
-	module.exports = jsregression;
-}
+module.exports = {
+    LinearRegression,
+    LogisticRegression,
+    MultiClassLogistic
+};
