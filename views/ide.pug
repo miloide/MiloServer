@@ -64,6 +64,9 @@ html
 				ul.nav.navbar-nav.navbar-right
 					li
 						h6#statusBar(style="margin-top: 20px;")
+							if newProj
+								| Your project not saved yet.
+								input(id="newProjInput" type="hidden", value="new")
 					li
 						img#loadingDiv(style="display: none;width:50px;",src="/media/loading.gif")
 					li
