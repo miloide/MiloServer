@@ -177,26 +177,24 @@ Plot.prototype.setOptions = function(options){
     }
 };
 
-Plot.prototype.react = function() {
-    if(document.getElementById(this.div_.getAttribute("id")) == undefined){
-        $(this.canvas_).prepend(this.div_);
-        var d3 = Plotly.d3;
-        var WIDTH_IN_PERCENT_OF_PARENT = 540;
-        var HEIGHT_IN_PERCENT_OF_PARENT = 80;
-        const gd3 = d3.select("#"+this.div_.getAttribute("id"))
+/**
+ * Returns a graphDiv suitable for plotting reactive graphs
+ */
+Plot.prototype.reactive = function() {
+    $("#graph_output").show();
+    $(this.canvas_).prepend(this.div_);
+    var d3 = Plotly.d3;
+    var WIDTH_IN_PERCENT_OF_PARENT = 540;
+    var HEIGHT_IN_PERCENT_OF_PARENT = 80;
+    const gd3 = d3.select("#"+this.div_.getAttribute("id"))
                     .append('div')
                     .style({
                         width: WIDTH_IN_PERCENT_OF_PARENT + '%',
                         //height: HEIGHT_IN_PERCENT_OF_PARENT + 'vh',
                     });
-        const gd = gd3.node();
-        gd.setAttribute("style","");
-        Plotly.newPlot(gd,this.data_, this.layout_);
-        Plotly.Plots.resize(gd);
-    } else {
-        Plotly.plot(this.div_, this.data_, this.layout_ );
-    }
-    //Add the Plotly div to the canvas
-    $("#graph_output").show();
+    const gd = gd3.node();
+    gd.setAttribute("style","");
+    return gd;
+
 };
 module.exports = Plot;

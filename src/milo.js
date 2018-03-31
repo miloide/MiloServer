@@ -12,7 +12,8 @@ window.jQuery  = window.$;
 var BlocklyStorage = window.BlocklyStorage = require('./storage');
 var Datasets  = window.Datasets = require('./datasets');
 var Blockly = window.Blockly = require('milo-blocks');
-window.reg = require('./ML/regression');
+
+
 for (var key in utils) {
   global[key] = utils[key];
 }
