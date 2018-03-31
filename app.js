@@ -11,7 +11,7 @@ var passport = require('passport');
 var authConfig = require('./config/auth');
 var users = require('./routes/users');
 var editor = require('./routes/editor');
-
+var compression = require('compression');
 
 
 const NODE_ENV = process.env.NODE_ENV ? process.env.NODE_ENV.toLowerCase() : 'development';
@@ -33,7 +33,7 @@ if (NODE_ENV  == 'development'){
 app.set('views', './views');
 app.set('view engine', 'pug');
 
-
+app.use(compression());
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Handle forms

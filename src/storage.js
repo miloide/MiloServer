@@ -80,6 +80,9 @@ MiloStorage.save = function(optWorkspace,showAlert=false) {
         );
       }
       $('#statusBar').html('All changes saved!');
+      if ($("#newProjInput").length !=0){
+        $("#newProjInput").remove();
+      }
       setTimeout(function(){
         $('#statusBar').html('');
       },1500);

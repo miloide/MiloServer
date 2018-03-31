@@ -1,5 +1,8 @@
 extends layout.pug
 block headers
+	script(src="/js/angular.min.js")
+	script(src="/js/sweetalert.min.js")
+	script(src="/ng/dashboard.js")
 	link(rel="stylesheet", href="/css/dashboard.css")
 block navigation
 	ul.nav.navbar-nav.navbar-right
@@ -22,78 +25,153 @@ block navigation
 						li
 							a(href='/users/register') Register
 block content
-	.container-fluid
-		.row
-			.col-sm-3.col-md-2.sidebar
-				ul.nav.nav-sidebar
-					li
-						a(href='/editor/')
-							i.material-icons add
-							| &nbsp; New Project
-				ul.nav.nav-sidebar(style="border-top: 1px solid #eee;")
-					li
-						a(href='')
-							i.material-icons group
-							| &nbsp; Shared with me
-					li
-						a(href='')
-							i.material-icons delete
-							| &nbsp; Trash
-				ul.nav.nav-sidebar(style="border-top: 1px solid #eee;")
-					li
-						a(href='')
-							i.material-icons feedback
-							| &nbsp; Feedback
-			.col-sm-9.col-sm-offset-3.col-md-10.col-md-offset-2.main
-				h2.sub-header My Projects
-				- var n = 0;
-				.tbl-projects
-					table.table.table-responsive.header-fixed(style="width:100%")
-						thead
-							tr
-								th #
-								th Project
-								th Owner
-								th Last Modified
-								th Actions
-						tbody
-							while n < projects.length
-								tr
-									td= ++n
-									td
-										| #{projects[n-1].projectName}
-									td Me
-									td #{projects[n-1].blocks.updated_at.toLocaleDateString()}
-									td
-										.dropdown
-											a(href='/editor/#' + projects[n-1].projectKey)
-												i.material-icons launch
-											a.dropdown-toggle(href='#', data-toggle='dropdown', role='button', aria-haspopup='true', aria-expanded='false')
-												i.material-icons more_vert
-											ul.dropdown-menu
-												li
-													a(href='#')
-														i.material-icons create
-														| &nbsp; Rename
-												li
-													a(href='#')
-														i.material-icons person_add
-														| &nbsp; Collaborators
-												li
-													a(href='#')
-														i.material-icons delete
-														| &nbsp; Delete
-							tr.lastrow
-								td &nbsp;
-								td &nbsp;
-								td &nbsp;
-								td &nbsp;
-								td &nbsp;
-							tr.lastrow
-								td &nbsp;
-								td &nbsp;
-								td &nbsp;
-								td &nbsp;
-								td &nbsp;
+	div(ng-app="dashboard")
+		#dashboardDiv.container-fluid(ng-controller="dashboardController")
+			.row
+				.col-sm-3.col-md-3.sidebar
+					ul.nav.nav-sidebar
+						li
+							a(href='/editor/?new')
+								i.material-icons add
+								| &nbsp; New Project
+					ul#sidenav.nav.nav-sidebar(style="border-top: 1px solid #eee;")
+						li(ng-repeat='item in projectMenu track by $index' ng-class='{active: currentProjectsType === item.key}')
+							a(ng-click="switchProject($index)")
+								i.material-icons {{item.icon}}
+								| &nbsp; {{item.name}}
+								| &nbsp;
+								span.badge {{this[item.key].length}}
+					ul.nav.nav-sidebar(style="border-top: 1px solid #eee;")
+						li
+							a(href="#")
+								i.material-icons feedback
+								| &nbsp; Feedback
+				.col-sm-9.col-sm-offset-3.col-md-9.col-md-offset-3.main
+					.col-sm-12
+						.col-sm-6(style="display: inline-flex")
+							h2
+								| {{currentHeading || 'Loading...'}}
 
+					.col-sm-12
+						.col-sm-12(ng-if="currentProjects.length==0")
+							h4 No Projects to show
+						.tbl-projects.col-sm-12(ng-if="currentProjects.length != 0")
+							.col-sm-12.sub-header(style="padding: 0px;")
+								.col-sm-4(style="padding: 0px;")
+									.input-group
+										span.input-group-addon#search-icon(style="padding:5px 6px 0px 6px")
+											i.material-icons search
+										input.form-control(type='text',
+														aria-describedby="search-icon",
+														placeholder='Search Project',
+														ng-model='searchFilter'
+										)
+							table.table.table-responsive.header-fixed(style="width:100%")
+								thead
+									tr
+										th #
+										th Project
+										th Owner
+										th Modified
+										th Actions
+								tbody
+										tr(ng-repeat="project in currentProjects | filter:searchFilter track by $index")
+											td {{$index + 1}}
+											td
+												span(id='{{"projectName-" + $index}}')
+													| {{project.projectName}} &nbsp;
+												div(id='{{"editProjectName-" + $index}}' ng-if='project.canModify' style="display: none;")
+													.input-group
+														input.form-control(type="text",
+															  ng-model='project.projectName'
+														)
+														span.input-group-btn
+															button.btn.btn-xs.btn-success(ng-click='saveProjectName($index)' style="height: 34px;")
+																i.material-icons save
+											td
+												div.long-text
+													| {{project.owner}}
+											td {{project.blocks.updated_at| date: "short"}}
+											td
+												.dropdown
+													a(ng-if='!project.trashed'  ng-href='{{"/editor/#" + project.projectKey}}')
+														i.material-icons launch
+													a(ng-if='project.trashed'  ng-click='restoreProject($index)' style="cursor:pointer;text-decoration:none")
+														i.material-icons restore
+														| &nbsp; Restore
+													a.dropdown-toggle(href='#', data-toggle='dropdown', role='button', aria-haspopup='true', aria-expanded='false')
+														i.material-icons more_vert
+													ul.dropdown-menu.dropdown-menu-right
+														li(ng-if='project.trashed == false')
+															a(href='#' ng-if='project.canModify' ng-click='renameProject($index)')
+																i.material-icons create
+																| &nbsp; Rename
+														li(ng-if='project.trashed == false')
+															a(href='#' ng-click="shareModal($index)")
+																i.material-icons person_add
+																| &nbsp; Collaborators
+														li
+															a(href='#' ng-click='project.trashed?removeProject($index):trashProject($index)' ng-if='project.canModify')
+																i.material-icons {{project.trashed? 'delete_forever' : 'delete'}}
+																| &nbsp; Delete
 
+										tr.lastrow
+											td &nbsp;
+											td &nbsp;
+											td &nbsp;
+											td &nbsp;
+											td &nbsp;
+										tr.lastrow
+											td &nbsp;
+											td &nbsp;
+											td &nbsp;
+											td &nbsp;
+											td &nbsp;
+			.hide-element
+				#shareModal(style="height: 50%;")
+					h4.text-left Link to project
+					input.form-control(readonly='readonly', type='text', id='projectLink'
+						value='{{currentShareProject.link}}')
+					br
+					.form-check.text-left
+						input#publicToggle.form-check-input(type='checkbox', value='')
+						label.form-check-label(for='publicToggle' style="margin-left: 5px;")
+							| Check to make public
+					h4.text-left Who has access
+					div.col-sm-12(style="padding:0px;")
+						.col-sm-6(style="padding:0px;")
+							.input-group
+									input.form-control(type="email",
+											placeholder="Add collaborator by email"
+											style="width: 200px;"
+									)
+									span.input-group-btn
+										button.btn.btn-xs.btn-primary(style="height: 34px;")
+											i.material-icons add
+					hr
+					table.table.header-fixed
+						tbody(style="height: 300px")
+							tr(ng-repeat="collaborator in currentShareProject.collabList")
+								td(style="width: 200px;margin-right: 11%;border:0px;")
+									| {{collaborator.split("[dot]").join(".")}}
+								td(style="width: fit-content;margin-right: 11%;border:0px;")
+									.dropdown
+										i.material-icons {{getCollabIcon(currentShareProject.collaborators[collaborator])}}
+										a.dropdown-toggle(href='#', data-toggle='dropdown', role='button', aria-haspopup='true', aria-expanded='false')
+											i.material-icons arrow_drop_down
+										ul.dropdown-menu.dropdown-menu-right
+											li
+												a(href='#')
+													i.material-icons remove_red_eye
+													| &nbsp; View
+											li
+												a(href='#')
+													i.material-icons create
+													| &nbsp; Edit
+											li
+												a(href='#')
+													i.material-icons work
+													| &nbsp; Admin
+								td(style="width: fit-content;border:0px;")
+									a(href='#')
+										i.material-icons delete

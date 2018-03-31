@@ -6,6 +6,7 @@ var salt = bcrypt.genSaltSync(10);
 
 /**
  * Handles requests to /storage/
+ * Type is either save or load
  */
 routes.post('/', function(req, res){
     var content = req.body;
@@ -15,9 +16,10 @@ routes.post('/', function(req, res){
             {projectKey: content.projectKey},
             function(err,result){
                 if (!err && result!=undefined){
-                    if (req.user.username != result.owner){
-                        var collabAccess = result.collaborators[req.user.username] || 'none';
-                        if (collabAccess == 'none'){
+                    if (req.user.email != result.owner){
+                        var emailEscaped = req.user.email.replace(/\./g,'[dot]');
+                        var collabAccess = result.collaborators[emailEscaped] || 'none';
+                        if (collabAccess == 'none' || collabAccess == 'view'){
                             return res.send({status: 403,message:"You are not authorized to save!"});
                         }
                     }
@@ -46,8 +48,10 @@ function saveHandler(content, req, res,isNew=true){
     };
 
     if (isNew){
+        project.trashed = false;
         project.public = false;
-        project.owner = req.user.username;
+        project.owner = req.user.email;
+        project.collaborators = {};
     }
 
     Project.findOneAndUpdate(
@@ -66,14 +70,15 @@ function saveHandler(content, req, res,isNew=true){
 
 function loadHandler(content,req,res){
     var key = content.projectKey;
-    Project.findOne({projectKey: key}, // search filter
+    Project.findOne({projectKey: key, trashed: false}, // search filter
         function(err, result){
-            if (err){
+            if (err || result ==undefined){
                 console.log("Load Failed!",err);
                 return res.send({status: 500,message:err});
             }
-            if (req.user.username != result.owner && !result.public){
-                if (result.collaborators[req.user.username] == undefined){
+            if (req.user.email != result.owner && !result.public){
+                var emailEscaped = req.user.email.replace(/\./g,'[dot]');
+                if (result.collaborators[emailEscaped] == undefined){
                     return res.send({status: 403,message:"You are not authorized!"});
                 }
             }

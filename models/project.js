@@ -34,13 +34,16 @@ var projectSchema = new Schema({
      },
      collaborators : {
          type  : Schema.Types.Mixed,
-         default: {}
+         default: {} //key: email, value: 'view','edit' or 'admin'
      },
      blocks : storageSchema,
-
      public : {
          type : Boolean,
          required : true
+     },
+     trashed : {
+        type : Boolean,
+        default : false
      }
 }, {collection: 'projectStorage'});
-const projectStorage = module.exports = mongoose.model('projectStorage', projectSchema);
+module.exports = mongoose.model('projectStorage', projectSchema);

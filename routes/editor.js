@@ -15,18 +15,14 @@ function isAuthenticated(req, res, next) {
  * Method: Get
  * Renders a blank IDE workspace
  */
-router.get(['/'],isAuthenticated,function(req, res){
-
-  // TODO: replace with call to create new project from model
-  var project = {
-    id: req.params.project_id,
-    title: "Untitled Project",
-    collaborators: [],
-    public: false,
-    owner: req.user.email,
-    xml:""
-  };
-  res.render('ide',{user: req.user,starterBlocks: ''});
+router.get('/',isAuthenticated,function(req, res){
+  var starterBlocks = '\
+      <xml xmlns="http://www.w3.org/1999/xhtml">\
+      <variables></variables>\
+      </xml>';
+  var newProj = req.query.new == undefined? false  : true;
+  res.render('ide',{user: req.user,starterBlocks: newProj?starterBlocks:'', newProj: newProj});
 });
+
 
 module.exports = router;
