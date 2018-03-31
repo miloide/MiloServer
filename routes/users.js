@@ -2,7 +2,7 @@ var express = require('express');
 var router = express.Router();
 var passport = require('passport');
 var User = require('../models/user');
-var project = require('../models/project');
+var Project = require('../models/project');
 
 function isAuthenticated(req, res, next) {
   if (req.isAuthenticated()){
@@ -31,15 +31,61 @@ router.get('/login', function(req, res){
 });
 
 router.get('/projects',isAuthenticated, function(req, res){
-    project.find({owner : req.user.username}, function(err, data){
+  res.render('dashboard',{user: req.user});
+});
+
+router.post('/projects/list',isAuthenticated, function(req, res){
+  var collabQuery= {};
+  collabQuery["collaborators."+req.user.email] = {$exists: true, $ne: null};
+  Project.find(
+    {$or: [
+      {owner : req.user.email},
+      collabQuery
+    ]},
+    function(err, data){
       if (err){
         return res.status(500).json({
         err: err
         });
       }
-      res.render('dashboard',{user: req.user, projects : data});
-    });
+      res.status(200).json({user: req.user, projects : data});
+    }
+  );
 });
+
+
+router.post('/projects/update',isAuthenticated, function(req, res){
+  var content = req.body;
+  Project.findOne(
+    {projectKey: content.projectKey},
+    function(err,project){
+      if (err || project == undefined){
+        return res.send({status: 404, message:"Failed to find project!"});
+      }
+      if (!err && project!=undefined){
+        if (req.user.email != project.owner){
+            var collabAccess = project.collaborators[req.user.email] || 'none';
+            if (collabAccess == 'none' || collabAccess != 'admin'){
+                return res.send({status: 403,message:"You are not authorized to update this project!"});
+            }
+        }
+        // The user has access to update
+        if (content.type == "rename"){
+          project.projectName = content.newName;
+          project.save();
+        } else if (content.type == "trash"){
+          project.trashed = content.trashed;
+          project.save();
+        } else if (content.type == 'delete'){
+          project.remove();
+        }
+
+        return res.send({status: 200, type: content.type,project:project});
+      }
+    }
+  );
+});
+
 
 router.post('/register',isAuthenticated,function(req, res){
   var name = req.body.name;

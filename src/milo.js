@@ -47,15 +47,16 @@ Milo.getStringParamFromUrl = function(name, defaultValue) {
  * @param {string} defaultXml Text representation of default blocks.
  */
 Milo.loadBlocks = function(defaultXml,override=false) {
-	if (override){
-		var xml = Blockly.Xml.textToDom(defaultXml);
-		Blockly.Xml.domToWorkspace(xml, Milo.workspace);
-		return;
-	}
-
 	if (window.location.hash.length > 1) {
 		// An href with #key trigers an AJAX call to retrieve saved blocks.
 		MiloStorage.retrieveXml(window.location.hash.substring(1));
+	} else if (override){
+		var xml = Blockly.Xml.textToDom(defaultXml);
+		Blockly.Xml.domToWorkspace(xml, Milo.workspace);
+		if ($("#newProjInput").length!=0){
+			window.history.replaceState(null, null, window.location.pathname);
+		}
+		return;
 	} else {
 		// Restore saved blocks in a separate thread so that subsequent
 		// initialization is not affected from a failed load.
