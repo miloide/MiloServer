@@ -17,7 +17,8 @@ routes.post('/', function(req, res){
             function(err,result){
                 if (!err && result!=undefined){
                     if (req.user.email != result.owner){
-                        var collabAccess = result.collaborators[req.user.email] || 'none';
+                        var emailEscaped = req.user.email.replace(/\./g,'[dot]');
+                        var collabAccess = result.collaborators[emailEscaped] || 'none';
                         if (collabAccess == 'none' || collabAccess == 'view'){
                             return res.send({status: 403,message:"You are not authorized to save!"});
                         }
@@ -76,7 +77,8 @@ function loadHandler(content,req,res){
                 return res.send({status: 500,message:err});
             }
             if (req.user.email != result.owner && !result.public){
-                if (result.collaborators[req.user.email] == undefined){
+                var emailEscaped = req.user.email.replace(/\./g,'[dot]');
+                if (result.collaborators[emailEscaped] == undefined){
                     return res.send({status: 403,message:"You are not authorized!"});
                 }
             }

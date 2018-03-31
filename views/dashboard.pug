@@ -84,7 +84,6 @@ block content
 													.input-group
 														input.form-control(type="text",
 															  ng-model='project.projectName'
-															  style="width: 100px;"
 														)
 														span.input-group-btn
 															button.btn.btn-xs.btn-success(ng-click='saveProjectName($index)' style="height: 34px;")
@@ -154,7 +153,7 @@ block content
 						tbody(style="height: 300px")
 							tr(ng-repeat="collaborator in currentShareProject.collabList")
 								td(style="width: 200px;margin-right: 11%;border:0px;")
-									| {{collaborator}}
+									| {{collaborator.split("[dot]").join(".")}}
 								td(style="width: fit-content;margin-right: 11%;border:0px;")
 									.dropdown
 										i.material-icons {{getCollabIcon(currentShareProject.collaborators[collaborator])}}

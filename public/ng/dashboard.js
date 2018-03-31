@@ -60,7 +60,8 @@ app.controller('dashboardController',[
         function ngProject(item){
             item.shared = false;
             item.canModify = false;
-            var collabAccess =  item.collaborators? item.collaborators[$scope.user.email] || 'none' : 'none';
+            var emailEscaped = $scope.user.email.replace(/\./g,'[dot]');
+            var collabAccess =  item.collaborators? item.collaborators[emailEscaped] || 'none' : 'none';
             if (collabAccess == 'admin'|| item.owner == $scope.user.email){
                 item.canModify = true;
             }

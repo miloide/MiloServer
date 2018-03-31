@@ -36,7 +36,8 @@ router.get('/projects',isAuthenticated, function(req, res){
 
 router.post('/projects/list',isAuthenticated, function(req, res){
   var collabQuery= {};
-  collabQuery["collaborators."+req.user.email] = {$exists: true, $ne: null};
+  var emailEscaped = req.user.email.replace(/\./g,'[dot]');
+  collabQuery["collaborators."+emailEscaped] = {$exists: true, $ne: null};
   Project.find(
     {$or: [
       {owner : req.user.email},
@@ -64,7 +65,8 @@ router.post('/projects/update',isAuthenticated, function(req, res){
       }
       if (!err && project!=undefined){
         if (req.user.email != project.owner){
-            var collabAccess = project.collaborators[req.user.email] || 'none';
+            var emailEscaped = req.user.email.replace(/\./g,'[dot]');
+            var collabAccess = project.collaborators[emailEscaped] || 'none';
             if (collabAccess == 'none' || collabAccess != 'admin'){
                 return res.send({status: 403,message:"You are not authorized to update this project!"});
             }
