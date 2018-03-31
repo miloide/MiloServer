@@ -20,7 +20,7 @@ SqueezeNet.classify = function(imgTag){
         var scriptElement = document.createElement("script");
         scriptElement.setAttribute("id","snetScript");
         //scriptElement.src = "https://unpkg.com/deeplearn-squeezenet";
-        scriptElement.src = "js/squeezenet.js";
+        scriptElement.src = "/js/squeezenet.js";
         scriptElement.onload = function () {
             SqueezeNet.loaded = true;
             SqueezeNet.classify_(imgTag);

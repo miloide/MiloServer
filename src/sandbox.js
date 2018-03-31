@@ -73,8 +73,8 @@ SandBox.run = function(code){
     context = setupContext(context);
     // Add window variables to context
     context = addToContext(window,context);
-    var setup =  DeepLearn.setup;
-    var jscode = setup + code;
+    // var setup =  DeepLearn.setup;
+    var jscode = code;
     try {
         var executionSandbox = makeSandbox(jscode);
         executionSandbox(context);

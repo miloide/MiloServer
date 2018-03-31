@@ -66,7 +66,7 @@ WebCam.init = function(callback) {
         WebCam.exists = false;
         // Fail Gracefully
         if (typeof (callback) == "function"){
-            imgShow(imgFromURL("media/nocamera.jpg",true));
+            imgShow(imgFromURL("/media/nocamera.jpg",true));
         }
     }
 };
@@ -81,7 +81,7 @@ WebCam.image = function(callback){
     if (WebCam.exists == false) {
         // Gracefully fall back to image
         $(WebCam.video).hide();
-        imgShow(imgFromURL("media/nocamera.jpg",true));
+        imgShow(imgFromURL("/media/nocamera.jpg",true));
         return;
 
     }
