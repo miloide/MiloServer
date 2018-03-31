@@ -23,8 +23,10 @@ routes.post('/', function(req, res){
                             return res.send({status: 403,message:"You are not authorized to save!"});
                         }
                     }
+                    // Trying to save an existing project
                     saveHandler(content,req,res,false);
                 } else {
+                    // A new project is being created
                     saveHandler(content,req,res);
                 }
             }
@@ -72,21 +74,32 @@ function loadHandler(content,req,res){
     var key = content.projectKey;
     Project.findOne({projectKey: key, trashed: false}, // search filter
         function(err, result){
-            if (err || result ==undefined){
+            if (err || result == undefined){
                 console.log("Load Failed!",err);
                 return res.send({status: 500,message:err});
             }
-            if (req.user.email != result.owner && !result.public){
+            // Check if owner
+            var canModify = req.user.email == result.owner;
+            var canRename = canModify;
+            var shared = false;
+            if (req.user.email != result.owner){
                 var emailEscaped = req.user.email.replace(/\./g,'[dot]');
-                if (result.collaborators[emailEscaped] == undefined){
+                if (result.collaborators[emailEscaped] == undefined && !result.public){
                     return res.send({status: 403,message:"You are not authorized!"});
                 }
+                shared = true;
+                canModify = result.collaborators[emailEscaped] != undefined?result.collaborators[emailEscaped] != 'view':false;
+                canRename = result.collaborators[emailEscaped] != undefined?result.collaborators[emailEscaped] == 'admin':false;
             }
+
             return res.send({
                 status: 200,
                 projectKey: result.projectKey,
                 xml: result.blocks.xml,
-                project: result
+                project: result,
+                canModify: canModify,
+                canRename: canRename,
+                shared: shared
             });
         }
     );

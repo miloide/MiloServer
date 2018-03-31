@@ -21,7 +21,7 @@ router.get('/',isAuthenticated,function(req, res){
       <variables></variables>\
       </xml>';
   var newProj = req.query.new == undefined? false  : true;
-  res.render('ide',{user: req.user,starterBlocks: newProj?starterBlocks:'', newProj: newProj});
+  res.render('ide',{user: req.user,starterBlocks: newProj ? starterBlocks : '', newProj: newProj});
 });
 
 
