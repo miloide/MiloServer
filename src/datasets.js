@@ -149,7 +149,7 @@ Datasets.readUploadedFile = function(file){
         $("#dataset_list").append(
             '<li><button class="button-none" onclick="Datasets.show(\''+fileName+'\')">'+fileName+'</button></li>'
         );
-        console.log(Datasets[fileName]);
+        // console.log(Datasets[fileName]);
         Datasets.checkHeader(fileName);
         Datasets.show(fileName);
         Helpers.snackbar("Uploaded " + fileName);
@@ -237,11 +237,11 @@ Datasets.importHelper = function(name){
 
 Datasets.createJexcelHandler = function(name) {
     return function(table){
-        console.log(name);
+        // console.log(name);
         var headerLength = Datasets[name].headers.length;
         var newColumn = table.jexcel('getHeader',headerLength-1);
         Datasets[name].headers.push(newColumn);
-        console.log(newColumn);
+        // console.log(newColumn);
         Datasets.imported[name] = Datasets.convert.rowsToMap(Datasets[name]);
         Milo.workspace.updateToolbox(document.getElementById('toolbox'));
     };
