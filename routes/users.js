@@ -75,14 +75,61 @@ router.post('/projects/update',isAuthenticated, function(req, res){
         if (content.type == "rename"){
           project.projectName = content.newName;
           project.save();
+          return res.send({status: 200, type: content.type, project:project});
         } else if (content.type == "trash"){
           project.trashed = content.trashed;
           project.save();
-        } else if (content.type == 'delete'){
+          return res.send({status: 200, type: content.type, project:project});
+        } else if (content.type == "delete"){
           project.remove();
+          return res.send({status: 200, type: content.type, project:project});
+        } else if (content.type == "public"){
+          project.public = content.public;
+          project.save();
+          return res.send({status: 200, type: content.type, project:project});
+        } else if (content.type == "collaborator"){
+          switch (content.collabAccess){
+            case 'add':
+              if (project.collaborators[content.collabKey]==undefined){
+                var emailKey = content.collabKey.split("[dot]").join(".");
+                User.findOne(
+                  {email: emailKey},
+                  function(err,user){
+                    if (err || user == undefined){
+                      return res.send({status: 404, message:"Failed to find user!"});
+                    }
+                    project.collaborators[content.collabKey] = 'view';
+                    project.markModified('collaborators.'+content.collabKey);
+                    project.save();
+                    return res.send({status: 200, type: content.type, project:project});
+                  }
+                );
+              }
+              break;
+            case 'admin':
+              project.collaborators[content.collabKey] = 'admin';
+              project.markModified('collaborators.'+content.collabKey);
+              project.save();
+              return res.send({status: 200, type: content.type, project:project});
+            case 'edit':
+              project.collaborators[content.collabKey] = 'edit';
+              project.markModified('collaborators.'+content.collabKey);
+              project.save();
+              return res.send({status: 200, type: content.type, project:project});
+            case 'view':
+              project.collaborators[content.collabKey] = 'view';
+              project.markModified('collaborators.'+content.collabKey);
+              project.save();
+              return res.send({status: 200, type: content.type, project:project});
+            case 'remove':
+              delete project.collaborators[content.collabKey];
+              project.markModified('collaborators.'+content.collabKey);
+              project.save();
+              return res.send({status: 200, type: content.type, project:project});
+            case 'default':
+              return res.send({status: 500,message:"Invalid Access Type"});
+          }
         }
-
-        return res.send({status: 200, type: content.type,project:project});
       }
     }
   );

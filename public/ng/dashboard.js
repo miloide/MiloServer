@@ -85,7 +85,7 @@ app.controller('dashboardController',[
             if (!$scope[$scope.currentProjectsType][index].canModify){
                 return;
             }
-            var oldName = $scope[$scope.currentProjectsType][index].projectName;
+            $scope[$scope.currentProjectsType][index].oldName = $scope[$scope.currentProjectsType][index].projectName;
             $("#projectName-"+index).hide();
             $("#editProjectName-"+index).show();
             $("#editProjectName-"+index).find('input').focus();
@@ -95,12 +95,13 @@ app.controller('dashboardController',[
                     $scope.saveProjectName(index);
                 } else if (e.keyCode == 27) {
                     // Escape key was pressed
-                    $scope[$scope.currentProjectsType][index].projectName = oldName;
+                    $scope[$scope.currentProjectsType][index].projectName = $scope[$scope.currentProjectsType][index].oldName;
                     $("#editProjectName-"+index).hide();
                     $("#projectName-"+index).show();
                 }
             });
         };
+
         $scope.shareModal = function(index){
             var project = $scope[$scope.currentProjectsType][index];
             project.collabList = project.collaborators? Object.keys(project.collaborators): [];
@@ -108,13 +109,87 @@ app.controller('dashboardController',[
             $scope.currentShareProject = project;
             swal({
                 content: $("#shareModal")[0],
-                buttons: ["Cancel", "Save Settings"],
+                buttons: [false,"Done"],
             });
         };
+
+        $scope.getCollabIcon = function(key){
+            var icons = {
+                'admin':'work',
+                'edit':'create',
+                'view':'remove_red_eye'
+            };
+            return icons[key];
+        };
+
+        $scope.changeShareAccess = function(collaborator, accessType){
+            var project = $scope.currentShareProject;
+            if (!project.canModify || collaborator == project.owner){
+                return;
+            }
+            if (accessType == 'add'){
+                collaborator = collaborator.replace(/\./g,'[dot]');
+            }
+            var data = {
+                "projectKey": project.projectKey,
+                "type": "collaborator",
+                'collabKey': collaborator,
+                'collabAccess': accessType
+            };
+            $http({
+                url: '/users/projects/update',
+                method: 'POST',
+                data: data,
+            })
+            .then(function (res) {
+                    if (res.data.status == 200){
+                        // update the current project and move it to the trashed list
+                        console.log("res",res.data);
+                        project.collaborators = res.data.project.collaborators;
+                        project.collabList = project.collaborators? Object.keys(project.collaborators): [];
+                        $scope.currentShareProject = project;
+                    } else {
+                        flashModalMessage(res.data.message);
+                    }
+                },
+                function(e){
+                    console.warn(e);
+            });
+        };
+
+        $scope.changeVisibility = function(value){
+            var project = $scope.currentShareProject;
+            if (!project.canModify){
+                return;
+            }
+            var data = {
+                "projectKey": project.projectKey,
+                "type": "public",
+                "public": value
+            };
+            $http({
+                url: '/users/projects/update',
+                method: 'POST',
+                data: data,
+            })
+            .then(function (res) {
+                    if (res.data.status == 200){
+                        // update the current project and move it to the trashed list
+                        project.public = res.data.project.public;
+                        $scope.currentShareProject = project;
+                    } else {
+                        flashModalMessage(res.data.message);
+                    }
+                },
+                function(e){
+                    console.warn(e);
+            });
+
+        };
+
+
         $scope.trashProject = function(index){
-            console.log("current:",$scope.currentProjectsType);
             var project = $scope[$scope.currentProjectsType][index];
-            console.log("trash:",project);
             if (!project.canModify){
                 return;
             }
@@ -141,14 +216,6 @@ app.controller('dashboardController',[
                 function(e){
                     console.warn(e);
             });
-        };
-        $scope.getCollabIcon = function(key){
-            var icons = {
-                'admin':'work',
-                'edit':'create',
-                'view':'remove_red_eye'
-            };
-            return icons[key];
         };
 
         $scope.restoreProject = function(index){
@@ -193,49 +260,49 @@ app.controller('dashboardController',[
             if (!project.canModify){
                 return;
             }
-            swal({
-                title: "Are you sure?",
-                text: "Your will not be able to recover this project!",
-                icon: "warning",
-                buttons: true,
-                dangerMode: true,
-            }).then(function(isConfirm){
-                if (!isConfirm){
-                    // The user pressed cancel
-                    return;
-                }
-                // On confirmation
-                var data = {
-                    "projectKey": project.projectKey,
-                    "type": "delete",
-                };
-                $http({
-                    url: '/users/projects/update',
-                    method: 'POST',
-                    data: data,
-                })
-                .then(function (res) {
-                        if (res.data.status == 200){
-                            // update the current project and move it to the trashed list
-                            $scope.trashedProjects.splice(index,1);
-                            swal("Deleted!", "Your project has been deleted.", "success");
-                        } else {
-                            swal('Error',res.data.message,"error");
-                        }
-                    },
-                    function(e){
-                        console.warn(e);
-                });
+
+            if (!confirm("Are you sure? You can't recover this project later!")){
+                // The user pressed cancel
+                return;
+            }
+            // On confirmation
+            var data = {
+                "projectKey": project.projectKey,
+                "type": "delete",
+            };
+            $http({
+                url: '/users/projects/update',
+                method: 'POST',
+                data: data,
+            })
+            .then(function (res) {
+                    if (res.data.status == 200){
+                        // update the current project and move it to the trashed list
+                        $scope.trashedProjects.splice(index,1);
+                    } else {
+                        alert("Failed to delete your project:",res.data.message);
+                    }
+                },
+                function(e){
+                    console.warn(e);
             });
         };
 
         $scope.saveProjectName = function(index){
             var project = $scope[$scope.currentProjectsType][index];
-            if (!project.canModify){
-                return;
-            }
+            var nameTest = new RegExp("^[A-Za-z][A-Za-z0-9_ ]+$");
             $("#projectName-"+index).show();
             $("#editProjectName-"+index).hide();
+            if (!project.canModify){
+                $scope[$scope.currentProjectsType][index].projectName = $scope[$scope.currentProjectsType][index].oldName;
+                return;
+            }
+            if (!nameTest.test(project.projectName)){
+                swal("Invalid project name","Project names must start with a letter, and \ncan only contain A-z,0-9,_ and space","warning");
+                $scope[$scope.currentProjectsType][index].projectName = $scope[$scope.currentProjectsType][index].oldName;
+                return;
+            }
+
             var data = {
                 "projectKey": project.projectKey,
                 "type": "rename",
@@ -249,6 +316,7 @@ app.controller('dashboardController',[
             .then(function (res) {
                     if (res.data.status == 200){
                         $scope[$scope.currentProjectsType][index].projectName = res.data.project.projectName;
+                        $scope[$scope.currentProjectsType][index].oldName = res.data.project.projectName;
                     } else {
                         swal('Error',res.data.message,"error");
                     }
@@ -257,6 +325,13 @@ app.controller('dashboardController',[
                     console.warn(e);
             });
         };
+
+        function flashModalMessage(message){
+            $("#addCollabFlash").html(message);
+            setTimeout(function(){
+                $("#addCollabFlash").html("");
+            },2000);
+        }
 }]);
 
 // TODO(arjun): Remove after debugging

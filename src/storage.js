@@ -97,8 +97,6 @@ MiloStorage.save = function(optWorkspace,showAlert=false) {
  */
 MiloStorage.retrieveXml = function(key, optWorkspace) {
   var workspace = optWorkspace || Blockly.getMainWorkspace();
-  // MiloStorage.makeRequest_('/storage', 'key', key, workspace);
-
   $.post( "/storage",{
     'type': "load",
     'projectKey': key,
@@ -111,10 +109,22 @@ MiloStorage.retrieveXml = function(key, optWorkspace) {
         window.location.hash = '';
         return;
       }
-      $("#projectName").html(response.project.projectName);
       MiloStorage.loadXml_(response.xml, workspace);
-      MiloStorage.projectKey = response.projectKey;
       MiloStorage.monitorChanges_(workspace);
+      $("#projectName").html(response.project.projectName);
+      if (!response.canRename){
+        $("#renameButton").hide();
+      }
+      if (response.canModify){
+        MiloStorage.projectKey = response.projectKey;
+        MiloStorage.project = response.project;
+        MiloStorage.canModify = true;
+      } else {
+        MiloStorage.canModify = false;
+        $("#saveButton").hide();
+        $("#cloneButton").show();
+        $("#downloadProjectButton").hide();
+      }
   });
 };
 

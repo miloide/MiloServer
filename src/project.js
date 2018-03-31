@@ -33,13 +33,14 @@ Project.rename = function(e){
 
 function handleSaveName(){
     var newName = $("#editProjectInput").val();
-    if (/[A-Za-z][A-Za-z0-9_ ]*/.test(newName)){
+    var nameTest = new RegExp("^[A-Za-z][A-Za-z0-9_ ]+$");
+    if (nameTest.test(newName)){
         $("#projectName").html(newName);
         MiloStorage.save();
         $("#editProjectName").hide();
         $("#projectName").show();
     } else {
-        Helpers.snackbar("Project names must start with a letter<br>can only contain A-z,0-9,_ and space",undefined,2000);
+        Helpers.snackbar("Project names must start with a letter<br>and can only contain A-z,0-9,_ and space",undefined,2000);
     }
 };
 

@@ -263,11 +263,20 @@ Milo.init = function() {
 	});
 	$(".runButton").click(Milo.runJS);
 	var saveButton = document.getElementById('saveButton');
-	MiloStorage['HTTPREQUEST_ERROR'] = MSG['httpRequestError'];
-	MiloStorage['LINK_ALERT'] = MSG['linkAlert'];
-	MiloStorage['HASH_ERROR'] = MSG['hashError'];
-	MiloStorage['XML_ERROR'] = MSG['xmlError'];
 	Milo.bindClick(saveButton, function() {
+		MiloStorage.save(Milo.workspace);
+	});
+
+	$("#cloneButton").click(function(e){
+		window.history.replaceState(null, null, window.location.pathname);
+		var originalName = $("#projectName").html();
+		$("#projectName").html("Copy of "+ originalName);
+		MiloStorage.canModify = true;
+		delete MiloStorage.project;
+		delete MiloStorage.projectKey;
+		$("#renameButton").show();
+		$("#saveButton").show();
+        $("#downloadProjectButton").show();
 		MiloStorage.save(Milo.workspace);
 	});
 
