@@ -144,7 +144,7 @@ app.controller('dashboardController',[
             .then(function (res) {
                     if (res.data.status == 200){
                         // update the current project and move it to the trashed list
-                        console.log("res",res.data);
+                        // console.log("res",res.data);
                         project.collaborators = res.data.project.collaborators;
                         project.collabList = project.collaborators? Object.keys(project.collaborators): [];
                         $scope.currentShareProject = project;
@@ -220,7 +220,7 @@ app.controller('dashboardController',[
 
         $scope.restoreProject = function(index){
             var project = $scope.trashedProjects[index];
-            console.log("restore:",project);
+            // console.log("restore:",project);
             if (!project.canModify){
                 return;
             }
@@ -256,7 +256,7 @@ app.controller('dashboardController',[
 
         $scope.removeProject = function(index){
             var project = $scope.trashedProjects[index];
-            console.log(project);
+            // console.log(project);
             if (!project.canModify){
                 return;
             }
