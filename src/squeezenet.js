@@ -12,7 +12,7 @@ SqueezeNet.loaded = false;
  */
 SqueezeNet.classify = function(imgTag){
     $('#loadingDiv').show();
-    if(typeof(imgTag)=="function"){
+    if (typeof imgTag == "function"){
         imgTag(SqueezeNet.classify);
         return;
     }
@@ -37,7 +37,8 @@ SqueezeNet.classify = function(imgTag){
  * @param {HTMLImageElement} imgTag HTML <img> tag with loaded image for classification
  * @private
  */
-SqueezeNet.classify_ = async (imgTag) => {  // jshint ignore:line
+
+SqueezeNet.classify_ = async (imgTag) => {
     const math = new dl.NDArrayMath('webgl', dl.safeMode);
     // squeezenet is loaded from https://unpkg.com/deeplearn-squeezenet
     const squeezeNet = new squeezenet.SqueezeNet(math);
@@ -54,7 +55,8 @@ SqueezeNet.classify_ = async (imgTag) => {  // jshint ignore:line
         posterior[className] = posterior[className].toFixed(5)*100+"%";
     }
     $(imgTag).after(
-        "<p>Predicted Classes with Confidence:</p>"+"<pre>"+JSON.stringify(posterior,null,2)+"</pre>"
+        "<p>Predicted Classes with Confidence:</p>"+"<pre>"+
+        JSON.stringify(posterior,null,2)+"</pre>"
     );
     $('#loadingDiv').hide();
 }; //jshint ignore: line
