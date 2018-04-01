@@ -22,8 +22,8 @@ function setPlotData(data){
     });
     var minPoint = arrayMin(data.x);
     var maxPoint = arrayMax(data.x);
-    var plotPoints_x = [minPoint, maxPoint];
-    return [data, plotPoints_x];
+    var plotPointsX = [minPoint, maxPoint];
+    return [data, plotPointsX];
 }
 
 /**
@@ -53,8 +53,6 @@ function showRegressionPlot(plotPointsX, data, plotTheta, label,threshold=0,logi
         originalData['marker'] = {'color':data.colors};
         originalData['text'] = data.groupBy;
     }
-
-
     Plotly.plot(gd, [
         originalData,
         {
@@ -101,7 +99,6 @@ function showRegressionPlot(plotPointsX, data, plotTheta, label,threshold=0,logi
             }
             plotPointsY.push(y);
         }
-        console.log("for",plotPointsX,"at",theta,"=",plotPointsY);
         return [plotPointsX,plotPointsY];
     }
 }
@@ -119,7 +116,7 @@ var LinearRegression = function(config) {
     if (!config.lambda) {
         config.lambda = 0.0;
     }
-    if(!config.trace) {
+    if (!config.trace) {
         config.trace = false;
     }
 
@@ -131,53 +128,52 @@ var LinearRegression = function(config) {
     this.plotTheta = [];
 };
 
-LinearRegression.prototype.fit = function (data_x,data_y) {
-    var data = Datasets.zip(data_x,data_y);
+LinearRegression.prototype.fit = function (dataX,dataY) {
+    var data = Datasets.zip(dataX,dataY);
     var N = data.length, X = [], Y = [];
     var constructPlot = false;
     this.dim = data[0].length;
     if (data[0]!=undefined){
         if (data[0].length  == 2){
             constructPlot = true;
-            plot = new Plot();
         }
     }
     for (var i=0; i < N; ++i) {
         var row = data[i];
-        var x_i = [];
-        var y_i = row[row.length-1];
-        x_i.push(1.0);
-        for(var j=0; j < row.length-1; ++j) {
-            x_i.push(row[j]);
+        var xI = [];
+        var yI = row[row.length-1];
+        xI.push(1.0);
+        for (var j=0; j < row.length-1; ++j) {
+            xI.push(row[j]);
         }
-        Y.push(y_i);
-        X.push(x_i);
+        Y.push(yI);
+        X.push(xI);
     }
     this.plotPoints = setPlotData({'x': X, 'y' : Y});
     this.theta = [];
-    for (var d = 0; d < this.dim; ++d) {
+    for (var count = 0; count < this.dim; ++count) {
         this.theta.push(0.0);
     }
+
     var subIterationLength = this.iterations/10==0?1:this.iterations/10;
     var subRangeEnd = subIterationLength;
     for (var k = 0; k <= this.iterations; ++k) {
         var Vx = this.grad(X, Y, this.theta);
 
-        for(var d = 0; d < this.dim; ++d) {
+        for (var d = 0; d < this.dim; ++d) {
             this.theta[d] = this.theta[d] - this.alpha * Vx[d];
         }
         if (constructPlot && k == subRangeEnd){
             this.plotTheta.push(JSON.parse(JSON.stringify(this.theta)));
             subRangeEnd += subIterationLength;
         }
-
     }
-    //this.visualize();
     return this;
 };
 
 LinearRegression.prototype.visualize = function(){
     showRegressionPlot(this.plotPoints[1],this.plotPoints[0] , this.plotTheta, "Linear Regression");
+    return this;
 };
 
 LinearRegression.prototype.grad = function(X, Y, theta) {
@@ -185,15 +181,15 @@ LinearRegression.prototype.grad = function(X, Y, theta) {
 
     var Vtheta = [];
 
-    for(var d = 0; d < this.dim; ++d){
+    for (var d = 0; d < this.dim; ++d){
         var g = 0;
-        for(var i = 0; i < N; ++i){
-            var x_i = X[i];
-            var y_i = Y[i];
+        for (var i = 0; i < N; ++i){
+            var xI = X[i];
+            var yI = Y[i];
 
-            var predicted = this.h(x_i, theta);
+            var predicted = this.h(xI, theta);
 
-            g += (predicted - y_i) * x_i[d];
+            g += (predicted - yI) * xI[d];
         }
 
         g = (g + this.lambda * theta[d]) / N;
@@ -204,25 +200,25 @@ LinearRegression.prototype.grad = function(X, Y, theta) {
     return Vtheta;
 };
 
-LinearRegression.prototype.h = function(x_i, theta) {
+LinearRegression.prototype.h = function(xI, theta) {
     var predicted = 0.0;
-    for(var d = 0; d < this.dim; ++d) {
-        predicted += x_i[d] * theta[d];
+    for (var d = 0; d < this.dim; ++d) {
+        predicted += xI[d] * theta[d];
     }
     return predicted;
-}
+};
 
 LinearRegression.prototype.cost = function(X, Y, theta) {
 
     var N = X.length;
     var cost = 0;
-    for(var i = 0; i < N; ++i){
-        var x_i = X[i];
-        var predicted = this.h(x_i, theta);
+    for (var i = 0; i < N; ++i){
+        var xI = X[i];
+        var predicted = this.h(xI, theta);
         cost += (predicted - Y[i]) * (predicted - Y[i]);
     }
 
-    for(var d = 0; d < this.dim; ++d) {
+    for (var d = 0; d < this.dim; ++d) {
         cost += this.lambda * theta[d] * theta[d];
     }
 
@@ -230,37 +226,37 @@ LinearRegression.prototype.cost = function(X, Y, theta) {
 };
 
 LinearRegression.prototype.transform = function(x) {
-    if(x[0].length){ // x is a matrix
-        var predicted_array = [];
-        for(var i=0; i < x.length; ++i){
+    if (x[0].length){ // x is a matrix
+        var predictedArray = [];
+        for (var i=0; i < x.length; ++i){
             var predicted = this.transform(x[i]);
-            predicted_array.push(predicted);
+            predictedArray.push(predicted);
         }
-        return predicted_array;
+        return predictedArray;
     }
 
     // x is a row vector
-    var x_i = [];
-    x_i.push(1.0);
-    for(var j=0; j < x.length; ++j){
-        x_i.push(x[j]);
+    var xI = [];
+    xI.push(1.0);
+    for (var j=0; j < x.length; ++j){
+        xI.push(x[j]);
     }
-    return this.h(x_i, this.theta);
+    return this.h(xI, this.theta);
 };
 
 
 var LogisticRegression = function(config) {
     var config = config || {};
-    if(!config.alpha){
+    if (!config.alpha){
         config.alpha = 0.001;
     }
-    if(!config.iterations) {
+    if (!config.iterations) {
         config.iterations = 100;
     }
-    if(!config.lambda) {
+    if (!config.lambda) {
         config.lambda = 0;
     }
-    if(!config.threshold){
+    if (!config.threshold){
         config.threshold = 0;
     }
     this.alpha = config.alpha;
@@ -271,66 +267,62 @@ var LogisticRegression = function(config) {
     this.threshold = config.threshold;
 };
 
-LogisticRegression.prototype.fit = function(data_x,data_y,rawClasses=null) {
+LogisticRegression.prototype.fit = function(dataX,dataY,rawClasses=null) {
 
-    this.dim = data_x[0].length?data_x[0].length:0;
+    this.dim = dataX[0].length?dataX[0].length:0;
     if (this.dim == 0){
-        data_x = Datasets.zip(data_x);
+        dataX = Datasets.zip(dataX);
         this.dim = 1;
     }
-    var classes = data_y;
-    console.log(data_x,data_y);
+    var classes = dataY;
+
     // check if y is a number (for classes) else convert to numbers
-    if (typeof data_y[0] !='number'){
+    if (typeof dataY[0] !='number'){
         var hist = Pmf.makeHistFromList(classes);
-        console.log(hist);
         var keys = Object.keys(hist.dictwrapper.dict);
         var key2num = {};
         for (var i in keys){
             key2num[keys[i]] = parseFloat(i);
         }
-        console.log(key2num);
         var numClass = [];
         for (var i in classes) {
             numClass.push(key2num[classes[i]]);
         }
-        data_y = numClass;
+        dataY = numClass;
     } else {
         classes = [];
-        data_y.forEach(function(e,i){
+        dataY.forEach(function(e){
             classes.push(String(e));
         });
     }
-
-    console.log(data_x,data_y);
     if (this.dim == 1){
-        for (var index=0;index<data_x.length;index++){
-            data_x[index].push(data_y[index]);
+        for (var index=0;index<dataX.length;index++){
+            dataX[index].push(dataY[index]);
         }
     }
-    var N = data_x.length;
+    var N = dataX.length;
     var constructPlot = false;
     var X = [];
-    var Y = data_y;
-    if (data_x[0]!=undefined){
-        if (data_x[0].length  == 2){
+    var Y = dataY;
+    if (dataX[0]!=undefined){
+        if (dataX[0].length  == 2){
             constructPlot = true;
         }
     }
     for (var i=0; i < N; ++i){
-        var row = data_x[i];
-        var x_i = [];
-        x_i.push(1.0);
-        for(var j=0; j < row.length; ++j){
-            x_i.push(row[j]);
+        var row = dataX[i];
+        var xI = [];
+        xI.push(1.0);
+        for (var j=0; j < row.length; ++j){
+            xI.push(row[j]);
         }
-        X.push(x_i);
+        X.push(xI);
     }
 
     var temp = {};
     temp.x = [];
     temp.y = [];
-    X.forEach(function(e,i){
+    X.forEach(function(e){
         temp.x.push(e[1]);
         temp.y.push(e[2]);
     });
@@ -338,22 +330,22 @@ LogisticRegression.prototype.fit = function(data_x,data_y,rawClasses=null) {
     if (rawClasses){
         temp.groupBy = rawClasses;
     }
-    temp.colors = data_y;
+    temp.colors = dataY;
 
     this.plotPoints = [temp,[arrayMin(temp.x),arrayMax(temp.x)]];
     this.theta = [];
-    for(var d = 0; d < this.dim; ++d){
+    for (var d = 0; d < this.dim; ++d){
         this.theta.push(0.0);
     }
     var subIterationLength = this.iterations/10==0?1:this.iterations/10;
     var subRangeEnd = subIterationLength;
-    for(var iter = 0; iter < this.iterations; ++iter){
-        var theta_delta = this.grad(X, Y, this.theta);
-        for(var d = 0; d < this.dim; ++d){
-            this.theta[d] = this.theta[d] - this.alpha * theta_delta[d];
+    for (var iter = 0; iter < this.iterations; ++iter){
+        var thetaDelta = this.grad(X, Y, this.theta);
+        for (var d = 0; d < this.dim; ++d){
+            this.theta[d] = this.theta[d] - this.alpha * thetaDelta[d];
         }
 
-        if(constructPlot && iter == subRangeEnd){
+        if (constructPlot && iter == subRangeEnd){
             this.plotTheta.push(JSON.parse(JSON.stringify(this.theta)));
             subRangeEnd += subIterationLength;
         }
@@ -364,7 +356,15 @@ LogisticRegression.prototype.fit = function(data_x,data_y,rawClasses=null) {
 };
 
 LogisticRegression.prototype.visualize = function(){
-    showRegressionPlot(this.plotPoints[1],this.plotPoints[0] , this.plotTheta, "Logistic Regression",this.threshold,true);
+    showRegressionPlot(
+        this.plotPoints[1],
+        this.plotPoints[0],
+        this.plotTheta,
+        "Logistic Regression",
+        this.threshold,
+        true
+    );
+    return this;
 };
 
 LogisticRegression.prototype.computeThreshold = function(X, Y){
@@ -377,61 +377,61 @@ LogisticRegression.prototype.computeThreshold = function(X, Y){
         }
     }
     return threshold;
-}
+};
 
 LogisticRegression.prototype.grad = function(X, Y, theta) {
     var N = X.length;
     var Vx = [];
-    for(var d = 0; d < this.dim; ++d) {
+    for (var d = 0; d < this.dim; ++d) {
         var sum = 0.0;
-        for(var i = 0; i < N; ++i){
-            var x_i = X[i];
-            var predicted = this.h(x_i, theta);
-            sum += ((predicted - Y[i]) * x_i[d] + this.lambda * theta[d]) / N;
+        for (var i = 0; i < N; ++i){
+            var xI = X[i];
+            var predicted = this.h(xI, theta);
+            sum += ((predicted - Y[i]) * xI[d] + this.lambda * theta[d]) / N;
         }
         Vx.push(sum);
     }
 
     return Vx;
 
-}
+};
 
-LogisticRegression.prototype.h = function(x_i, theta) {
+LogisticRegression.prototype.h = function(xI, theta) {
     var gx = 0.0;
-    for(var d = 0; d < this.dim; ++d){
-        gx += theta[d] * x_i[d];
+    for (var d = 0; d < this.dim; ++d){
+        gx += theta[d] * xI[d];
     }
     return 1.0 / (1.0 + Math.exp(-gx));
-}
+};
 
 LogisticRegression.prototype.transform = function(x) {
-    if(x[0].length){ // x is a matrix
-        var predicted_array = [];
-        for(var i=0; i < x.length; ++i){
+    if (x[0].length){ // x is a matrix
+        var predictedArray = [];
+        for (var i=0; i < x.length; ++i){
             var predicted = this.transform(x[i]);
-            predicted_array.push(predicted);
+            predictedArray.push(predicted);
         }
-        return predicted_array;
+        return predictedArray;
     }
 
-    var x_i = [];
-    x_i.push(1.0);
-    for(var j=0; j < x.length; ++j){
-        x_i.push(x[j]);
+    var xI = [];
+    xI.push(1.0);
+    for (var j=0; j < x.length; ++j){
+        xI.push(x[j]);
     }
-    return this.h(x_i, this.theta);
-}
+    return this.h(xI, this.theta);
+};
 
 LogisticRegression.prototype.cost = function(X, Y, theta) {
     var N = X.length;
     var sum = 0;
-    for(var i = 0; i < N; ++i){
-        var y_i = Y[i];
-        var x_i = X[i];
-        sum += -(y_i * Math.log(this.h(x_i, theta)) + (1-y_i) * Math.log(1 - this.h(x_i, theta))) / N;
+    for (var i = 0; i < N; ++i){
+        var yI = Y[i];
+        var xI = X[i];
+        sum += -(yI * Math.log(this.h(xI, theta)) + (1-yI) * Math.log(1 - this.h(xI, theta))) / N;
     }
 
-    for(var d = 0; d < this.dim; ++d) {
+    for (var d = 0; d < this.dim; ++d) {
         sum += (this.lambda * theta[d] * theta[d]) / (2.0 * N);
     }
     return sum;
@@ -439,13 +439,13 @@ LogisticRegression.prototype.cost = function(X, Y, theta) {
 
 var MultiClassLogistic = function(config){
     var config = config || {};
-    if(!config.alpha){
+    if (!config.alpha){
         config.alpha = 0.001;
     }
-    if(!config.iterations) {
+    if (!config.iterations) {
         config.iterations = 100;
     }
-    if(!config.lambda) {
+    if (!config.lambda) {
         config.lambda = 0;
     }
     this.alpha = config.alpha;
@@ -453,18 +453,18 @@ var MultiClassLogistic = function(config){
     this.iterations = config.iterations;
 };
 
-MultiClassLogistic.prototype.fit = function(data_x,data_y) {
+MultiClassLogistic.prototype.fit = function(dataX,dataY) {
 
-    var hist = Pmf.makeHistFromList(data_y);
+    var hist = Pmf.makeHistFromList(dataY);
     var unique = Object.keys(hist.dictwrapper.dict);
-    var N = data_x.length;
+    var N = dataX.length;
     this.classes = unique;
     this.logistics = {};
     this.result = [];
-    this.stringLables = data_y;
-    if (typeof data_y[0] == 'number'){
+    this.stringLables = dataY;
+    if (typeof dataY[0] == 'number'){
         var stringLables = [];
-        data_y.forEach(function(e,i){
+        dataY.forEach(function(e){
             stringLables.push(String(e));
         });
         this.stringLables = stringLables;
@@ -478,40 +478,41 @@ MultiClassLogistic.prototype.fit = function(data_x,data_y) {
         });
         var classLabels = [];
         for (var i=0 ; i<N ; i++){
-            classLabels.push( data_y[i] == c? 1 : 0);
+            classLabels.push( dataY[i] == c? 1 : 0);
         }
-        this.result.push(this.logistics[c].fit(data_x,classLabels,this.stringLables));
+        this.result.push(this.logistics[c].fit(dataX,classLabels,this.stringLables));
     }
     return this;
 };
 
 MultiClassLogistic.prototype.visualize = function(){
-    this.result.forEach(function(e,i){
+    this.result.forEach(function(e){
         e.visualize();
     });
+    return this;
 };
 
 MultiClassLogistic.prototype.transform = function(x) {
-    if(x[0].length){ // x is a matrix
-        var predicted_array = [];
-        for(var i=0; i < x.length; ++i){
+    if (x[0].length){ // x is a matrix
+        var predictedArray = [];
+        for (var i=0; i < x.length; ++i){
             var predicted = this.transform(x[i]);
-            predicted_array.push(predicted);
+            predictedArray.push(predicted);
         }
-        return predicted_array;
+        return predictedArray;
     }
-    var max_prob = 0.0;
-    var best_c = '';
-    for(var k = 0; k < this.classes.length; ++k) {
+    var maxProb = 0.0;
+    var bestClass = '';
+    for (var k = 0; k < this.classes.length; ++k) {
         var c = this.classes[k];
-        var prob_c = this.logistics[c].transform(x);
-        if(max_prob < prob_c){
-            max_prob = prob_c;
-            best_c = c;
+        var classProbability = this.logistics[c].transform(x);
+        if (maxProb < classProbability){
+            maxProb = classProbability;
+            bestClass = c;
         }
     }
-    return best_c;
-}
+    return bestClass;
+};
 
 module.exports = {
     LinearRegression,
