@@ -60,16 +60,6 @@ function showRegressionPlot(plotPointsX, data, plotTheta, label,threshold=0,logi
         originalData['text'] = data.groupBy;
     }
 
-    // if (logistic){
-    //     Plotly.plot(gd, [originalData],{
-    //         // Layout Options
-    //         legend: {
-    //             traceorder: 'reversed'
-    //         }
-    //     }).then(function() {
-    //     });
-    //     return;
-    // }
 
     Plotly.plot(gd, [
         originalData,
@@ -86,7 +76,6 @@ function showRegressionPlot(plotPointsX, data, plotTheta, label,threshold=0,logi
             traceorder: 'reversed'
         }
     }).then(function() {
-        console.log(plotTheta[count]);
         update(count);
     });
 
@@ -110,7 +99,6 @@ function showRegressionPlot(plotPointsX, data, plotTheta, label,threshold=0,logi
 
     function makeData(offset) {
         var theta = plotTheta[offset];
-        console.log(offset,theta);
         var plotPointsY = [];
         for (var i = 0; i < plotPointsX.length; i++){
             var y = plotPointsX[i] * theta[1] + theta[0];
@@ -148,7 +136,8 @@ var LinearRegression = function(config) {
     this.plotTheta = [];
 };
 
-LinearRegression.prototype.fit = function (data) {
+LinearRegression.prototype.fit = function (data_x,data_y) {
+    var data = Datasets.zip(data_x,data_y);
     var N = data.length, X = [], Y = [];
     var constructPlot = false;
     this.dim = data[0].length;
@@ -188,7 +177,6 @@ LinearRegression.prototype.fit = function (data) {
         }
 
     }
-    console.log(this.plotTheta);
     this.visualize(plotPoints);
     return {
         theta: this.theta,
@@ -297,25 +285,31 @@ var LogisticRegression = function(config) {
     this.threshold = config.threshold;
 };
 
-LogisticRegression.prototype.fit = function(data) {
-    this.dim = data[0].length-1;
+LogisticRegression.prototype.fit = function(data_x,data_y) {
+
+    this.dim = data_x[0].length?data_x[0].length:0;
+    if (this.dim == 0){
+        data_x = Datasets.zip(data_x);
+        this.dim = 1;
+    }
+
     if (this.dim == 1){
-        for (var index=0;index<data.length;index++){
-            data[index].push(data[index][1]);
+        for (var index=0;index<data_x.length;index++){
+            data_x[index].push(data_y[index]);
         }
     }
-    var N = data.length;
+    var N = data_x.length;
     var constructPlot = false;
     var X = [];
     var Y = [];
-    if (data[0]!=undefined){
-        if (data[0][0].length  == 2){
+    if (data_x[0]!=undefined){
+        if (data_x[0].length  == 2){
             constructPlot = true;
         }
     }
     for(var i=0; i < N; ++i){
-        var row = data[i][0];
-        var row_y = data[i][1];
+        var row = data_x[i];
+        var row_y = data_y[i];
         var x_i = [];
         var y_i = row_y;
         x_i.push(1.0);
@@ -371,7 +365,6 @@ LogisticRegression.prototype.fit = function(data) {
 
 LogisticRegression.prototype.visualize = function(plotPoints){
     showRegressionPlot(plotPoints[1],plotPoints[0] , this.plotTheta, "Logistic Regression",this.threshold,true);
-    console.log(plotPoints[1],plotPoints[0] , this.plotTheta, "Logistic Regression",true);
 };
 
 LogisticRegression.prototype.computeThreshold = function(X, Y){
