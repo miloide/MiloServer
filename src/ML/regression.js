@@ -50,13 +50,7 @@ function showRegressionPlot(plotPointsX, data, plotTheta, label,threshold=0,logi
         'mode': 'markers',
     };
     if (data.groupBy){
-        var hist = Pmf.makeHistFromList(data.groupBy);
-        var keys = hist.dictwrapper.values();
-        var key2color = {}
-        for (var i in keys) key2color[keys[i]] = i+1;
-        var color = [];
-        for (var i in data.groupBy) color.push(key2color[data.groupBy[i]]);
-        originalData['marker'] = {'color':color};
+        originalData['marker'] = {'color':data.colors};
         originalData['text'] = data.groupBy;
     }
 
@@ -284,7 +278,31 @@ LogisticRegression.prototype.fit = function(data_x,data_y) {
         data_x = Datasets.zip(data_x);
         this.dim = 1;
     }
+    var classes = data_y;
+    console.log(data_x,data_y);
+    // check if y is a number (for classes) else convert to numbers
+    if (typeof data_y[0] !='number'){
+        var hist = Pmf.makeHistFromList(classes);
+        console.log(hist);
+        var keys = Object.keys(hist.dictwrapper.dict);
+        var key2num = {};
+        for (var i in keys){
+            key2num[keys[i]] = parseFloat(i);
+        }
+        console.log(key2num);
+        var numClass = [];
+        for (var i in classes) {
+            numClass.push(key2num[classes[i]]);
+        }
+        data_y = numClass;
+    } else {
+        classes = [];
+        data_y.forEach(function(e,i){
+            classes.push(String(e));
+        });
+    }
 
+    console.log(data_x,data_y);
     if (this.dim == 1){
         for (var index=0;index<data_x.length;index++){
             data_x[index].push(data_y[index]);
@@ -293,25 +311,22 @@ LogisticRegression.prototype.fit = function(data_x,data_y) {
     var N = data_x.length;
     var constructPlot = false;
     var X = [];
-    var Y = [];
+    var Y = data_y;
     if (data_x[0]!=undefined){
         if (data_x[0].length  == 2){
             constructPlot = true;
         }
     }
-    for(var i=0; i < N; ++i){
+    for (var i=0; i < N; ++i){
         var row = data_x[i];
-        var row_y = data_y[i];
         var x_i = [];
-        var y_i = row_y;
         x_i.push(1.0);
         for(var j=0; j < row.length; ++j){
             x_i.push(row[j]);
         }
         X.push(x_i);
-        Y.push(y_i);
     }
-    console.log("Coords",X,Y);
+
     var temp = {};
     temp.x = [];
     temp.y = [];
@@ -319,7 +334,8 @@ LogisticRegression.prototype.fit = function(data_x,data_y) {
         temp.x.push(e[1]);
         temp.y.push(e[2]);
     });
-    temp.groupBy = Y;
+    temp.groupBy = classes;
+    temp.colors = data_y;
 
     this.plotPoints = [temp,[arrayMin(temp.x),arrayMax(temp.x)]];
     this.theta = [];
@@ -341,8 +357,6 @@ LogisticRegression.prototype.fit = function(data_x,data_y) {
 
     }
     this.threshold = this.computeThreshold(X, Y);
-    //his.visualize(this.plotPoints);
-
     return this;
 };
 
@@ -447,7 +461,7 @@ MultiClassLogistic.prototype.fit = function(data, classes) {
     this.classes = unique;
     this.logistics = {};
     var result = {};
-    
+
     for(var k = 0; k < this.classes.length; ++k){
         var c = this.classes[k];
         this.logistics[c] = new LogisticRegression({
