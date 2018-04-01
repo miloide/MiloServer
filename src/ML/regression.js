@@ -271,7 +271,7 @@ var LogisticRegression = function(config) {
     this.threshold = config.threshold;
 };
 
-LogisticRegression.prototype.fit = function(data_x,data_y) {
+LogisticRegression.prototype.fit = function(data_x,data_y,rawClasses=null) {
 
     this.dim = data_x[0].length?data_x[0].length:0;
     if (this.dim == 0){
@@ -335,6 +335,9 @@ LogisticRegression.prototype.fit = function(data_x,data_y) {
         temp.y.push(e[2]);
     });
     temp.groupBy = classes;
+    if (rawClasses){
+        temp.groupBy = rawClasses;
+    }
     temp.colors = data_y;
 
     this.plotPoints = [temp,[arrayMin(temp.x),arrayMax(temp.x)]];
@@ -373,7 +376,6 @@ LogisticRegression.prototype.computeThreshold = function(X, Y){
             threshold = prob;
         }
     }
-
     return threshold;
 }
 
@@ -451,36 +453,42 @@ var MultiClassLogistic = function(config){
     this.iterations = config.iterations;
 };
 
-MultiClassLogistic.prototype.fit = function(data, classes) {
-    this.dim = data[0].length;
-    for(var i = 0;i < data.length;i++){
-        data[i].push(classes[i]);
-    }
-    var N = data.length;
-    var unique = classes.filter(function(item, i, ar){ return ar.indexOf(item) === i; });
+MultiClassLogistic.prototype.fit = function(data_x,data_y) {
+
+    var hist = Pmf.makeHistFromList(data_y);
+    var unique = Object.keys(hist.dictwrapper.dict);
+    var N = data_x.length;
     this.classes = unique;
     this.logistics = {};
-    var result = {};
-
-    for(var k = 0; k < this.classes.length; ++k){
+    this.result = [];
+    this.stringLables = data_y;
+    if (typeof data_y[0] == 'number'){
+        var stringLables = [];
+        data_y.forEach(function(e,i){
+            stringLables.push(String(e));
+        });
+        this.stringLables = stringLables;
+    }
+    for (var k = 0; k < this.classes.length; ++k){
         var c = this.classes[k];
         this.logistics[c] = new LogisticRegression({
             alpha: this.alpha,
             lambda: this.lambda,
             iterations: this.iterations
         });
-        var data_c = [];
-        for(var i=0; i < N; ++i){
-            var row = [];
-            for(var j=0; j < this.dim-1; ++j){
-                row.push(data[i][j]);
-            }
-            row.push(data[i][this.dim-1] == c ? 1 : 0);
-            data_c.push(row);
+        var classLabels = [];
+        for (var i=0 ; i<N ; i++){
+            classLabels.push( data_y[i] == c? data_y[i] : 0);
         }
-        result[c] = this.logistics[c].fit(data_c);
+        this.result.push(this.logistics[c].fit(data_x,classLabels,this.stringLables));
     }
-    return result;
+    return this;
+};
+
+MultiClassLogistic.prototype.visualize = function(){
+    this.result.forEach(function(e,i){
+        e.visualize();
+    });
 };
 
 MultiClassLogistic.prototype.transform = function(x) {
