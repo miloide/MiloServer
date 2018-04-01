@@ -287,12 +287,14 @@ var LogisticRegression = function(config) {
     if(!config.lambda) {
         config.lambda = 0;
     }
+    if(!config.threshold){
+        config.threshold = 0;
+    }
     this.alpha = config.alpha;
     this.lambda = config.lambda;
     this.iterations = config.iterations;
     this.plotTheta = [];
-    this.threshold;
-    this.groupBy;
+    this.threshold = config.threshold;
 };
 
 LogisticRegression.prototype.fit = function(data) {
@@ -307,16 +309,17 @@ LogisticRegression.prototype.fit = function(data) {
     var X = [];
     var Y = [];
     if (data[0]!=undefined){
-        if (data[0].length  == 3){
+        if (data[0][0].length  == 2){
             constructPlot = true;
         }
     }
     for(var i=0; i < N; ++i){
-        var row = data[i];
+        var row = data[i][0];
+        var row_y = data[i][1];
         var x_i = [];
-        var y_i = row[row.length-1];
+        var y_i = row_y;
         x_i.push(1.0);
-        for(var j=0; j < row.length-1; ++j){
+        for(var j=0; j < row.length; ++j){
             x_i.push(row[j]);
         }
         X.push(x_i);
