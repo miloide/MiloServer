@@ -6,17 +6,19 @@ html
         title Milo IDE
         script(src="/js/jquery.js")
         script(src="/js/bootstrap.min.js")
-        link(rel="icon" type="image/png" href="media/icon.png")
+        link(rel="icon" type="image/png" href="/media/icon.png")
         link(rel="stylesheet" href="/css/bootstrap.min.css")
         link(rel="stylesheet" href="/css/bootstrap-theme.min.css")
         link(rel="stylesheet", href="/css/layout.css")
         link(rel="icon" type="image/png" href="/media/icon.png")
         link(href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet")
+        block headers
     body(style="padding-top: 70px;")
         nav.navbar.navbar-fixed-top.navbar-default
             .container-fluid
                 .navbar-header
-                    a.navbar-brand(href='#') Milo
+                    a.navbar-brand(href='#')
+                        img(src='/media/icon.png')
                 #navigation.collapse.navbar-collapse
                     block navigation
         block content
