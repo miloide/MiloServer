@@ -478,7 +478,7 @@ MultiClassLogistic.prototype.fit = function(data_x,data_y) {
         });
         var classLabels = [];
         for (var i=0 ; i<N ; i++){
-            classLabels.push( data_y[i] == c? data_y[i] : 0);
+            classLabels.push( data_y[i] == c? 1 : 0);
         }
         this.result.push(this.logistics[c].fit(data_x,classLabels,this.stringLables));
     }
