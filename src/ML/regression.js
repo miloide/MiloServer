@@ -133,6 +133,7 @@ var LinearRegression = function(config) {
     this.alpha = config.alpha;
     this.lambda = config.lambda;
     this.trace = config.trace;
+    this.plotPoints = [];
     this.plotTheta = [];
 };
 
@@ -158,7 +159,7 @@ LinearRegression.prototype.fit = function (data_x,data_y) {
         Y.push(y_i);
         X.push(x_i);
     }
-    var plotPoints = setPlotData({'x': X, 'y' : Y});
+    this.plotPoints = setPlotData({'x': X, 'y' : Y});
     this.theta = [];
     for (var d = 0; d < this.dim; ++d) {
         this.theta.push(0.0);
@@ -177,22 +178,12 @@ LinearRegression.prototype.fit = function (data_x,data_y) {
         }
 
     }
-    this.visualize(plotPoints);
-    return {
-        theta: this.theta,
-        dim: this.dim,
-        weights: this.theta,
-        cost: this.cost(X, Y, this.theta),
-        config: {
-            alpha: this.alpha,
-            lambda: this.lambda,
-            iterations: this.iterations
-        }
-    };
+    //this.visualize();
+    return this;
 };
 
-LinearRegression.prototype.visualize = function(plotPoints){
-    showRegressionPlot(plotPoints[1],plotPoints[0] , this.plotTheta, "Linear Regression");
+LinearRegression.prototype.visualize = function(){
+    showRegressionPlot(this.plotPoints[1],this.plotPoints[0] , this.plotTheta, "Linear Regression");
 };
 
 LinearRegression.prototype.grad = function(X, Y, theta) {
@@ -282,6 +273,7 @@ var LogisticRegression = function(config) {
     this.lambda = config.lambda;
     this.iterations = config.iterations;
     this.plotTheta = [];
+    this.plotPoints = [];
     this.threshold = config.threshold;
 };
 
@@ -329,7 +321,7 @@ LogisticRegression.prototype.fit = function(data_x,data_y) {
     });
     temp.groupBy = Y;
 
-    var plotPoints = [temp,[arrayMin(temp.x),arrayMax(temp.x)]];
+    this.plotPoints = [temp,[arrayMin(temp.x),arrayMax(temp.x)]];
     this.theta = [];
     for(var d = 0; d < this.dim; ++d){
         this.theta.push(0.0);
@@ -349,22 +341,13 @@ LogisticRegression.prototype.fit = function(data_x,data_y) {
 
     }
     this.threshold = this.computeThreshold(X, Y);
-    this.visualize(plotPoints);
+    //his.visualize(this.plotPoints);
 
-    return {
-        weights: this.theta,
-        threshold: this.threshold,
-        cost: this.cost(X, Y, this.theta),
-        config: {
-            alpha: this.alpha,
-            lambda: this.lambda,
-            iterations: this.iterations
-        }
-    }
+    return this;
 };
 
-LogisticRegression.prototype.visualize = function(plotPoints){
-    showRegressionPlot(plotPoints[1],plotPoints[0] , this.plotTheta, "Logistic Regression",this.threshold,true);
+LogisticRegression.prototype.visualize = function(){
+    showRegressionPlot(this.plotPoints[1],this.plotPoints[0] , this.plotTheta, "Logistic Regression",this.threshold,true);
 };
 
 LogisticRegression.prototype.computeThreshold = function(X, Y){
@@ -456,29 +439,15 @@ var MultiClassLogistic = function(config){
 
 MultiClassLogistic.prototype.fit = function(data, classes) {
     this.dim = data[0].length;
-    var N = data.length;
-
-    if(!classes){
-        classes = [];
-        for(var i=0; i < N; ++i){
-            var found = false;
-            var label = data[i][this.dim-1];
-            for(var j=0; j < classes.length; ++j){
-                if(label == classes[j]){
-                    found = true;
-                    break;
-                }
-            }
-            if(!found){
-                classes.push(label);
-            }
-        }
+    for(var i = 0;i < data.length;i++){
+        data[i].push(classes[i]);
     }
-
-    this.classes = classes;
-
+    var N = data.length;
+    var unique = classes.filter(function(item, i, ar){ return ar.indexOf(item) === i; });
+    this.classes = unique;
     this.logistics = {};
     var result = {};
+    
     for(var k = 0; k < this.classes.length; ++k){
         var c = this.classes[k];
         this.logistics[c] = new LogisticRegression({
