@@ -13,7 +13,7 @@ DictWrapper.prototype.getDict = function(){
 };
 
 DictWrapper.prototype.values = function(){
-    return Object.keys(this.dict).map(parseFloat);
+    return Object.keys(this.dict);
 };
 
 DictWrapper.prototype.getPair = function(){
