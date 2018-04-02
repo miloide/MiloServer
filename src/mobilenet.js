@@ -11,8 +11,8 @@ MobileNet.TOPK_PREDICTIONS = 10;
 
 
 /**
- * Imports deeplearn-mobilenet from unpkg &
- * classifies a given image in <img> tag using squeezeNet.
+ * Imports mobilenet model &
+ * classifies a given image in <img> tag
  * @param {HTMLImageElement} imgTag HTML <img> tag with loaded image for classification
  */
 MobileNet.classify = function(imgTag){

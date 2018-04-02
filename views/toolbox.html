@@ -1,5 +1,4 @@
 <xml id="toolbox" style="display: none">
-
     <category name="%{BKY_CATMATH}" colour="%{BKY_COLOUR_HUE}">
       <block type="math_number"></block>
       <block type="math_arithmetic">
@@ -142,6 +141,9 @@
         <field name="HUE">#ffffff</field>
       </block>
       <block type="plot_bar">
+        <field name="HUE">#ffffff</field>
+      </block>
+      <block type="plot_box">
         <field name="HUE">#ffffff</field>
       </block>
       <block type="function_plot"></block>
@@ -388,17 +390,17 @@
     <sep></sep>
     <category name="%{BKY_CATML}" colour="%{BKY_ML_HUE}" expanded="true">
       <category name="Vector Math" colour="%{BKY_COLOUR_HUE}">
-        <block type="tf_number"></block>
-        <block type="tf_array1d"></block>
-        <block type="tf_get_scalar"></block>
-        <block type="tf_arithmetic">
+        <block type="dl_number"></block>
+        <block type="dl_array1d"></block>
+        <block type="dl_get_scalar"></block>
+        <block type="dl_arithmetic">
           <value name="A">
-            <shadow type="tf_number">
+            <shadow type="dl_number">
               <field name="NUM">1</field>
             </shadow>
           </value>
           <value name="B">
-            <shadow type="tf_number">
+            <shadow type="dl_number">
               <field name="NUM">1</field>
             </shadow>
           </value>
@@ -415,7 +417,14 @@
             </shadow>
           </value>
         </block>
-        <block type="print"></block>
+        <block type="text_log">
+            <value name="TEXT">
+                <block type="dl_get_scalar">
+                  <value name="NUM">
+                  </value>
+                </block>
+            </value>
+          </block>
       </category>
       <category name="Machine Learning" colour="%{BKY_HISTOGRAM_HUE}">
         <block type="regression">

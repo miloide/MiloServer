@@ -72,8 +72,8 @@ Plot.prototype.addDataItem = function(data) {
         data.y = y_;
     }
 
-    if (data.x == undefined) {
-     //       Helpers.showAlert("Error", "Not enough data to plot!");
+    if (data.x == undefined && data.y == undefined) {
+            Helpers.showAlert("Error", "Not enough data to plot!");
             return;
     }
 
@@ -95,7 +95,7 @@ Plot.prototype.addDataItem = function(data) {
         data.marker["color"] = color;
         data.text = data.group;
     }
-    if (data.type == "scatter") data.mode = data.isLine?"markers+lines":"markers";
+    if(data.type == "scatter") data.mode = data.isLine?"markers+lines":"markers";
     this.data_.push(data);
     return true;
 };
