@@ -239,7 +239,7 @@ Milo.init = function() {
 	});
 
 	Blockly.JavaScript.addReservedWords(
-		'code,jscode,setup,dl,graph,math,session,DeepLearn,Data,WebCam,SqueezeNet,timeouts,checkTimeout'
+		'code,jscode,setup,dl,graph,math,session,DeepLearn,Data,WebCam,MobileNet,timeouts,checkTimeout'
 	);
 	// Register callbacks for buttons
 	// TODO(arjun): implement adddataset callback

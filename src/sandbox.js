@@ -4,7 +4,7 @@ var MSG = require('./strings');
 var Helpers = require('./helpers');
 var Plot = require('./plot');
 var WebCam = require('./webcam');
-var SqueezeNet = require('./squeezenet');
+var MobileNet = require('./mobilenet');
 var Datasets = require('./datasets');
 var DeepLearn = require('./deeplearn');
 var Pmf = require('./statistics/pmf');
@@ -35,8 +35,8 @@ function setupContext(context){
     context['Blockly'] = Blockly;
     // Add Plot module to execution context
     context['Plot'] = Plot;
-    // Add SqueezeNet module to execution context
-    context['SqueezeNet'] = SqueezeNet;
+    // Add MobileNet module to execution context
+    context['MobileNet'] = MobileNet;
     // Add Datasets module to execution context
     context['Datasets'] = Datasets;
     // Add DeepLearn module to execution context
