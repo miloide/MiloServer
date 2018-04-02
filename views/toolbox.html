@@ -87,7 +87,6 @@
       </block>
       <block type="math_random_float"></block>
     </category>
-
     <category name="Statistics" colour="%{BKY_HISTOGRAM_HUE}">
       <block type="lists_split_math">
           <value name="INPUT">
@@ -418,6 +417,14 @@
         </block>
         <block type="print"></block>
       </category>
+      <category name="Machine Learning" colour="%{BKY_HISTOGRAM_HUE}">
+        <block type="regression">
+        </block>
+        <block type="regression_train">
+        </block>
+        <block type="regression_test"></block>
+        <block type="visualize_regressions"></block>
+    </category>
       <category name="Deep Learning" colour="%{BKY_HISTOGRAM_HUE}">
         <block type="dl_optimizer">
           <field name="optimizer">SGD</field>

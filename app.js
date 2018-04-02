@@ -12,7 +12,7 @@ var authConfig = require('./config/auth');
 var users = require('./routes/users');
 var editor = require('./routes/editor');
 var compression = require('compression');
-
+var flash = require('connect-flash');
 
 const NODE_ENV = process.env.NODE_ENV ? process.env.NODE_ENV.toLowerCase() : 'development';
 
@@ -48,6 +48,7 @@ app.use(require('express-session')({
     resave: false,
     saveUninitialized: false
 }));
+app.use(flash());
 app.use(passport.initialize());
 app.use(passport.session());
 authConfig(passport);

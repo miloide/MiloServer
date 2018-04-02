@@ -16,6 +16,7 @@ html
 								input#editProjectInput.form-control(
 									type="text",
 									placeholder="Untitled Project",
+									max-length="30",
 									value='Untitled Project')
 								button#editProjectSaveButton.btn.btn-xs.btn-success
 									i.material-icons save
@@ -32,9 +33,11 @@ html
 								li
 									a#renameButton(style="cursor:pointer") Rename Project
 								li
-									a(style="cursor:pointer") Reload Project
+									a#cloneButton(style="cursor:pointer;") Make a copy
 								li
-									a(style="cursor:pointer") Download Project
+									a#reloadButton(style="cursor:pointer" onclick="window.location.reload();") Reload Project
+								li
+									a#downloadProjectButton(style="cursor:pointer") Download Project
 					li.btn-group
 						li.dropdown
 							a.dropdown-toggle(style="cursor:pointer", data-toggle='dropdown', role='button', aria-haspopup='true', aria-expanded='false')

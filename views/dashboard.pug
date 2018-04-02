@@ -83,8 +83,8 @@ block content
 												div(id='{{"editProjectName-" + $index}}' ng-if='project.canModify' style="display: none;")
 													.input-group
 														input.form-control(type="text",
-															  ng-model='project.projectName'
-															  style="width: 100px;"
+															  ng-model='project.projectName',
+															  max-length="30"
 														)
 														span.input-group-btn
 															button.btn.btn-xs.btn-success(ng-click='saveProjectName($index)' style="height: 34px;")
@@ -110,7 +110,7 @@ block content
 														li(ng-if='project.trashed == false')
 															a(href='#' ng-click="shareModal($index)")
 																i.material-icons person_add
-																| &nbsp; Collaborators
+																| &nbsp; Sharing
 														li
 															a(href='#' ng-click='project.trashed?removeProject($index):trashProject($index)' ng-if='project.canModify')
 																i.material-icons {{project.trashed? 'delete_forever' : 'delete'}}
@@ -133,46 +133,66 @@ block content
 					h4.text-left Link to project
 					input.form-control(readonly='readonly', type='text', id='projectLink'
 						value='{{currentShareProject.link}}')
-					br
-					.form-check.text-left
-						input#publicToggle.form-check-input(type='checkbox', value='')
+					.form-check.text-left(ng-if='currentShareProject.canModify')
+						br
+						input#publicToggle.form-check-input(type='checkbox',ng-change='changeVisibility(currentShareProject.public)',ng-model='currentShareProject.public')
 						label.form-check-label(for='publicToggle' style="margin-left: 5px;")
 							| Check to make public
+					.h5.text-left(ng-if='!currentShareProject.canModify')
+						| Project type: {{currentShareProject.public?'public':'private'}}
 					h4.text-left Who has access
-					div.col-sm-12(style="padding:0px;")
+					div.col-sm-12(style="padding:0px;",ng-if="currentShareProject.canModify")
 						.col-sm-6(style="padding:0px;")
 							.input-group
-									input.form-control(type="email",
-											placeholder="Add collaborator by email"
-											style="width: 200px;"
+									input.form-control(
+											type="email",
+											ng-model='addCollabEmail',
+											placeholder="Add collaborator by email",
+											style="width: 200px;",
+											ng-keyup="$event.keyCode == 13 ? changeShareAccess(addCollabEmail,'add'): null"
 									)
 									span.input-group-btn
-										button.btn.btn-xs.btn-primary(style="height: 34px;")
+										button.btn.btn-xs.btn-primary(style="height: 34px;" ng-click="changeShareAccess(addCollabEmail,'add')")
 											i.material-icons add
-					hr
+							div.text-left#addCollabFlash
+						br
+						br
+					.col-sm-12(style="border-top:1px solid #eee")
 					table.table.header-fixed
 						tbody(style="height: 300px")
+							tr
+								td(style="width: 200px;margin-right: 11%;border:0px;")
+									| {{currentShareProject.owner}}
+								td(style="width: fit-content;margin-right: 11%;border:0px;")
+									| Owner
 							tr(ng-repeat="collaborator in currentShareProject.collabList")
 								td(style="width: 200px;margin-right: 11%;border:0px;")
-									| {{collaborator}}
+									| {{collaborator.split("[dot]").join(".")}}
 								td(style="width: fit-content;margin-right: 11%;border:0px;")
 									.dropdown
 										i.material-icons {{getCollabIcon(currentShareProject.collaborators[collaborator])}}
-										a.dropdown-toggle(href='#', data-toggle='dropdown', role='button', aria-haspopup='true', aria-expanded='false')
+										a.dropdown-toggle(ng-if="currentShareProject.canModify"
+											href='#',
+											data-toggle='dropdown',
+											role='button', aria-haspopup='true',
+											aria-expanded='false'
+										)
 											i.material-icons arrow_drop_down
-										ul.dropdown-menu.dropdown-menu-right
+										ul.dropdown-menu.dropdown-menu-right(
+											ng-if="currentShareProject.canModify"
+										)
 											li
-												a(href='#')
+												a(href='#' ng-click="changeShareAccess(collaborator,'view')")
 													i.material-icons remove_red_eye
 													| &nbsp; View
 											li
-												a(href='#')
+												a(href='#' ng-click="changeShareAccess(collaborator,'edit')")
 													i.material-icons create
 													| &nbsp; Edit
 											li
-												a(href='#')
+												a(href='#' ng-click="changeShareAccess(collaborator,'admin')")
 													i.material-icons work
 													| &nbsp; Admin
-								td(style="width: fit-content;border:0px;")
-									a(href='#')
+								td(style="width: fit-content;border:0px;",ng-if="currentShareProject.canModify")
+									a(href='#' ng-click="changeShareAccess(collaborator,'remove')")
 										i.material-icons delete
