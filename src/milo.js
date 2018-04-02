@@ -12,7 +12,7 @@ var MiloStorage = require('./storage');
 var Datasets  = window.Datasets = require('./datasets');
 var Blockly = window.Blockly = require('milo-blocks');
 var Project = require('./project');
-window.tf = require('@tensorflow/tfjs');
+window.plt = require('./plot');
 window.sandbox = sandbox;
 
 
@@ -239,7 +239,7 @@ Milo.init = function() {
 	});
 
 	Blockly.JavaScript.addReservedWords(
-		'code,jscode,setup,dl,graph,math,session,DeepLearn,Data,WebCam,MobileNet,timeouts,checkTimeout'
+		'code,jscode,setup,graph,math,session,tf,Data,WebCam,MobileNet,timeouts,checkTimeout'
 	);
 	// Register callbacks for buttons
 	// TODO(arjun): implement adddataset callback

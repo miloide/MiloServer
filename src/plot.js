@@ -72,8 +72,8 @@ Plot.prototype.addDataItem = function(data) {
         data.y = y_;
     }
 
-    if (data.x == undefined) {
-     //       Helpers.showAlert("Error", "Not enough data to plot!");
+    if (data.x == undefined && data.y == undefined) {
+            Helpers.showAlert("Error", "Not enough data to plot!");
             return;
     }
 
