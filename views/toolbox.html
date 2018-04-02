@@ -389,17 +389,17 @@
     <sep></sep>
     <category name="%{BKY_CATML}" colour="%{BKY_ML_HUE}" expanded="true">
       <category name="Vector Math" colour="%{BKY_COLOUR_HUE}">
-        <block type="dl_number"></block>
-        <block type="dl_array1d"></block>
-        <block type="dl_get_scalar"></block>
-        <block type="dl_arithmetic">
+        <block type="tf_number"></block>
+        <block type="tf_array1d"></block>
+        <block type="tf_get_scalar"></block>
+        <block type="tf_arithmetic">
           <value name="A">
-            <shadow type="dl_number">
+            <shadow type="tf_number">
               <field name="NUM">1</field>
             </shadow>
           </value>
           <value name="B">
-            <shadow type="dl_number">
+            <shadow type="tf_number">
               <field name="NUM">1</field>
             </shadow>
           </value>
@@ -416,14 +416,7 @@
             </shadow>
           </value>
         </block>
-        <block type="text_log">
-            <value name="TEXT">
-                <block type="dl_get_scalar">
-                  <value name="NUM">
-                  </value>
-                </block>
-            </value>
-          </block>
+        <block type="print"></block>
       </category>
       <category name="Deep Learning" colour="%{BKY_HISTOGRAM_HUE}">
         <block type="dl_optimizer">

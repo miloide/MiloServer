@@ -10,6 +10,7 @@ var DeepLearn = require('./deeplearn');
 var Pmf = require('./statistics/pmf');
 var Cdf = require('./statistics/cdf');
 var gaussian = require('./statistics/gaussian');
+var tfjs = require('@tensorflow/tfjs');
 var $ = window.$ = require('jquery');
 
 /**
@@ -45,6 +46,7 @@ function setupContext(context){
     context = addToContext(Pmf,context);
     // Add all from Cdf module to execution context
     context = addToContext(Cdf,context);
+    context = addToContext(tfjs,context);
     // Add gaussian module to execution context
     context['gaussian'] = gaussian;
     return context;
