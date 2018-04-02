@@ -38,6 +38,7 @@ function setupContext(context){
     context['MobileNet'] = MobileNet;
     // Add Datasets module to execution context
     context['Datasets'] = Datasets;
+    context['RegExp'] = RegExp;
     // Add tfjs to execution context
     context['tf'] = tf;
     // Add all from WebCam module to execution context
