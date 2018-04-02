@@ -27,13 +27,12 @@ MobileNet.classify = function(imgTag){
 
 
 /**
- * Using mobilenet calculate class probabilities and predicted class labels to console.
+ * Using mobilenet calculate class probabilities and predicted class labels to webConsole.
  * @param {HTMLImageElement} imgTag HTML <img> tag with loaded image for classification
  * @private
  */
 
 MobileNet.classify_ = async (imgElement) => {
-    console.log(imgElement.height,imgElement.width);
     //loads mobilenet model from google storage.
     var mobilenet = await tf.loadModel(MobileNet.MODEL_PATH);
     // Warmup the model. This isn't necessary, but makes the first prediction
