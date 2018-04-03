@@ -3,6 +3,7 @@ var Blockly = require('milo-blocks');
 var MSG = require('./strings');
 var Helpers = require('./helpers');
 var Plot = require('./plot');
+var Canvas = require('./canvas');
 var WebCam = require('./webcam');
 var MobileNet = require('./mobilenet');
 var Datasets = require('./datasets');
@@ -51,6 +52,7 @@ function setupContext(context){
     context = addToContext(regression, context);
     // Add gaussian module to execution context
     context['gaussian'] = gaussian;
+    context = addToContext(Canvas, context);
     return context;
 }
 

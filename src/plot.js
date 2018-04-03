@@ -197,4 +197,6 @@ Plot.prototype.reactive = function() {
     return gd;
 
 };
+
+
 module.exports = Plot;

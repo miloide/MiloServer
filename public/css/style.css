@@ -635,3 +635,8 @@ However, delay the fade out process for 2.5 seconds */
 .btn-outline.is-disabled {
   opacity: .5;
 }
+
+canvas{
+   cursor: crosshair;
+   border:black solid 1px;
+}
