@@ -140,6 +140,7 @@
       <block type="plot_histogram">
         <field name="HUE">#ffffff</field>
       </block>
+      <block type="plot_canvas"></block>
       <block type="plot_bar">
         <field name="HUE">#ffffff</field>
       </block>
@@ -392,7 +393,6 @@
       <category name="Vector Math" colour="%{BKY_COLOUR_HUE}">
         <block type="tf_number"></block>
         <block type="tf_tensor"></block>
-        <block type="tf_get_scalar"></block>
         <block type="tf_arithmetic">
           <value name="A">
             <shadow type="tf_number">
@@ -405,6 +405,7 @@
             </shadow>
           </value>
         </block>
+        <block type="tf_basic_math"></block>
         <block type="lists_split_math">
           <value name="INPUT">
             <shadow type="text">
