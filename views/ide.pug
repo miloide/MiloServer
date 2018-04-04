@@ -116,6 +116,9 @@ html
 						#content_workspace(style="height: 88vh; width: 100%;")
 					#outputs.col-sm-5.scroll.zero-margin.pull-right
 						#graph_output(style="display: none")
+						#drawCanvasDiv(style="display:none")
+							canvas#drawCanvas(width='500', height='300')
+							a#clear(href='#') Clear
 						#misc_output
 						#console_holder(style="display: none")
 							h3 Console Output

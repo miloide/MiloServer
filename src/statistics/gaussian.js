@@ -130,6 +130,7 @@
       output = this.generate_list(opcode, list_var);
     } else
       {output = this[opcode](list_var);}
+      console.log(output);
     return output;
   };
   var gaussian = function(mean, variance) {
