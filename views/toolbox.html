@@ -1,5 +1,4 @@
 <xml id="toolbox" style="display: none">
-
     <category name="%{BKY_CATMATH}" colour="%{BKY_COLOUR_HUE}">
       <block type="math_number"></block>
       <block type="math_arithmetic">
@@ -87,7 +86,6 @@
       </block>
       <block type="math_random_float"></block>
     </category>
-
     <category name="Statistics" colour="%{BKY_HISTOGRAM_HUE}">
       <block type="lists_split_math">
           <value name="INPUT">
@@ -143,6 +141,9 @@
         <field name="HUE">#ffffff</field>
       </block>
       <block type="plot_bar">
+        <field name="HUE">#ffffff</field>
+      </block>
+      <block type="plot_box">
         <field name="HUE">#ffffff</field>
       </block>
       <block type="function_plot"></block>
@@ -299,7 +300,7 @@
     </category>
     <category name="Image" colour="%{BKY_IMAGE_HUE}">
       <block type="img_from_webcam"></block>
-      <block type="squeezenet_label"></block>
+      <block type="mobilenet_label"></block>
       <block type="img_show"></block>
       <block type="img_from_url">
           <value name="TEXT">
@@ -389,17 +390,17 @@
     <sep></sep>
     <category name="%{BKY_CATML}" colour="%{BKY_ML_HUE}" expanded="true">
       <category name="Vector Math" colour="%{BKY_COLOUR_HUE}">
-        <block type="dl_number"></block>
-        <block type="dl_array1d"></block>
-        <block type="dl_get_scalar"></block>
-        <block type="dl_arithmetic">
+        <block type="tf_number"></block>
+        <block type="tf_tensor"></block>
+        <block type="tf_get_scalar"></block>
+        <block type="tf_arithmetic">
           <value name="A">
-            <shadow type="dl_number">
+            <shadow type="tf_number">
               <field name="NUM">1</field>
             </shadow>
           </value>
           <value name="B">
-            <shadow type="dl_number">
+            <shadow type="tf_number">
               <field name="NUM">1</field>
             </shadow>
           </value>
@@ -416,38 +417,16 @@
             </shadow>
           </value>
         </block>
-        <block type="text_log">
-            <value name="TEXT">
-                <block type="dl_get_scalar">
-                  <value name="NUM">
-                  </value>
-                </block>
-            </value>
-          </block>
-      </category>
-      <category name="Deep Learning" colour="%{BKY_HISTOGRAM_HUE}">
-        <block type="dl_optimizer">
-          <field name="optimizer">SGD</field>
-        </block>
-        <block type="dl_mlparams">
-          <field name="paramters">learningRate</field>
-        </block>
-          <block type="dl_train"></block>
-          <block type="dl_dataconfiguration"></block>
-          <block type="dl_predict"></block>
-          <block type="dl_feedentry">
-          <field name="costFunction">MEAN</field>
-        </block>
-        <block type="dl_createoptimizer">
-          <field name="optimizer">Adagrad</field>
-          <field name="rate">0</field>
-          <field name="numBatches">0</field>
-          <field name="batchSize">0</field>
+        <block type="tf_print">
         </block>
       </category>
-
-
-
-
+      <category name="Machine Learning" colour="%{BKY_HISTOGRAM_HUE}">
+        <block type="regression">
+        </block>
+        <block type="regression_train">
+        </block>
+        <block type="regression_test"></block>
+        <block type="visualize_regressions"></block>
+    </category>
   </category>
 </xml>

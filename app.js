@@ -98,8 +98,8 @@ try {
 
 var httpServer = http.createServer(app);
 
-httpServer.listen(5000, function(){
-  console.log('Server listening on port 5000');
+httpServer.listen(3000, function(){
+  console.log('Server listening on port 3000');
 });
 
 module.exports = app;

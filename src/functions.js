@@ -26,8 +26,17 @@ function clearOutput(){
 console.webLog = (function (old_function,div_id) {
     return function (value) {
         //See https://developer.mozilla.org/en-US/docs/Web/API/Console/log
-        // console.log(value);
-        if (value instanceof Promise){
+        if ( typeof value == 'string'){
+            old_function(value);
+            $(div_id).append(
+                '<pre class="block">'+
+                    value.trim().replace(new RegExp("\\r?\\n\\s+","g"),"\<br\>")+
+                '</pre>'
+            );
+        } else if (typeof value == 'number'){
+            old_function(value);
+            $(div_id).append('<pre class="block">' + value + '</pre>');
+        } else if (value instanceof Promise){
             Promise.resolve(value).then(function(val){
                 try {
                     var values = Object.values(JSON.parse(JSON.stringify(val)));

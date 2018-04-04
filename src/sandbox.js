@@ -4,12 +4,13 @@ var MSG = require('./strings');
 var Helpers = require('./helpers');
 var Plot = require('./plot');
 var WebCam = require('./webcam');
-var SqueezeNet = require('./squeezenet');
+var MobileNet = require('./mobilenet');
 var Datasets = require('./datasets');
-var DeepLearn = require('./deeplearn');
 var Pmf = require('./statistics/pmf');
 var Cdf = require('./statistics/cdf');
+var regression = require('./ML/regression');
 var gaussian = require('./statistics/gaussian');
+var tf = require('@tensorflow/tfjs');
 var $ = window.$ = require('jquery');
 
 /**
@@ -33,18 +34,21 @@ function setupContext(context){
     context['Blockly'] = Blockly;
     // Add Plot module to execution context
     context['Plot'] = Plot;
-    // Add SqueezeNet module to execution context
-    context['SqueezeNet'] = SqueezeNet;
+    // Add MobileNet module to execution context
+    context['MobileNet'] = MobileNet;
     // Add Datasets module to execution context
     context['Datasets'] = Datasets;
-    // Add DeepLearn module to execution context
-    context['DeepLearn'] = DeepLearn;
+    context['RegExp'] = RegExp;
+    // Add tfjs to execution context
+    context['tf'] = tf;
     // Add all from WebCam module to execution context
     context = addToContext(WebCam,context);
     // Add all from Pmf module to execution context
     context = addToContext(Pmf,context);
     // Add all from Cdf module to execution context
     context = addToContext(Cdf,context);
+    // Add all from regression module to execution context
+    context = addToContext(regression, context);
     // Add gaussian module to execution context
     context['gaussian'] = gaussian;
     return context;
@@ -73,8 +77,8 @@ SandBox.run = function(code){
     context = setupContext(context);
     // Add window variables to context
     context = addToContext(window,context);
-    var setup =  DeepLearn.setup;
-    var jscode = setup + code;
+
+    var jscode = code;
     try {
         var executionSandbox = makeSandbox(jscode);
         executionSandbox(context);
