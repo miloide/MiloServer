@@ -67,7 +67,7 @@
     }
     var self = this;
     $("#clear").click(function(){
-        resizeImage(self.canvas, context);
+        //resizeImage(self.canvas, context);
         context.fillStyle="#fff";
         context.fillRect(0,0,self.canvas.width, self.canvas.height);
         context.strokeStyle="black";
@@ -91,8 +91,8 @@ function resizeImage(canvas, context){
     image.src = canvas.toDataURL();
     image.width = 28;
     image.height = 28;
-    console.log(image);
-    console.log(tf.fromPixels(image,2).toFloat());
+    //console.log(image);
+    //console.log(tf.fromPixels(image,2).toFloat());
 }
 
 module.exports = Canvas;
