@@ -3,6 +3,7 @@ var Blockly = require('milo-blocks');
 var MSG = require('./strings');
 var Helpers = require('./helpers');
 var Plot = require('./plot');
+var Canvas = require('./canvas_');
 var WebCam = require('./webcam');
 var MobileNet = require('./mobilenet');
 var Datasets = require('./datasets');
@@ -41,6 +42,7 @@ function setupContext(context){
     context['RegExp'] = RegExp;
     // Add tfjs to execution context
     context['tf'] = tf;
+    context['Canvas'] = Canvas;
     // Add all from WebCam module to execution context
     context = addToContext(WebCam,context);
     // Add all from Pmf module to execution context

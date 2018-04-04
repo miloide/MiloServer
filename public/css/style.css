@@ -52,9 +52,9 @@ body {
   overflow: scroll;
 }
 
-canvas {
+/*canvas {
   display: none;
-}
+}*/
 video, canvas {
   width: 500px;
   height: 375px;
@@ -634,4 +634,15 @@ However, delay the fade out process for 2.5 seconds */
 .btn-outline:disabled,
 .btn-outline.is-disabled {
   opacity: .5;
+}
+canvas{
+  display: none;
+}
+
+#drawCanvas{
+   display: inherit;
+   cursor: crosshair;
+   height:560;
+   width:280;
+   border:black solid 1px;
 }
