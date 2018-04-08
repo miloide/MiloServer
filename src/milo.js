@@ -213,6 +213,9 @@ Milo.init = function() {
 	// Initialize Sidebar Pagination
 	Helpers.paginationHandler();
 
+	// Setup loop trap
+	Blockly.JavaScript.INFINITE_LOOP_TRAP = '  checkTimeout();\n';
+
 	// Handle Category names
 	for (var messageKey in MSG) {
 		if (messageKey.indexOf('cat') == 0) {
