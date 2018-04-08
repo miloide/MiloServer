@@ -175,6 +175,8 @@ html
 						a(style="cursor:pointer") 4
 					li(data-page='5')
 						a(style="cursor:pointer") 5
+					li(data-page='6')
+						a(style="cursor:pointer") 6
 					li(data-page='+')
 						a(style="cursor:pointer") >
 
@@ -238,7 +240,6 @@ html
 						li Now click on run to visualize the bar plot :).
 					img(src='/media/plots.png',class="center", alt='list')
 				div(data-page='4', class="page-data",style='display:none;')
-
 					h3
 						strong Probability Mass Function
 					p
@@ -280,11 +281,13 @@ html
 					| pX(x) = (13 − 2x)/36
 					br
 					| for x ∈ {1, 2, . . . , 6}
-
 				div(data-page='5',class="page-data", style='display:none;')
-					p Coming Soon
+					textarea#sidebar_edit_5(wrap="off",cols=100, rows=20)
+				div#sidebar_content_6(data-page='6',class="page-data", style='display:none;')
+
 
 		include toolbox.html
 		#snackbar
 		#init_xml_text(style="display:none")
 			|	#{starterBlocks}
+`

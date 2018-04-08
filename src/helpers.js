@@ -1,5 +1,6 @@
 var swal = require('sweetalert');
 var $ = require('jquery');
+var SimpleMDE = require('simplemde');
 /**
  * Namespace for all helper functions
  */
@@ -65,7 +66,7 @@ window.addEventListener("online", function(e){
     Helpers.Network.showOnlineAlert();
 });
 
-Helpers.paginationHandler = function(){
+Helpers.sidebarInit = function(){
     // store pagination container so we only select it once
     var $paginationContainer = $(".pagination-container"),
         $pagination = $paginationContainer.find('.pagination');
@@ -100,6 +101,17 @@ Helpers.paginationHandler = function(){
 
         }
     });
+
+    //Initialize Sidebar Editor
+    /**
+
+    simplemde = new SimpleMDE({
+        element: $("#sidebar_edit_5")[0],
+        promptURLs: true,
+        status: false
+    });
+    $("#sidebar_content_6").parent().html(simplemde.markdown(simplemde.value()))
+     */
 };
 
 

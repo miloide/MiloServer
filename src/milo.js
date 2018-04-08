@@ -210,8 +210,8 @@ Milo.renderContent = function() {
  */
 Milo.init = function() {
 
-	// Initialize Sidebar Pagination
-	Helpers.paginationHandler();
+	// Initialize Sidebar
+	Helpers.sidebarInit();
 
 	// Setup loop trap
 	Blockly.JavaScript.INFINITE_LOOP_TRAP = '  checkTimeout();\n';
