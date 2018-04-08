@@ -1,7 +1,15 @@
 head
 	meta(charset="utf-8")
 	meta(name="google", value="notranslate")
+	meta(name='viewport', content='width=device-width, initial-scale=1.0')
 	title Milo IDE
+	// Google Analytics
+	script.
+		window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+		ga('create', 'UA-XXXXX-Y', 'auto'); // Replace with actual tracking ID
+		ga('send', 'pageview');
+	script(async='', src='https://www.google-analytics.com/analytics.js')
+	// End Google Analytics
 	link(rel="stylesheet" href="/css/jquery.jexcel.css" type="text/css")
 	link(rel="stylesheet" href="/css/jquery.jcalendar.css" type="text/css")
 	script(src="/ide.js")

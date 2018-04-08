@@ -4,6 +4,12 @@ html
         meta(name="google", value="notranslate")
         meta(name='viewport', content='width=device-width, initial-scale=1.0')
         title Milo IDE
+        // Google Analytics
+        script.
+            window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+            ga('create', 'UA-XXXXX-Y', 'auto'); // Replace with actual tracking ID
+            ga('send', 'pageview');
+        script(async='', src='https://www.google-analytics.com/analytics.js')
         script(src="/js/jquery.js")
         script(src="/js/bootstrap.min.js")
         link(rel="icon" type="image/png" href="/media/icon.png")
