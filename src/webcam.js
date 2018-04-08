@@ -50,8 +50,8 @@ WebCam.init = function(callback) {
         // Add a listener to wait for the 'loadedmetadata' state so the video's dimensions can be read
         WebCam.video.addEventListener("loadedmetadata", function() {
             WebCam.loaded = true;
-            w = 227;
-            h = 227;
+            w = 224;
+            h = 224;
             canvas.width = w;
             canvas.height = h;
             if (typeof(callback) == "function"){
@@ -66,7 +66,7 @@ WebCam.init = function(callback) {
         WebCam.exists = false;
         // Fail Gracefully
         if (typeof (callback) == "function"){
-            imgShow(imgFromURL("media/nocamera.jpg",true));
+            imgShow(imgFromURL("/media/nocamera.jpg",true));
         }
     }
 };
@@ -81,7 +81,7 @@ WebCam.image = function(callback){
     if (WebCam.exists == false) {
         // Gracefully fall back to image
         $(WebCam.video).hide();
-        imgShow(imgFromURL("media/nocamera.jpg",true));
+        imgShow(imgFromURL("/media/nocamera.jpg",true));
         return;
 
     }
@@ -105,7 +105,7 @@ WebCam.image = function(callback){
 WebCam.capture_ = function(){
     var canvas = getImageCanvas();
     var context =  canvas.getContext("2d");
-    var w = 227,h = 227;
+    var w = 224,h = 224;
     // Define the size of the rectangle that will be filled (basically the entire element)
     context.fillRect(0, 0, w, h);
     // Grab the image from the video
@@ -135,7 +135,7 @@ function getImageCanvas(){
  * @returns {HTMLImageElement}
  */
 function imgFromURL(url,isWebCam){
-    const w = 227,h = 227;
+    const w = 224,h = 224;
     var img = new Image(w,h);
     img.setAttribute("crossorigin","anonymous");
     img.style="display:none;";

@@ -149,7 +149,7 @@ Datasets.readUploadedFile = function(file){
         $("#dataset_list").append(
             '<li><button class="button-none" onclick="Datasets.show(\''+fileName+'\')">'+fileName+'</button></li>'
         );
-        console.log(Datasets[fileName]);
+        // console.log(Datasets[fileName]);
         Datasets.checkHeader(fileName);
         Datasets.show(fileName);
         Helpers.snackbar("Uploaded " + fileName);
@@ -220,7 +220,7 @@ Datasets.importHelper = function(name){
     if (Datasets.loaded[name]== undefined || Datasets.loaded[name]) {return;}
     var scriptElement = document.createElement("script");
     scriptElement.setAttribute("id",name+"_dataset");
-    scriptElement.src = "datasets/"+name+".js";
+    scriptElement.src = "/datasets/"+name+".js";
     scriptElement.onload = function () {
         Datasets.loaded[name] = true;
         Datasets.imported[name] = Datasets.convert.rowsToMap(Datasets[name]);
@@ -237,11 +237,11 @@ Datasets.importHelper = function(name){
 
 Datasets.createJexcelHandler = function(name) {
     return function(table){
-        console.log(name);
+        // console.log(name);
         var headerLength = Datasets[name].headers.length;
         var newColumn = table.jexcel('getHeader',headerLength-1);
         Datasets[name].headers.push(newColumn);
-        console.log(newColumn);
+        // console.log(newColumn);
         Datasets.imported[name] = Datasets.convert.rowsToMap(Datasets[name]);
         Milo.workspace.updateToolbox(document.getElementById('toolbox'));
     };
@@ -252,14 +252,15 @@ Datasets.createJexcelHandler = function(name) {
  * @param {string} name
  */
 Datasets.show = function(name){
-    if (Datasets.loaded[name] == undefined || Datasets.loaded[name]==false) {return;}
+    if (Datasets.loaded[name] == undefined || Datasets.loaded[name]==false) {
+        return;
+    }
     var data = Datasets[name].rows;
     var colWidths = [];
     for (var i = 0; i < Datasets[name].headers.length; i++){
         colWidths.push(100);
     }
     var handler = Datasets.createJexcelHandler(name);
-    console.log(handler);
     $('#dataset_output').jexcel({data:data, colWidths:colWidths, colHeaders:Datasets[name].headers, oninsertcolumn: handler});
     $('#dataset_save').html('Save ' + name);
     $('#dataset_save').show();

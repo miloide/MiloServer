@@ -16,9 +16,11 @@
   "license": "MIT",
   "dependencies": {
     "@material/fab": "^0.32.0",
+    "@tensorflow/tfjs": "^0.6.1",
     "bcrypt": "^1.0.3",
     "bcrypt-nodejs": "0.0.3",
     "body-parser": "^1.17.1",
+    "compression": "^1.7.2",
     "connect-flash": "^0.1.1",
     "cookie-parser": "^1.4.3",
     "ejs": "^2.5.6",
@@ -32,6 +34,7 @@
     "fs-extra": "^5.0.0",
     "glob": "^7.1.2",
     "jquery": "^3.3.1",
+    "js-regression": "^1.0.10",
     "milo-blocks": "file:../milo-blocks/",
     "mongoose": "^4.9.1",
     "morgan": "^1.8.1",
@@ -41,7 +44,8 @@
     "passport-local-mongoose": "^5.0.0",
     "pug": "^2.0.0-rc.4",
     "serve-index": "^1.0.0",
-    "sweetalert": "^2.1.0"
+    "sweetalert": "^2.1.0",
+    "uniqid": "^4.1.1"
   },
   "devDependencies": {
     "atomus": "^2.0.0",
@@ -52,7 +56,7 @@
     "chai": "^4.1.2",
     "compression-webpack-plugin": "^1.1.7",
     "eslint-loader": "^1.9.0",
-    "mocha": "^5.0.1",
+    "mocha": "^5.0.5",
     "mocha-jsdom": "^1.1.0",
     "mocha-webpack": "^1.0.1",
     "script-loader": "^0.7.2",

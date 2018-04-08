@@ -5,18 +5,19 @@ const storageSchema =new Schema({
     hash:{
         type: String,
         required:true
-    }, 
+    },
     xml:{
         type: String,
         required: true
     },
-    created_at:{ 
-        type: Date, 
-        default: Date.now 
+    created_at:{
+        type: Date,
+        default: Date.now
     },
-    updated_at: { 
-        type: Date, 
+    updated_at: {
+        type: Date,
         default: Date.now
     }
 },{collection: 'blockStorage'});
+
 const blockStorage = module.exports = mongoose.model('blockStorage', storageSchema);

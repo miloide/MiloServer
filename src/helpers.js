@@ -10,6 +10,7 @@ var $ = require('jquery');
 Helpers.showAlert = function(header, body,type="info"){
     swal(header,body,type);
 };
+
 Helpers.generateHash = function(str){
     var hash = 0, i, chr;
     if (this.length === 0) {return hash;}
@@ -34,7 +35,7 @@ Helpers.snackbar = function(message,callback,timer) {
          if (callback){
             callback();
          }
-    }, timer || 1000);
+    }, timer || 1500);
 };
 
 /**

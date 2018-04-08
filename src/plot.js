@@ -72,8 +72,8 @@ Plot.prototype.addDataItem = function(data) {
         data.y = y_;
     }
 
-    if (data.x == undefined) {
-     //       Helpers.showAlert("Error", "Not enough data to plot!");
+    if (data.x == undefined && data.y == undefined) {
+            Helpers.showAlert("Error", "Not enough data to plot!");
             return;
     }
 
@@ -95,7 +95,7 @@ Plot.prototype.addDataItem = function(data) {
         data.marker["color"] = color;
         data.text = data.group;
     }
-    if (data.type == "scatter") data.mode = data.isLine?"markers+lines":"markers";
+    if(data.type == "scatter") data.mode = data.isLine?"markers+lines":"markers";
     this.data_.push(data);
     return true;
 };
@@ -177,4 +177,24 @@ Plot.prototype.setOptions = function(options){
     }
 };
 
+/**
+ * Returns a graphDiv suitable for plotting reactive graphs
+ */
+Plot.prototype.reactive = function() {
+    $("#graph_output").show();
+    $(this.canvas_).prepend(this.div_);
+    var d3 = Plotly.d3;
+    var WIDTH_IN_PERCENT_OF_PARENT = 540;
+    var HEIGHT_IN_PERCENT_OF_PARENT = 80;
+    const gd3 = d3.select("#"+this.div_.getAttribute("id"))
+                    .append('div')
+                    .style({
+                        width: WIDTH_IN_PERCENT_OF_PARENT + '%',
+                        //height: HEIGHT_IN_PERCENT_OF_PARENT + 'vh',
+                    });
+    const gd = gd3.node();
+    gd.setAttribute("style","");
+    return gd;
+
+};
 module.exports = Plot;
