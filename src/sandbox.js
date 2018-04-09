@@ -61,12 +61,12 @@ function setupContext(context){
  * @param {string} code Generated JS for execution
  */
 SandBox.run = function(code){
-    Blockly.JavaScript.INFINITE_LOOP_TRAP = '  checkTimeout();\n';
-	var timeouts = 0;
-	var checkTimeout = function() {
-		if (timeouts++ > 1000000) {
-			throw MSG['timeout'];
-		}
+    var startTime = Date.now();
+    var checkTimeout = function() {
+        if (Date.now() > startTime+5000) {
+            throw new Error(MSG['timeout']);
+        }
+        return;
     };
 
     var context = {
@@ -74,19 +74,19 @@ SandBox.run = function(code){
         document: document,
         window: window,
         parseFloat: parseFloat,
-        checkTimeout: checkTimeout
+        checkTimeout: checkTimeout,
+        startTime: startTime,
     };
     context = setupContext(context);
     // Add window variables to context
     context = addToContext(window,context);
-
-    var jscode = code;
     try {
-        var executionSandbox = makeSandbox(jscode);
+        var executionSandbox = makeSandbox('checkTimeout();\n'+code);
         executionSandbox(context);
     } catch (e){
-        console.log(jscode);
+        console.log(code);
         Helpers.showAlert("Error",MSG['badCode'].replace('%1', e));
+        // TODO: Remove before deployment
         console.log(e.stack);
     };
 };
