@@ -9,6 +9,7 @@ var MiloStorage = {};
 
 var Blockly = require('milo-blocks');
 var Helpers = require('./helpers');
+var sidebarScope = require('./sidebar').getScope;
 var $ = require('jquery');
 
 /**
@@ -59,11 +60,16 @@ MiloStorage.save = function(optWorkspace,showAlert=false) {
   var xml = Blockly.Xml.workspaceToDom(workspace);
   var data = Blockly.Xml.domToText(xml);
   var projectName = $("#projectName").html();
+  var projectPages = JSON.stringify(sidebarScope().pages);
+  var projectMarkdownPages = JSON.stringify(sidebarScope().markdownPages);
   $.post( "/storage",{
     'type': "save",
     'projectName': projectName,
     'projectKey': MiloStorage.projectKey || '',
-    'xml': data
+    'xml': data,
+    'pages': projectPages,
+    'markdownPages': projectMarkdownPages,
+
   }).done(function(response){
       if (response.status != 200){
         Helpers.showAlert("Project Save Failed!",
@@ -119,8 +125,10 @@ MiloStorage.retrieveXml = function(key, optWorkspace) {
         MiloStorage.projectKey = response.projectKey;
         MiloStorage.project = response.project;
         MiloStorage.canModify = true;
+        Helpers.sidebarInit(MiloStorage.canModify,response.project);
       } else {
         MiloStorage.canModify = false;
+        Helpers.sidebarInit(MiloStorage.canModify,respone.project);
         $("#saveButton").hide();
         $("#cloneButton").show();
         $("#downloadProjectButton").hide();

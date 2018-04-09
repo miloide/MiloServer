@@ -1,6 +1,6 @@
 var swal = require('sweetalert');
 var $ = require('jquery');
-var SimpleMDE = require('simplemde');
+
 /**
  * Namespace for all helper functions
  */
@@ -66,52 +66,19 @@ window.addEventListener("online", function(e){
     Helpers.Network.showOnlineAlert();
 });
 
-Helpers.sidebarInit = function(){
-    // store pagination container so we only select it once
-    var $paginationContainer = $(".pagination-container"),
-        $pagination = $paginationContainer.find('.pagination');
-
-    // click event
-    $pagination.find("li a").on('click.pageChange',function(e){
-        e.preventDefault();
-        // get parent li's data-page attribute and current page
-        var parentLiPage = $(this).parent('li').data("page"),
-            currentPage = parseInt( $(".pagination-container div[data-page]:visible").data('page') ),
-            numPages = $paginationContainer.find("div[data-page]").length;
-
-        // make sure they aren't clicking the current page
-        if ( parseInt(parentLiPage) !== parseInt(currentPage) ) {
-            // hide the current page
-            $paginationContainer.find("div[data-page]:visible").hide();
-            $(".pagination").find("li.active").removeClass("active");
-
-            if ( parentLiPage === '+' ) {
-                // next page
-                $paginationContainer.find("div[data-page="+( currentPage+1>numPages ? numPages : currentPage+1 )+"]").show();
-                $pagination.find("li[data-page="+( currentPage+1>numPages ? numPages : currentPage+1 )+"]").addClass("active");
-            } else if ( parentLiPage === '-' ) {
-                // previous page
-                $paginationContainer.find("div[data-page="+( currentPage-1<1 ? 1 : currentPage-1 )+"]").show();
-                $pagination.find("li[data-page="+( currentPage-1<1 ? 1 : currentPage-1 )+"]").addClass("active");
-            } else {
-                // specific page
-                $paginationContainer.find("div[data-page="+parseInt(parentLiPage)+"]").show();
-                $(this).parent('li').addClass("active");
-            }
-
-        }
-    });
-
-    //Initialize Sidebar Editor
-    /**
-
-    simplemde = new SimpleMDE({
-        element: $("#sidebar_edit_5")[0],
-        promptURLs: true,
-        status: false
-    });
-    $("#sidebar_content_6").parent().html(simplemde.markdown(simplemde.value()))
-     */
+Helpers.sidebarInit = function(canModify, project){
+    if (project.pages){
+        var pages = typeof project.pages == 'string'?JSON.parse(project.pages):project.pages;
+        var markdownPages = typeof project.markdownPages == 'string'?JSON.parse(project.markdownPages):project.markdownPages;
+        var elem = angular.element($("#sidebar"));
+        var injector = elem.injector();
+        var $rootScope = injector.get('$rootScope');
+        $rootScope.$apply(function(){
+            $rootScope.canModify = canModify;
+            $rootScope.pages = pages;
+            $rootScope.markdownPages = markdownPages;
+        });
+    }
 };
 
 

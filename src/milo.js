@@ -8,10 +8,12 @@ var utils = require('./functions');
 var sandbox = require('./sandbox');
 // Export globally
 var $ = window.$ = require('jquery');
+window.SimpleMDE = require('simplemde');
 var MiloStorage = require('./storage');
 var Datasets  = window.Datasets = require('./datasets');
 var Blockly = window.Blockly = require('milo-blocks');
 var Project = require('./project');
+var sidebar = require('./sidebar').app;
 
 for (var key in utils) {
   global[key] = utils[key];
@@ -196,11 +198,15 @@ Milo.renderContent = function() {
 			sourceElement.innerHTML = code;
 		}
 	} else if (content.id == 'content_data') {
-			//$('#table').jexcel({ data:Dataset.exceldata, colHeaders: ["1","2"], colWidths: [ 300, 80, 100 ] });
 			var defaultDatasets = Object.keys(Datasets.loaded);
 			$("#builtInDropdown").empty();
 			for (var index in defaultDatasets){
-				$("#builtInDropdown").append('<option value="'+defaultDatasets[index]+'">'+ defaultDatasets[index]+' Dataset </option>');
+				$("#builtInDropdown").append(
+					'<option value="' +
+					defaultDatasets[index] + '">' +
+					defaultDatasets[index] +
+					' Dataset </option>'
+				);
 			}
 	}
 };
@@ -209,9 +215,6 @@ Milo.renderContent = function() {
  * Initialize Blockly.  Called on page load.
  */
 Milo.init = function() {
-
-	// Initialize Sidebar
-	Helpers.sidebarInit();
 
 	// Setup loop trap
 	Blockly.JavaScript.INFINITE_LOOP_TRAP = '  checkTimeout();\n';
@@ -242,9 +245,8 @@ Milo.init = function() {
 		'code,jscode,setup,graph,math,session,tf,Data,WebCam,MobileNet,timeouts,checkTimeout'
 	);
 	// Register callbacks for buttons
-	// TODO(arjun): implement adddataset callback
 	Milo.workspace.registerToolboxCategoryCallback('DATASETS',Datasets.flyoutCallback);
-	// Per https://groups.google.com/d/msg/blockly/Ux9OQuyJ9XE/8PvZt73aBgAJ need to update due to bug.
+	// Per https://groups.google.com/d/msg/blockly/Ux9OQuyJ9XE/8PvZt73aBgAJ due to bug.
 	Milo.workspace.updateToolbox(document.getElementById('toolbox'));
 
 	var xmlText = $("#init_xml_text").text().trim();
@@ -256,7 +258,6 @@ Milo.init = function() {
 
 	// Hook a save function onto unload.
 	MiloStorage.backupOnUnload(Milo.workspace);
-
 
 	Milo.tabClick(Milo.selected);
 	Milo.bindClick('renameButton',Project.rename);
@@ -297,7 +298,16 @@ Milo.init = function() {
 			'</a></li>'
 		);
 	}
-
+	function linkSidebarStorage(){
+		var elem = angular.element($("#sidebar"));
+		var injector = elem.injector();
+		var $rootScope = injector.get('$rootScope');
+		$rootScope.$apply(function(){
+			$rootScope.MiloStorage.save = MiloStorage.save;
+			$rootScope.MiloStorage = MiloStorage;
+		});
+	}
+	linkSidebarStorage();
 	// Lazy-load the syntax-highlighting.
 	window.setTimeout(Milo.importPrettify, 1);
 

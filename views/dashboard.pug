@@ -25,7 +25,7 @@ block navigation
 						li
 							a(href='/users/register') Register
 block content
-	div(ng-app="dashboard")
+	div(ng-app="dashboard" ng-cloak)
 		#dashboardDiv.container-fluid(ng-controller="dashboardController")
 			.row
 				.col-sm-3.col-md-3.sidebar

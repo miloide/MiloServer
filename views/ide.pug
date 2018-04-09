@@ -155,139 +155,41 @@ html
 					.col-sm-12
 						h3 Generated XML
 						textarea#content_xml_text(wrap="off",cols=100, rows=20)
-		#sidebar.col-xs-7.col-sm-5.col-md-5.sidebar.sidebar-right.sidebar-animate
-			.heading
-				a(onclick="$.sidebar.lockToggle()",style="cursor:pointer")
-					i.material-icons#pinHolder lock_open
-				h3 Milo Data Science Tutorial
-				p Go through each step and complete the marked exercise
-			.pagination-container
-				ul.pagination
-					li(data-page='-')
-						a(style="cursor:pointer") <
-					li.active(data-page='1')
-						a(style="cursor:pointer") 1
-					li(data-page='2')
-						a(style="cursor:pointer") 2
-					li(data-page='3')
-						a(style="cursor:pointer") 3
-					li(data-page='4')
-						a(style="cursor:pointer") 4
-					li(data-page='5')
-						a(style="cursor:pointer") 5
-					li(data-page='6')
-						a(style="cursor:pointer") 6
-					li(data-page='+')
-						a(style="cursor:pointer") >
+		#sidebar.col-xs-7.col-sm-5.col-md-5.sidebar.sidebar-right.sidebar-animate(ng-app='SidebarApp' ng-cloak)
+			div(ng-controller="SidebarController")
+				.heading
+					a(onclick="$.sidebar.lockToggle()",style="cursor:pointer")
+						i.material-icons#pinHolder lock_open
+					| &nbsp;&nbsp;
+					a(ng-click="toggleEditor()", ng-if="canModify" style="cursor:pointer")
+						i.material-icons#editorToggle {{isEditing ? 'save':'create'}}
+					| &nbsp;&nbsp;
+					a(ng-click="addPage()", ng-if="canModify && !isEditing" style="cursor:pointer")
+						i.material-icons#addPageButton add
+					| &nbsp;&nbsp;
+					a(ng-click="removePage()", ng-if="canModify && !isEditing" style="cursor:pointer")
+						i.material-icons#deletePageButton delete
+				#pageEditor(style="{{isEditing?'':'display: none;'}}")
+					div#editorContainer
+						textarea#sidebarEditor(wrap="off",cols=100, rows=20)
+					p {{'Page: ' + (selectedPage + 1)}}
+
+				#pagination-container(ng-if="!isEditing")
+					ul.pagination
+						li(data-page='-' ng-click="prevPage()")
+							a(style="cursor:pointer") <
+						li(ng-repeat="page in pages track by $index" ng-click='selectPage($index)' class="{{selectedPage === $index?'active':''}}")
+							a(style="cursor:pointer") {{$index+1}}
+						li(data-page='+' ng-click="nextPage()")
+							a(style="cursor:pointer") >
+					div(ng-repeat="page in pages track by $index" style="{{selectedPage === $index?'':'display:none'}}" id="{{'sidebar_page_'+($index+1)}}" data-page='{{$index+1}}', class="page-data")
+						div(id="{{'sidebar_content_' + ($index+1)}}" class="col-md-12" ng-bind-html="page  | trust")
 
 
 
-				div(data-page='1', class="page-data")
-					h3
-						strong
-							| Hello! Welcome to Milo !
-							img(src='https://html-online.com/editor/tinymce4_6_5/plugins/emoticons/img/smiley-cool.gif', alt='cool')
-							| . Here's a quick tour of milo.
-					ul
-							li The left hand side of milo is the
-							strong  toolbox
-							| where you can find a plethora of blocks to use to construct some awesome programs! The toolbox is organized in categories. Each category has blocks that perform some operation related to the category.
-							br
-							li To try out these blocks, go ahead and select any one of the category and drag the blocks into the
-							strong workspace
-							| As you can see, these blocks have some kind of notch. These notches allow you to
-							strong connect
-							|two or more blocks together into one unit. Go ahead and try this.
-							br
-							li To create variables go to the
-							strong variables category
-							| and click on create variable. You will be prompted with an alert. Add the variable name and then you can see blocks for the new variable are created.
-							li Took a look at these blocks!
-							br
-					img(src='/media/milo.png',alt='Milo Blocks' class="center")
 
-				div(data-page='2', class="page-data",style='display:none;')
-					h3
-						strong How to plot with Milo
-					ul
-						li Its always better to plot data to gain more insight such as outliers from them. 
-						br
-						li To create a plot, make sure you first have a list to begin with. You can create a list using create list block from category lists or you can import one of the built in datasets from the datasets dropdown and drag a block from datasets category and setting your desirable column to plot from the dataset.
-						br
-						li Try importing one of the datasets from the dataset dropdown. Once you click on the dataset, switch over to the tab view to view the dataset.
-						br
-						li Take a look at the example below to see how list can be created!
-
-					img(src='/media/lists.png',class="center", alt='list')
-
-					ul
-						br
-						li You can create a list of numbers by selecting the create list block from advanced category.
-						br
-						li Go to next tab to continue the plotting tutorial
-
-				div(data-page='3', class="page-data",style='display:none;')
-					h3 How to plot with Milo Continued
-					ul
-						li To create a plot, you will require two basic blocks. Click on the plot category to see the various kinds of plots available.
-						br
-						li First drag te kind of plot you want to create. For example drag the bar plot into the workspace. Next drag the data lists you want to visualize into the workspace.
-						br
-						li For a better visualization, use one of the built in datasets. Connect the list to bar plot block. Connect iris Length list block to X and class list block to Y
-						br
-						li Once you have connected the data list blocks with bar plot, drag the plot block from the plot category. Now connect the bar plot block to this newly dragged plot block.
-						br
-						li Now click on run to visualize the bar plot :).
-					img(src='/media/plots.png',class="center", alt='list')
-				div(data-page='4', class="page-data",style='display:none;')
-					h3
-						strong Probability Mass Function
-					p
-					| In probability and statistics, a probability mass function (pmf) is a function that gives the probability that a discrete random variable is exactly equal to some value. The probability mass function is often the primary means of defining a discrete probability distributions.
-					p
-					| A 
-					strong PMF equation 
-					| looks like this:
-					br
-					| P(X = x).
-					br
-					| That just means “the probability that X takes on some value.
-					p
-					| It’s not a very useful equation on its own; What’s more useful is an equation that tells you the probability of some individual event happening. For example:
-					br
-					| P(X=1) = 0.2 * 0.2.
-					p
-					strong Experiment
-					|  :: Suppose I toss a fair die twice independently.
-					br
-					strong Random Variable
-					|  :: X = Minimum of the two outcomes
-					br
-					strong Sample space S = {(i, j)|1 ≤ i, j ≤ 6}.
-					br
-					| Please note that the sample space has 36 elements and hence element has probability 1/36.
-					br
-					| The values X can take are {1, 2, 3, 4, 5, 6}.
-					br
-					| X = i corresponds to the event {(i, i),(i, i + 1),(i + 1, i), . . . ,(i, 6),(6, i)}.
-					br
-					| Hence
-					br
-					| P(X = i) = (1 + (6 − i) ∗ 2)/36 =(13 − 2i)/36
-					p
-					br
-					| Thus we can write the pmf as
-					br
-					| pX(x) = (13 − 2x)/36
-					br
-					| for x ∈ {1, 2, . . . , 6}
-				div(data-page='5',class="page-data", style='display:none;')
-					textarea#sidebar_edit_5(wrap="off",cols=100, rows=20)
-				div#sidebar_content_6(data-page='6',class="page-data", style='display:none;')
-
-
+		script(src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML" defer)
 		include toolbox.html
 		#snackbar
 		#init_xml_text(style="display:none")
 			|	#{starterBlocks}
-`
