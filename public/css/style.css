@@ -646,3 +646,7 @@ canvas{
    width:280;
    border:black solid 1px;
 }
+
+.dropdown-menu {
+  z-index: 5000;
+}

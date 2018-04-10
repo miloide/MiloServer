@@ -41,12 +41,16 @@ routes.post('/', function(req, res){
 function saveHandler(content, req, res,isNew=true){
     var projectName = content.projectName;
     var xml = content.xml;
+    var pages = content.pages;
+    var markdownPages = content.markdownPages;
     var hash = bcrypt.hashSync(xml, salt);
     var projectKey = content.projectKey.length==0?uniqid():content.projectKey;
     var project = {
         projectName:projectName,
         projectKey: projectKey,
         blocks:{xml:xml, hash:hash},
+        pages: JSON.parse(pages),
+        markdownPages: JSON.parse(markdownPages)
     };
 
     if (isNew){
