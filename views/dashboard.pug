@@ -14,16 +14,25 @@ block navigation
 				ul.dropdown-menu
 					if user
 						li
-							span &nbsp; Hi #{user.name}
-							br
-							span &nbsp; Account Type:  #{user.role}
+							h4 &nbsp Hi #{user.name}
+						if (user.role == 'faculty')
+							li
+								a(href='')
+									i.material-icons verified_user
+									| &nbsp Faculty Account
 						li
-							a(href='/users/logout') Logout
+							a(href='/users/logout')
+								i.material-icons input
+								| &nbsp; Logout
 					else
 						li
-							a(href='/users/login') Login
+							a(href='/users/login')
+								i.material-icons account_box
+								| &nbsp; Login
 						li
-							a(href='/users/register') Register
+							a(href='/users/register')
+								i.material-icons assignment
+								| &nbsp; Sign Up
 block content
 	div(ng-app="dashboard" ng-cloak)
 		#dashboardDiv.container-fluid(ng-controller="dashboardController")

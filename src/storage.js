@@ -56,6 +56,9 @@ MiloStorage.restoreBlocks = function(optWorkspace) {
  * @param {Blockly.WorkspaceSvg=} optWorkspace Workspace override option.
  */
 MiloStorage.save = function(optWorkspace,showAlert=false) {
+  if (anonymous){
+    return;
+  }
   var workspace = optWorkspace || Blockly.getMainWorkspace();
   var xml = Blockly.Xml.workspaceToDom(workspace);
   var data = Blockly.Xml.domToText(xml);
@@ -126,7 +129,7 @@ MiloStorage.retrieveXml = function(key, optWorkspace) {
         MiloStorage.project = response.project;
         MiloStorage.canModify = true;
         Helpers.sidebarInit(MiloStorage.canModify,response.project);
-      } else {
+      } else if (!anonymous){
         MiloStorage.canModify = false;
         Helpers.sidebarInit(MiloStorage.canModify,response.project);
         $("#saveButton").hide();
@@ -145,6 +148,9 @@ MiloStorage.retrieveXml = function(key, optWorkspace) {
  * @private
  */
 MiloStorage.monitorChanges_ = function(workspace) {
+  if (anonymous){
+    return;
+  }
   var startXmlDom = Blockly.Xml.workspaceToDom(workspace);
   var startXmlText = Blockly.Xml.domToText(startXmlDom);
   var bindData = workspace.addChangeListener(change);
