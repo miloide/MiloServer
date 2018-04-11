@@ -56,6 +56,9 @@ MiloStorage.restoreBlocks = function(optWorkspace) {
  * @param {Blockly.WorkspaceSvg=} optWorkspace Workspace override option.
  */
 MiloStorage.save = function(optWorkspace,showAlert=false) {
+  if (anonymous){
+    return;
+  }
   var workspace = optWorkspace || Blockly.getMainWorkspace();
   var xml = Blockly.Xml.workspaceToDom(workspace);
   var data = Blockly.Xml.domToText(xml);
@@ -126,9 +129,9 @@ MiloStorage.retrieveXml = function(key, optWorkspace) {
         MiloStorage.project = response.project;
         MiloStorage.canModify = true;
         Helpers.sidebarInit(MiloStorage.canModify,response.project);
-      } else {
+      } else if (!anonymous){
         MiloStorage.canModify = false;
-        Helpers.sidebarInit(MiloStorage.canModify,respone.project);
+        Helpers.sidebarInit(MiloStorage.canModify,response.project);
         $("#saveButton").hide();
         $("#cloneButton").show();
         $("#downloadProjectButton").hide();
@@ -145,6 +148,9 @@ MiloStorage.retrieveXml = function(key, optWorkspace) {
  * @private
  */
 MiloStorage.monitorChanges_ = function(workspace) {
+  if (anonymous){
+    return;
+  }
   var startXmlDom = Blockly.Xml.workspaceToDom(workspace);
   var startXmlText = Blockly.Xml.domToText(startXmlDom);
   var bindData = workspace.addChangeListener(change);
@@ -154,6 +160,9 @@ MiloStorage.monitorChanges_ = function(workspace) {
     if (startXmlText != xmlText) {
       $('#statusBar').html('You have unsaved changes');
       workspace.removeChangeListener(bindData);
+      if (MiloStorage.canModify){
+        MiloStorage.save(workspace);
+      }
     }
   }
 };
