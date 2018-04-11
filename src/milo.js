@@ -13,7 +13,6 @@ var MiloStorage = require('./storage');
 var Datasets  = window.Datasets = require('./datasets');
 var Blockly = window.Blockly = require('milo-blocks');
 var Project = require('./project');
-var sidebar = require('./sidebar').app;
 
 for (var key in utils) {
   global[key] = utils[key];
@@ -282,12 +281,17 @@ Milo.init = function() {
 		$("#saveButton").show();
         $("#downloadProjectButton").show();
 		MiloStorage.save(Milo.workspace);
+		Helpers.sidebarInit(MiloStorage.canModify, {pages:[],markdownPages:[]});
 	});
 
 	for (var i = 0; i < Milo.TABS_.length; i++) {
 		var name = Milo.TABS_[i];
 		Milo.bindClick('tab_' + name,
-				function(name_) {return function() {Milo.tabClick(name_);};}(name));
+				function(name_) {
+					return function() {
+						Milo.tabClick(name_);
+					};
+		}(name));
 	}
 	var defaultDatasets = Object.keys(Datasets.loaded);
 	for (var index in defaultDatasets){

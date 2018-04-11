@@ -128,7 +128,7 @@ MiloStorage.retrieveXml = function(key, optWorkspace) {
         Helpers.sidebarInit(MiloStorage.canModify,response.project);
       } else {
         MiloStorage.canModify = false;
-        Helpers.sidebarInit(MiloStorage.canModify,respone.project);
+        Helpers.sidebarInit(MiloStorage.canModify,response.project);
         $("#saveButton").hide();
         $("#cloneButton").show();
         $("#downloadProjectButton").hide();
@@ -154,7 +154,9 @@ MiloStorage.monitorChanges_ = function(workspace) {
     if (startXmlText != xmlText) {
       $('#statusBar').html('You have unsaved changes');
       workspace.removeChangeListener(bindData);
-      MiloStorage.save(workspace);
+      if (MiloStorage.canModify){
+        MiloStorage.save(workspace);
+      }
     }
   }
 };

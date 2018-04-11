@@ -104,15 +104,15 @@ block content
 													a(ng-if='project.trashed'  ng-click='restoreProject($index)' style="cursor:pointer;text-decoration:none")
 														i.material-icons restore
 														| &nbsp; Restore
-													a.dropdown-toggle(href='#', data-toggle='dropdown', role='button', aria-haspopup='true', aria-expanded='false')
+													a.dropdown-toggle(href='#', data-toggle='dropdown', role='button', aria-haspopup='true',  ng-if='project.canModify' aria-expanded='false')
 														i.material-icons more_vert
-													ul.dropdown-menu.dropdown-menu-right
+													ul.dropdown-menu.dropdown-menu-right(ng-if='project.canModify')
 														li(ng-if='!project.trashed')
-															a(href='#' ng-if='project.canModify' ng-click='renameProject($index)')
+															a(href='#' ng-click='renameProject($index)')
 																i.material-icons create
 																| &nbsp; Rename
 														li
-															a(href='#' ng-click='project.trashed?removeProject($index):trashProject($index)' ng-if='project.canModify')
+															a(href='#' ng-click='project.trashed?removeProject($index):trashProject($index)')
 																i.material-icons {{project.trashed? 'delete_forever' : 'delete'}}
 																| &nbsp; Delete
 
