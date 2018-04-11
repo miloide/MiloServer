@@ -15,7 +15,7 @@ function Visualize(knn){
     }
     this.range = 600;
     this.d3 = Plotly.d3;
-    this.colors = this.d3.scale.category20c();
+    this.colors = this.d3.scale.category10();
   }
 
   Visualize.prototype.normalizeData = function(){
