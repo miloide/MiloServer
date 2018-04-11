@@ -47,6 +47,7 @@ function setupContext(context){
     context['Canvas'] = Canvas;
     context['Visualize'] = visualizeKnn;
     context['Knn'] = Knn;
+    context['Math'] = Math;
     // Add all from WebCam module to execution context
     context = addToContext(WebCam,context);
     // Add all from Pmf module to execution context
