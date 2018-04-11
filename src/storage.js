@@ -154,6 +154,7 @@ MiloStorage.monitorChanges_ = function(workspace) {
     if (startXmlText != xmlText) {
       $('#statusBar').html('You have unsaved changes');
       workspace.removeChangeListener(bindData);
+      MiloStorage.save(workspace);
     }
   }
 };

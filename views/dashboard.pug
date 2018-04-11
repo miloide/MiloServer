@@ -78,8 +78,12 @@ block content
 										tr(ng-repeat="project in currentProjects | filter:searchFilter track by $index")
 											td {{$index + 1}}
 											td
-												span(id='{{"projectName-" + $index}}')
+												span(ng-if='project.trashed' id='{{"projectName-" + $index}}')
 													| {{project.projectName}} &nbsp;
+												a(ng-if='!project.trashed' style="text-decoration: none;"
+												  ng-href='{{"/editor/#" + project.projectKey}}')
+													i.material-icons launch
+													| &nbsp; {{project.projectName}}
 												div(id='{{"editProjectName-" + $index}}' ng-if='project.canModify' style="display: none;")
 													.input-group
 														input.form-control(type="text",
@@ -95,22 +99,18 @@ block content
 											td {{project.blocks.updated_at| date: "short"}}
 											td
 												.dropdown
-													a(ng-if='!project.trashed'  ng-href='{{"/editor/#" + project.projectKey}}')
-														i.material-icons launch
+													a(href='#' ng-if='!project.trashed' ng-click="shareModal($index)")
+														i.material-icons share
 													a(ng-if='project.trashed'  ng-click='restoreProject($index)' style="cursor:pointer;text-decoration:none")
 														i.material-icons restore
 														| &nbsp; Restore
 													a.dropdown-toggle(href='#', data-toggle='dropdown', role='button', aria-haspopup='true', aria-expanded='false')
 														i.material-icons more_vert
 													ul.dropdown-menu.dropdown-menu-right
-														li(ng-if='project.trashed == false')
+														li(ng-if='!project.trashed')
 															a(href='#' ng-if='project.canModify' ng-click='renameProject($index)')
 																i.material-icons create
 																| &nbsp; Rename
-														li(ng-if='project.trashed == false')
-															a(href='#' ng-click="shareModal($index)")
-																i.material-icons person_add
-																| &nbsp; Sharing
 														li
 															a(href='#' ng-click='project.trashed?removeProject($index):trashProject($index)' ng-if='project.canModify')
 																i.material-icons {{project.trashed? 'delete_forever' : 'delete'}}
