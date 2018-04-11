@@ -157,7 +157,7 @@ function Visualize(knn){
                       .attr("class", "legend")
                       .attr('transform', function(d, i) {
                           var height = 30;
-                          var x = 550;
+                          var x = 50;
                           var y = i * height;
                           return 'translate(' + x + ',' + y + ')';
                       });
