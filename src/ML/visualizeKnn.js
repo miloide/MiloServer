@@ -2,7 +2,7 @@ function Visualize(knn){
     this.d3 = Plotly.d3;
     this.colors = this.d3.scale.category20();
     this.range = 600;
-    
+
     if (knn != undefined){
       // console.log(knn);
       this.knn = knn;
@@ -147,7 +147,8 @@ function Visualize(knn){
    Visualize.prototype.showCanvas = function() {
     var self = this;
     $("#chart").show();
-    var root = this.d3.select("#chart").append("svg").attr("width", this.range).attr("height", this.range);
+    var root = this.d3.select("#chart").append("svg")
+                      .attr("width", this.range).attr("height", this.range);
     var layer1 = root.append("g").attr("id", "layer1");
     var legend = root.append('g').selectAll('.legend')
                       .data(self.labels)
@@ -160,22 +161,22 @@ function Visualize(knn){
                           var y = i * height;
                           return 'translate(' + x + ',' + y + ')';
                       });
-                  legend.append("circle")
-                      .attr('cy',20)
-                      .attr('r',8)
-                      .style('stroke',function(d,i){
-                        return self.colors(i);
-                      })
-                      .style('fill',function(d,i){
-                        return self.colors(i);
-                      });
-                  legend.append("text")
-                      .attr('x', 30)
-                      .attr('y', 25)
-                      .text(function(d,i){ 
-                        return d; 
-                      });
-                
+    legend.append("circle")
+        .attr('cy',20)
+        .attr('r',8)
+        .style('stroke',function(d,i){
+          return self.colors(i);
+        })
+        .style('fill',function(d,i){
+          return self.colors(i);
+    });
+    legend.append("text")
+        .attr('x', 30)
+        .attr('y', 25)
+        .text(function(d,i){
+          return d;
+    });
+
     if (this.knn != undefined){
       var data = this.generateUserData();
     } else {
@@ -198,7 +199,8 @@ function Visualize(knn){
       currentPoint.x = mousePoint[0];
       currentPoint.y = mousePoint[1];
 
-      if ( currentPoint.x < 0 || currentPoint.x > this.range || currentPoint.y < 0 || currentPoint.y > this.range ) {
+      if ( currentPoint.x < 0 || currentPoint.x > this.range || currentPoint.y < 0 ||
+           currentPoint.y > this.range ) {
         return;
       }
 
