@@ -160,7 +160,7 @@ function Visualize(knn){
                           var y = i * height;
                           return 'translate(' + x + ',' + y + ')';
                       });
-                legend.append("circle")
+                  legend.append("circle")
                       .attr('cy',20)
                       .attr('r',8)
                       .style('stroke',function(d,i){
@@ -169,7 +169,7 @@ function Visualize(knn){
                       .style('fill',function(d,i){
                         return self.colors(i);
                       });
-                legend.append("text")
+                  legend.append("text")
                       .attr('x', 30)
                       .attr('y', 25)
                       .text(function(d,i){ 
