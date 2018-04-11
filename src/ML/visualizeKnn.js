@@ -1,4 +1,8 @@
 function Visualize(knn){
+    this.d3 = Plotly.d3;
+    this.colors = this.d3.scale.category20();
+    this.range = 600;
+    
     if (knn != undefined){
       // console.log(knn);
       this.knn = knn;
@@ -8,21 +12,19 @@ function Visualize(knn){
       this.size = this.x.length;
       this.normalizeData();
      } else {  //The size of the canvas
-
       this.size = 20;  //The number of data points
       this.category = 2; //How many labels of the data set
+      this.labels=["0","1"];
       this.k = 3; // K in KNN
     }
-    this.range = 600;
-    this.d3 = Plotly.d3;
-    this.colors = this.d3.scale.category20();
   }
 
   Visualize.prototype.normalizeData = function(){
     this.labels = this.y_.filter(function(item, i, ar){
         return ar.indexOf(item) === i;
     });
-    // console.log(this.labels);
+    var self = this;
+    //console.log(this.labels);
     this.labelMap={};
     for (var i = 0;i< this.labels.length;i++){
         this.labelMap[this.labels[i]] = i;
@@ -73,6 +75,7 @@ function Visualize(knn){
   };
 
   Visualize.prototype.drawCircle = function(container, p, r, color) {
+    console.log(color);
     var circle = container.append("circle")
       .attr("cx", p.x).attr("cy", p.y).attr("r", r)
       .attr("stroke", "#000").attr("stroke-width", 1).attr("fill", color);
@@ -142,10 +145,37 @@ function Visualize(knn){
   };
 
    Visualize.prototype.showCanvas = function() {
-
+    var self = this;
     $("#chart").show();
     var root = this.d3.select("#chart").append("svg").attr("width", this.range).attr("height", this.range);
     var layer1 = root.append("g").attr("id", "layer1");
+    var legend = root.append('g').selectAll('.legend')
+                      .data(self.labels)
+                      .enter()
+                      .append("g")
+                      .attr("class", "legend")
+                      .attr('transform', function(d, i) {
+                          var height = 30;
+                          var x = 550;
+                          var y = i * height;
+                          return 'translate(' + x + ',' + y + ')';
+                      });
+                legend.append("circle")
+                      .attr('cy',20)
+                      .attr('r',8)
+                      .style('stroke',function(d,i){
+                        return self.colors(i);
+                      })
+                      .style('fill',function(d,i){
+                        return self.colors(i);
+                      });
+                legend.append("text")
+                      .attr('x', 30)
+                      .attr('y', 25)
+                      .text(function(d,i){ 
+                        return d; 
+                      });
+                
     if (this.knn != undefined){
       var data = this.generateUserData();
     } else {
