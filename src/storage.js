@@ -9,6 +9,7 @@ var MiloStorage = {};
 
 var Blockly = require('milo-blocks');
 var Helpers = require('./helpers');
+var sidebarScope = require('./sidebar').getScope;
 var $ = require('jquery');
 
 /**
@@ -55,15 +56,23 @@ MiloStorage.restoreBlocks = function(optWorkspace) {
  * @param {Blockly.WorkspaceSvg=} optWorkspace Workspace override option.
  */
 MiloStorage.save = function(optWorkspace,showAlert=false) {
+  if (anonymous){
+    return;
+  }
   var workspace = optWorkspace || Blockly.getMainWorkspace();
   var xml = Blockly.Xml.workspaceToDom(workspace);
   var data = Blockly.Xml.domToText(xml);
   var projectName = $("#projectName").html();
+  var projectPages = JSON.stringify(sidebarScope().pages);
+  var projectMarkdownPages = JSON.stringify(sidebarScope().markdownPages);
   $.post( "/storage",{
     'type': "save",
     'projectName': projectName,
     'projectKey': MiloStorage.projectKey || '',
-    'xml': data
+    'xml': data,
+    'pages': projectPages,
+    'markdownPages': projectMarkdownPages,
+
   }).done(function(response){
       if (response.status != 200){
         Helpers.showAlert("Project Save Failed!",
@@ -119,8 +128,10 @@ MiloStorage.retrieveXml = function(key, optWorkspace) {
         MiloStorage.projectKey = response.projectKey;
         MiloStorage.project = response.project;
         MiloStorage.canModify = true;
-      } else {
+        Helpers.sidebarInit(MiloStorage.canModify,response.project);
+      } else if (!anonymous){
         MiloStorage.canModify = false;
+        Helpers.sidebarInit(MiloStorage.canModify,response.project);
         $("#saveButton").hide();
         $("#cloneButton").show();
         $("#downloadProjectButton").hide();
@@ -137,6 +148,9 @@ MiloStorage.retrieveXml = function(key, optWorkspace) {
  * @private
  */
 MiloStorage.monitorChanges_ = function(workspace) {
+  if (anonymous){
+    return;
+  }
   var startXmlDom = Blockly.Xml.workspaceToDom(workspace);
   var startXmlText = Blockly.Xml.domToText(startXmlDom);
   var bindData = workspace.addChangeListener(change);
@@ -146,6 +160,9 @@ MiloStorage.monitorChanges_ = function(workspace) {
     if (startXmlText != xmlText) {
       $('#statusBar').html('You have unsaved changes');
       workspace.removeChangeListener(bindData);
+      if (MiloStorage.canModify){
+        MiloStorage.save(workspace);
+      }
     }
   }
 };

@@ -2,42 +2,71 @@ doctype html
 html
 	include head.pug
 	body
+		if !user
+			script.
+				var anonymous = true;
+		else
+			script.
+				var anonymous = false;
 		nav.navbar.navbar-default
 			.navbar-header
-				a.navbar-brand
+				button.navbar-toggle.collapsed(type='button', data-toggle='collapse', data-target='#navigation', aria-expanded='false')
+					span.sr-only Toggle navigation
+					span.icon-bar
+					span.icon-bar
+					span.icon-bar
+				a.navbar-brand(href="/", style="cursor: pointer;")
 					img(src='/media/icon.png')
 			#navigation.collapse.navbar-collapse
 				ul.nav.navbar-nav
 					li
-						a#projectName(style="cursor:default")
+						a#projectName(style="cursor: default;")
 							| Untitled Project
-						#editProjectName(style="margin-top: 8px;margin-left: 8px; display: none;")
-							.form-group(style="display: inline-flex;")
-								input#editProjectInput.form-control(
-									type="text",
-									placeholder="Untitled Project",
-									max-length="30",
-									value='Untitled Project')
-								button#editProjectSaveButton.btn.btn-xs.btn-success
-									i.material-icons save
+						if user
+							#editProjectName(style="margin-top: 8px;margin-left: 8px; display: none;")
+								.form-group(style="display: inline-flex;")
+									input#editProjectInput.form-control(
+										type="text",
+										placeholder="Untitled Project",
+										max-length="30",
+										value='Untitled Project')
+									button#editProjectSaveButton.btn.btn-xs.btn-success
+										i.material-icons save
 
 
 					li.btn-group
-						li.dropdown
-							a.dropdown-toggle(style="cursor:pointer", data-toggle='dropdown', role='button', aria-haspopup='true', aria-expanded='false')
-								| File
-								span.caret
-							ul.dropdown-menu
-								li
-									a#saveButton(style="cursor:pointer") Save Project
-								li
-									a#renameButton(style="cursor:pointer") Rename Project
-								li
-									a#cloneButton(style="cursor:pointer;") Make a copy
-								li
-									a#reloadButton(style="cursor:pointer" onclick="window.location.reload();") Reload Project
-								li
-									a#downloadProjectButton(style="cursor:pointer") Download Project
+						if user
+							li.dropdown
+								a.dropdown-toggle(style="cursor:pointer", data-toggle='dropdown', role='button', aria-haspopup='true', aria-expanded='false')
+									| File
+									span.caret
+								ul.dropdown-menu
+									li
+										a(href='/editor/?new')
+											i.material-icons add
+											| &nbsp; New Project
+									li.divider(role='separator')
+									li
+										a#saveButton(style="cursor:pointer")
+											i.material-icons save
+											| &nbsp; Save Project
+									li
+										a#renameButton(style="cursor:pointer")
+											i.material-icons create
+											| &nbsp; Rename Project
+									li
+										a#cloneButton(style="cursor:pointer;")
+											i.material-icons content_copy
+											| &nbsp; Make a copy
+									li.divider(role='separator')
+									li
+										a#reloadButton(style="cursor:pointer" onclick="window.location.reload();")
+											i.material-icons restore
+											| &nbsp; Reload Project
+									li
+										a#downloadProjectButton(style="cursor:pointer")
+											i.material-icons cloud_download
+											| &nbsp; Download project (coming soon)
 					li.btn-group
 						li.dropdown
 							a.dropdown-toggle(style="cursor:pointer", data-toggle='dropdown', role='button', aria-haspopup='true', aria-expanded='false')
@@ -45,10 +74,14 @@ html
 								span.caret
 							ul.dropdown-menu
 								li
-									a.runButton(style="cursor:pointer") Run
+									a.runButton(style="cursor:pointer")
+										i.material-icons play_arrow
+										| &nbsp; Run Project
 								li.divider(role='separator')
 								li
-									a#trashButton(style="cursor:pointer") Reset
+									a#trashButton(style="cursor:pointer")
+										i.material-icons delete
+										| &nbsp; Reset Workspace
 					li.btn-group
 						li.dropdown
 							a.dropdown-toggle(style="cursor:pointer", data-toggle='dropdown', role='button', aria-haspopup='true', aria-expanded='false')
@@ -56,27 +89,39 @@ html
 								span.caret
 							ul#menuDatasetImport.dropdown-menu
 								li
-									a(style="cursor:pointer" onclick='Datasets.triggerClick()') Upload
+									a(style="cursor:pointer" onclick='Datasets.triggerClick()')
+										i.material-icons file_upload
+										| &nbsp; Upload CSV Dataset
 								li.divider(role='separator')
 								li
-									span &nbsp Built In Datasets
+									h5
+										| &nbsp; Built In Datasets
 					li
-						a.runButton(style="cursor:pointer") Run
+						a.runButton(style="cursor:pointer; color: green;")
+							i.material-icons play_circle_filled
+							| Run
 
 
 				ul.nav.navbar-nav.navbar-right
 					li
 						h6#statusBar(style="margin-top: 20px;")
-							if newProj
+							if !user
+								| You cannot save this project. Please login to save.
+							else if newProj
 								| Your project not saved yet.
 								input(id="newProjInput" type="hidden", value="new")
 					li
 						img#loadingDiv(style="display: none;width:50px;",src="/media/loading.gif")
 					li
-						button#sidebarToggleButton.navbar-toggle.toggle-right(type='button', data-toggle='sidebar', data-target='.sidebar-right')
+						button#sidebarToggleButton.navbar-toggle.toggle-right(type='button', data-toggle='sidebar', data-target='#sidebar')
 							span.icon-bar
 							span.icon-bar
 							span.icon-bar
+					if user
+						li
+							a(href='/users/projects' style="cursor:pointer; color: #3F51B5;")
+								i.material-icons dashboard
+								| &nbsp; My Projects
 					li.btn-group
 						li.dropdown
 							a.dropdown-toggle(style="cursor:pointer", data-toggle='dropdown', role='button', aria-haspopup='true', aria-expanded='false')
@@ -85,30 +130,44 @@ html
 							ul.dropdown-menu
 								if user
 									li
-										span &nbsp Hi #{user.name}
-										br
-										span &nbsp Account Type:  #{user.role}
+										h4 &nbsp Hi #{user.name}
+									if (user.role == 'faculty')
+										li
+											a(href='')
+												i.material-icons verified_user
+												| &nbsp Faculty Account
 									li
-										a(href='/users/projects') Dashboard
-									li
-										a(href='/users/logout') Logout
+										a(href='/users/logout')
+											i.material-icons input
+											| &nbsp; Logout
 								else
 									li
-										a(href='/users/login') Login
+										a(href='/users/login')
+											i.material-icons account_box
+											| &nbsp; Login
 									li
-										a(href='/users/register') Register
+										a(href='/users/register')
+											i.material-icons assignment
+											| &nbsp; Sign Up
 
 
 			br
 			ul.nav.nav-tabs
 				li.active(role='presentation')
-					a#tab_blocks.tabon(style="cursor:pointer") Workspace
+					a#tab_blocks.tabon(style="cursor:pointer")
+						i.material-icons extension
+						| &nbsp; Workspace
 				li(role='presentation')
-					a#tab_data.taboff(style="cursor:pointer") Data Explorer
+					a#tab_data.taboff(style="cursor:pointer")
+						i.material-icons find_in_page
+						| &nbsp; Data Explorer
 				li(role='presentation')
-					a#tab_javascript.taboff(style="cursor:pointer") Code
+					a#tab_javascript.taboff(style="cursor:pointer")
+						i.material-icons code
+						| &nbsp; Code
 				li(role='presentation')
-					a#tab_xml.taboff(style="cursor:pointer") Debug
+					a#tab_xml.taboff(style="cursor:pointer")
+						i.material-icons bug_report
 		#content_blocks.content
 			.container-fluid.zero-margin
 				.row
@@ -116,6 +175,8 @@ html
 						#content_workspace(style="height: 88vh; width: 100%;")
 					#outputs.col-sm-5.scroll.zero-margin.pull-right
 						#graph_output(style="display: none")
+						#chart(style="display:none")
+						#kmeans.kmeans-chart(style='display:none')
 						#drawCanvasDiv(style="display:none")
 							canvas#drawCanvas(width='500', height='300')
 							a#clear(href='#') Clear
@@ -155,135 +216,40 @@ html
 					.col-sm-12
 						h3 Generated XML
 						textarea#content_xml_text(wrap="off",cols=100, rows=20)
-		#sidebar.col-xs-7.col-sm-5.col-md-5.sidebar.sidebar-right.sidebar-animate
-			.heading
-				a(onclick="$.sidebar.lockToggle()",style="cursor:pointer")
-					i.material-icons#pinHolder lock_open
-				h3 Milo Data Science Tutorial
-				p Go through each step and complete the marked exercise
-			.pagination-container
-				ul.pagination
-					li(data-page='-')
-						a(style="cursor:pointer") <
-					li.active(data-page='1')
-						a(style="cursor:pointer") 1
-					li(data-page='2')
-						a(style="cursor:pointer") 2
-					li(data-page='3')
-						a(style="cursor:pointer") 3
-					li(data-page='4')
-						a(style="cursor:pointer") 4
-					li(data-page='5')
-						a(style="cursor:pointer") 5
-					li(data-page='+')
-						a(style="cursor:pointer") >
+		#sidebar.col-xs-7.col-sm-5.col-md-5.sidebar.sidebar-right.sidebar-animate(ng-app='SidebarApp' ng-cloak)
+			div(ng-controller="SidebarController")
+				.heading
+					a(onclick="$.sidebar.lockToggle()",style="cursor:pointer")
+						i.material-icons#pinHolder lock_open
+					| &nbsp;&nbsp;
+					a(ng-click="toggleEditor()", ng-if="canModify" style="cursor:pointer")
+						i.material-icons#editorToggle {{isEditing ? 'save':'create'}}
+					| &nbsp;&nbsp;
+					a(ng-click="addPage()", ng-if="canModify && !isEditing" style="cursor:pointer")
+						i.material-icons#addPageButton add
+					| &nbsp;&nbsp;
+					a(ng-click="removePage()", ng-if="canModify && !isEditing" style="cursor:pointer")
+						i.material-icons#deletePageButton delete
+				#pageEditor(style="{{isEditing?'':'display: none;'}}")
+					div#editorContainer
+						textarea#sidebarEditor(wrap="off",cols=100, rows=20)
+					p {{'Page: ' + (selectedPage + 1)}}
+
+				#pagination-container(ng-if="!isEditing")
+					ul.pagination
+						li(data-page='-' ng-click="prevPage()")
+							a(style="cursor:pointer") <
+						li(ng-repeat="page in pages track by $index" ng-click='selectPage($index)' class="{{selectedPage === $index?'active':''}}")
+							a(style="cursor:pointer") {{$index+1}}
+						li(data-page='+' ng-click="nextPage()")
+							a(style="cursor:pointer") >
+					div(ng-repeat="page in pages track by $index" style="{{selectedPage === $index?'':'display:none'}}" id="{{'sidebar_page_'+($index+1)}}" data-page='{{$index+1}}', class="page-data")
+						div(id="{{'sidebar_content_' + ($index+1)}}" class="col-md-12" ng-bind-html="page  | trust")
 
 
 
-				div(data-page='1', class="page-data")
-					h3
-						strong
-							| Hello! Welcome to Milo !
-							img(src='https://html-online.com/editor/tinymce4_6_5/plugins/emoticons/img/smiley-cool.gif', alt='cool')
-							| . Here's a quick tour of milo.
-					ul
-							li The left hand side of milo is the
-							strong  toolbox
-							| where you can find a plethora of blocks to use to construct some awesome programs! The toolbox is organized in categories. Each category has blocks that perform some operation related to the category.
-							br
-							li To try out these blocks, go ahead and select any one of the category and drag the blocks into the
-							strong workspace
-							| As you can see, these blocks have some kind of notch. These notches allow you to
-							strong connect
-							|two or more blocks together into one unit. Go ahead and try this.
-							br
-							li To create variables go to the
-							strong variables category
-							| and click on create variable. You will be prompted with an alert. Add the variable name and then you can see blocks for the new variable are created.
-							li Took a look at these blocks!
-							br
-					img(src='/media/milo.png',alt='Milo Blocks' class="center")
 
-				div(data-page='2', class="page-data",style='display:none;')
-					h3
-						strong How to plot with Milo
-					ul
-						li Its always better to plot data to gain more insight such as outliers from them. 
-						br
-						li To create a plot, make sure you first have a list to begin with. You can create a list using create list block from category lists or you can import one of the built in datasets from the datasets dropdown and drag a block from datasets category and setting your desirable column to plot from the dataset.
-						br
-						li Try importing one of the datasets from the dataset dropdown. Once you click on the dataset, switch over to the tab view to view the dataset.
-						br
-						li Take a look at the example below to see how list can be created!
-
-					img(src='/media/lists.png',class="center", alt='list')
-
-					ul
-						br
-						li You can create a list of numbers by selecting the create list block from advanced category.
-						br
-						li Go to next tab to continue the plotting tutorial
-
-				div(data-page='3', class="page-data",style='display:none;')
-					h3 How to plot with Milo Continued
-					ul
-						li To create a plot, you will require two basic blocks. Click on the plot category to see the various kinds of plots available.
-						br
-						li First drag te kind of plot you want to create. For example drag the bar plot into the workspace. Next drag the data lists you want to visualize into the workspace.
-						br
-						li For a better visualization, use one of the built in datasets. Connect the list to bar plot block. Connect iris Length list block to X and class list block to Y
-						br
-						li Once you have connected the data list blocks with bar plot, drag the plot block from the plot category. Now connect the bar plot block to this newly dragged plot block.
-						br
-						li Now click on run to visualize the bar plot :).
-					img(src='/media/plots.png',class="center", alt='list')
-				div(data-page='4', class="page-data",style='display:none;')
-
-					h3
-						strong Probability Mass Function
-					p
-					| In probability and statistics, a probability mass function (pmf) is a function that gives the probability that a discrete random variable is exactly equal to some value. The probability mass function is often the primary means of defining a discrete probability distributions.
-					p
-					| A 
-					strong PMF equation 
-					| looks like this:
-					br
-					| P(X = x).
-					br
-					| That just means “the probability that X takes on some value.
-					p
-					| It’s not a very useful equation on its own; What’s more useful is an equation that tells you the probability of some individual event happening. For example:
-					br
-					| P(X=1) = 0.2 * 0.2.
-					p
-					strong Experiment
-					|  :: Suppose I toss a fair die twice independently.
-					br
-					strong Random Variable
-					|  :: X = Minimum of the two outcomes
-					br
-					strong Sample space S = {(i, j)|1 ≤ i, j ≤ 6}.
-					br
-					| Please note that the sample space has 36 elements and hence element has probability 1/36.
-					br
-					| The values X can take are {1, 2, 3, 4, 5, 6}.
-					br
-					| X = i corresponds to the event {(i, i),(i, i + 1),(i + 1, i), . . . ,(i, 6),(6, i)}.
-					br
-					| Hence
-					br
-					| P(X = i) = (1 + (6 − i) ∗ 2)/36 =(13 − 2i)/36
-					p
-					br
-					| Thus we can write the pmf as
-					br
-					| pX(x) = (13 − 2x)/36
-					br
-					| for x ∈ {1, 2, . . . , 6}
-
-				div(data-page='5',class="page-data", style='display:none;')
-					p Coming Soon
-
+		script(src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML" defer)
 		include toolbox.html
 		#snackbar
 		#init_xml_text(style="display:none")
