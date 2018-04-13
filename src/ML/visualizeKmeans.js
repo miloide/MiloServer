@@ -26,7 +26,7 @@ function kMeans(w, h, numPoints, numClusters, maxIter,kmeans) {
     svg.append("g")
         .append("text")
         .attr("class", "label")
-        .attr("transform", "translate(" + (width - margin.left - margin.right) + 
+        .attr("transform", "translate(" + (width - margin.left - margin.right) +
             "," + (height + margin.top + margin.bottom) + ")")
         .text("");
     if (kmeans!=undefined) {
@@ -43,12 +43,12 @@ function kMeans(w, h, numPoints, numClusters, maxIter,kmeans) {
     }
 
     /**
-     * Returns a point with the specified type and fill color and with random 
+     * Returns a point with the specified type and fill color and with random
      * x,y-coordinates.
      */
     function getRandomPoint(type, fill) {
-        return { 
-            x: Math.round(Math.random() * width), 
+        return {
+            x: Math.round(Math.random() * width),
             y: Math.round(Math.random() * height),
             type: type,
             fill: fill
@@ -71,13 +71,11 @@ function kMeans(w, h, numPoints, numClusters, maxIter,kmeans) {
                 result.push(point);
             }
             return result;
-        }
-        else {
+        } else {
             var result = [];
             var data = kmeans.normalizeData();
             if (type == "centroid"){
                 var initialCentroid = data[1];
-                console.log(initialCentroid);
                 result = initialCentroid.map(function(centroid, index){
                     return {
                         x : centroid[0],
@@ -122,7 +120,7 @@ function kMeans(w, h, numPoints, numClusters, maxIter,kmeans) {
                 closest.distance = distance;
             }
         });
-        return (centroids[closest.i]); 
+        return (centroids[closest.i]);
     }
     /**
      * All points assume the color of the closest centroid.
@@ -135,7 +133,7 @@ function kMeans(w, h, numPoints, numClusters, maxIter,kmeans) {
     }
 
     /**
-     * Computes the center of the cluster by taking the mean of the x and y 
+     * Computes the center of the cluster by taking the mean of the x and y
      * coordinates.
      */
     function computeClusterCenter(cluster) {
@@ -173,31 +171,31 @@ function kMeans(w, h, numPoints, numClusters, maxIter,kmeans) {
             data.push("cluster -"+ (i+1));
         }
         var legend = svg.append('svg').append('g').selectAll('.legend')
-                                .data(data)
-                                .enter()
-                                .append("g")
-                                .attr("class", "legend")
-                                .attr('transform', function(d, i) {
-                                    var height = 30;
-                                    var x = 10;
-                                    var y = i * height;
-                                    return 'translate(' + x + ',' + y + ')';
-                                });
-                      legend.append("circle")
-                                .attr('cy',20)
-                                .attr('r',8)
-                                .style('stroke',function(d,i){
-                                    return colors[i];
-                                })
-                                .style('fill',function(d,i){
-                                    return colors[i];
-                                });
-                      legend.append("text")
-                                .attr('x', 30)
-                                .attr('y', 25)
-                                .text(function(d) {
-                                    return d;
-                                });
+                        .data(data)
+                        .enter()
+                        .append("g")
+                        .attr("class", "legend")
+                        .attr('transform', function(d, i) {
+                            var height = 30;
+                            var x = 10;
+                            var y = i * height;
+                            return 'translate(' + x + ',' + y + ')';
+                        });
+        legend.append("circle")
+                .attr('cy',20)
+                .attr('r',8)
+                .style('stroke',function(d,i){
+                    return colors[i];
+                })
+                .style('fill',function(d,i){
+                    return colors[i];
+                });
+        legend.append("text")
+                .attr('x', 30)
+                .attr('y', 25)
+                .text(function(d) {
+                    return d;
+                });
     }
 
     /**
@@ -230,7 +228,7 @@ function kMeans(w, h, numPoints, numClusters, maxIter,kmeans) {
     }
     /**
      * Executes one iteration of the algorithm:
-     * - Fill the points with the color of the closest centroid (this makes it 
+     * - Fill the points with the color of the closest centroid (this makes it
      *   part of its cluster)
      * - Move the centroids to the center of their cluster.
      */
@@ -248,7 +246,7 @@ function kMeans(w, h, numPoints, numClusters, maxIter,kmeans) {
     }
 
     /**
-     * The main function initializes the algorithm and calls an iteration every 
+     * The main function initializes the algorithm and calls an iteration every
      * two seconds.
      */
     function initialize() {
@@ -256,7 +254,6 @@ function kMeans(w, h, numPoints, numClusters, maxIter,kmeans) {
         // Initialize random points and centroids
         centroids = initializePoints(numClusters, "centroid",kmeans);
         points = initializePoints(numPoints, "point", kmeans);
-        console.log(centroids, points);
 
         // initial drawing
         update();
@@ -276,4 +273,5 @@ function kMeans(w, h, numPoints, numClusters, maxIter,kmeans) {
     initialize();
 }
 
+window.km = kMeans;
 module.exports = kMeans;

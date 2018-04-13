@@ -13,8 +13,6 @@ var MiloStorage = require('./storage');
 var Datasets  = window.Datasets = require('./datasets');
 var Blockly = window.Blockly = require('milo-blocks');
 var Project = require('./project');
-var sidebar = require('./sidebar').app;
-window.Kmeans = require('./ML/Kmeans');
 for (var key in utils) {
   global[key] = utils[key];
 }
@@ -65,20 +63,6 @@ Milo.loadBlocks = function(defaultXml,override=false) {
 		window.setTimeout(MiloStorage.restoreBlocks, 0);
 	}
 };
-
-/**
- * Resets position of flyout scroll bars
- */
-function resetFlyoutScroll(){
-	var x = $(".blocklyFlyoutScrollbar").attr('style').split('translate(')[1].split(',')[0].split('px')[0];
-	var y = $(".blocklyFlyoutScrollbar").attr('style').split('translate(')[1].split(',')[1].split('px')[0];
-	x = parseFloat(x)+10;
-	y = parseFloat(y);
-	var newTransform = "transform: translate(" + x + "px, " + y + "px);!important";
-	$("head").append('<style type="text/css"></style>');
-	var newStyleElement = $("head").children(':last');
-	newStyleElement.html('.blocklyFlyoutScrollbar{'+ newTransform+'}');
-}
 
 /**
  * Bind a function to a button's click event.
@@ -333,8 +317,6 @@ Milo.init = function() {
 	linkSidebarStorage();
 	// Lazy-load the syntax-highlighting.
 	window.setTimeout(Milo.importPrettify, 1);
-	window.setTimeout(resetFlyoutScroll,10000);
-
 };
 
 
