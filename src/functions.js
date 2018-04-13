@@ -65,6 +65,17 @@ console.webLog = (function (old_function,div_id) {
     };
 } (console.log.bind(console), "#console_javascript"));
 
+/**
+ * Prints a tensorflow tensor by waiting for values to be computed for 500 millis if not yet defined
+ * @param {tf.tensor} tensor
+ */
+console.printTensor = function(tensor){
+    if (tensor == undefined){
+        console.webLog("Try rerunning this script... some values weren't found.");
+    } else {
+        console.webLog(tensor.toString().split("values:")[1].trim());
+    }
+};
 
 /**
  * Console object to JSON Download
