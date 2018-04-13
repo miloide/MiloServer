@@ -175,7 +175,6 @@ function Visualize(knn){
                       .text(function(d,i){ 
                         return d; 
                       });
-                
     if (this.knn != undefined){
       var data = this.generateUserData();
     } else {

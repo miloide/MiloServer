@@ -51,7 +51,7 @@ function setupContext(context){
     context['Knn'] = Knn;
     context['Math'] = Math;
     context['Kmeans'] = Kmeans;
-    context = addToContext(VisualizeKmeans,context)
+    context['kMeans'] = VisualizeKmeans;
     // Add all from WebCam module to execution context
     context = addToContext(WebCam,context);
     // Add all from Pmf module to execution context
