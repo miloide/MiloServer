@@ -75,18 +75,52 @@ app.use('/editor', editor);
 app.use('/storage', projectStorage);
 
 
-function isAuthenticated(req, res, next) {
-  if (req.isAuthenticated()){
-      return next();
-  }
-  // IF A USER ISN'T LOGGED IN, THEN REDIRECT THEM SOMEWHERE
-  res.redirect('/users/login');
-}
+// function isAuthenticated(req, res, next) {
+//   if (req.isAuthenticated()){
+//       return next();
+//   }
+//   // IF A USER ISN'T LOGGED IN, THEN REDIRECT THEM SOMEWHERE
+//   res.redirect('/users/login');
+// }
 
 
 // Root Handler
-app.get('/',isAuthenticated, function(req, res){
-    res.redirect('/users/projects');
+app.get('/', function(req, res){
+    if (req.isAuthenticated()){
+      res.render('home',{user: req.user});
+    } else {
+      res.render('home');
+    }
+});
+
+app.get('/about', function(req, res){
+  if (req.isAuthenticated()){
+    res.render('about',{user: req.user});
+  } else {
+    res.render('about');
+  }
+});
+
+app.get('/privacy', function(req, res){
+  if (req.isAuthenticated()){
+    res.render('privacy',{user: req.user});
+  } else {
+    res.render('privacy');
+  }
+});
+
+
+app.get('/terms', function(req, res){
+  if (req.isAuthenticated()){
+    res.render('terms',{user: req.user});
+  } else {
+    res.render('terms');
+  }
+});
+
+// Catch 404s
+app.get('*', function(req, res){
+  res.redirect('/');
 });
 
 try {

@@ -8,11 +8,11 @@ var utils = require('./functions');
 var sandbox = require('./sandbox');
 // Export globally
 var $ = window.$ = require('jquery');
+window.SimpleMDE = require('simplemde');
 var MiloStorage = require('./storage');
 var Datasets  = window.Datasets = require('./datasets');
 var Blockly = window.Blockly = require('milo-blocks');
 var Project = require('./project');
-
 for (var key in utils) {
   global[key] = utils[key];
 }
@@ -63,7 +63,6 @@ Milo.loadBlocks = function(defaultXml,override=false) {
 		window.setTimeout(MiloStorage.restoreBlocks, 0);
 	}
 };
-
 
 /**
  * Bind a function to a button's click event.
@@ -196,11 +195,15 @@ Milo.renderContent = function() {
 			sourceElement.innerHTML = code;
 		}
 	} else if (content.id == 'content_data') {
-			//$('#table').jexcel({ data:Dataset.exceldata, colHeaders: ["1","2"], colWidths: [ 300, 80, 100 ] });
 			var defaultDatasets = Object.keys(Datasets.loaded);
 			$("#builtInDropdown").empty();
 			for (var index in defaultDatasets){
-				$("#builtInDropdown").append('<option value="'+defaultDatasets[index]+'">'+ defaultDatasets[index]+' Dataset </option>');
+				$("#builtInDropdown").append(
+					'<option value="' +
+					defaultDatasets[index] + '">' +
+					defaultDatasets[index] +
+					' Dataset </option>'
+				);
 			}
 	}
 };
@@ -209,10 +212,9 @@ Milo.renderContent = function() {
  * Initialize Blockly.  Called on page load.
  */
 Milo.init = function() {
-
-	// Initialize Sidebar Pagination
-	Helpers.paginationHandler();
-
+	if (anonymous){
+		MiloStorage.canModify = false;
+	}
 	// Setup loop trap
 	Blockly.JavaScript.INFINITE_LOOP_TRAP = '  checkTimeout();\n';
 
@@ -238,13 +240,13 @@ Milo.init = function() {
 		}
 	});
 
+
 	Blockly.JavaScript.addReservedWords(
 		'code,jscode,setup,graph,math,session,tf,Data,WebCam,MobileNet,timeouts,checkTimeout'
 	);
 	// Register callbacks for buttons
-	// TODO(arjun): implement adddataset callback
 	Milo.workspace.registerToolboxCategoryCallback('DATASETS',Datasets.flyoutCallback);
-	// Per https://groups.google.com/d/msg/blockly/Ux9OQuyJ9XE/8PvZt73aBgAJ need to update due to bug.
+	// Per https://groups.google.com/d/msg/blockly/Ux9OQuyJ9XE/8PvZt73aBgAJ due to bug.
 	Milo.workspace.updateToolbox(document.getElementById('toolbox'));
 
 	var xmlText = $("#init_xml_text").text().trim();
@@ -257,56 +259,69 @@ Milo.init = function() {
 	// Hook a save function onto unload.
 	MiloStorage.backupOnUnload(Milo.workspace);
 
-
 	Milo.tabClick(Milo.selected);
-	Milo.bindClick('renameButton',Project.rename);
+	if (!anonymous){
+		var saveButton = document.getElementById('saveButton');
+		Milo.bindClick('renameButton',Project.rename);
+		Milo.bindClick(saveButton, function() {
+			MiloStorage.save(Milo.workspace);
+		});
+
+		$("#cloneButton").click(function(e){
+			window.history.replaceState(null, null, window.location.pathname);
+			var originalName = $("#projectName").html();
+			$("#projectName").html("Copy of "+ originalName);
+			MiloStorage.canModify = true;
+			delete MiloStorage.project;
+			delete MiloStorage.projectKey;
+			$("#renameButton").show();
+			$("#saveButton").show();
+			$("#downloadProjectButton").show();
+			MiloStorage.save(Milo.workspace);
+			Helpers.sidebarInit(MiloStorage.canModify, {pages:[],markdownPages:[]});
+		});
+	}
 	Milo.bindClick('trashButton',function() {
-				Milo.discard();
-				Milo.renderContent();
+		Milo.discard();
+		Milo.renderContent();
 	});
 	$(".runButton").click(Milo.runJS);
-	var saveButton = document.getElementById('saveButton');
-	Milo.bindClick(saveButton, function() {
-		MiloStorage.save(Milo.workspace);
-	});
-
-	$("#cloneButton").click(function(e){
-		window.history.replaceState(null, null, window.location.pathname);
-		var originalName = $("#projectName").html();
-		$("#projectName").html("Copy of "+ originalName);
-		MiloStorage.canModify = true;
-		delete MiloStorage.project;
-		delete MiloStorage.projectKey;
-		$("#renameButton").show();
-		$("#saveButton").show();
-        $("#downloadProjectButton").show();
-		MiloStorage.save(Milo.workspace);
-	});
 
 	for (var i = 0; i < Milo.TABS_.length; i++) {
 		var name = Milo.TABS_[i];
 		Milo.bindClick('tab_' + name,
-				function(name_) {return function() {Milo.tabClick(name_);};}(name));
+				function(name_) {
+					return function() {
+						Milo.tabClick(name_);
+					};
+		}(name));
 	}
 	var defaultDatasets = Object.keys(Datasets.loaded);
 	for (var index in defaultDatasets){
 		$("#menuDatasetImport").append('<li id="'+defaultDatasets[index]+
-			'MenuItem"><a style="cursor:pointer" onclick="Datasets.importHelper(\''+
-			defaultDatasets[index]+'\')">'+
+			'MenuItem"><a style="cursor:pointer; text-transform: capitalize" onclick="Datasets.importHelper(\''+
+			defaultDatasets[index]+'\')"> Import '+
 			defaultDatasets[index]+
 			'</a></li>'
 		);
 	}
-
+	function linkSidebarStorage(){
+		var elem = angular.element($("#sidebar"));
+		var injector = elem.injector();
+		var $rootScope = injector.get('$rootScope');
+		$rootScope.$apply(function(){
+			$rootScope.MiloStorage.save = MiloStorage.save;
+			$rootScope.MiloStorage = MiloStorage;
+		});
+	}
+	linkSidebarStorage();
 	// Lazy-load the syntax-highlighting.
 	window.setTimeout(Milo.importPrettify, 1);
-
 };
 
 
 /**
  * Execute the user's Milo.
- * Just a quick and dirty eval.  Catch infinite loops.
  * TODO(arjun): Replace with JS Interpretter from
  *              https://developers.google.com/blockly/guides/app-integration/running-javascript
  */

@@ -44,6 +44,14 @@ var projectSchema = new Schema({
      trashed : {
         type : Boolean,
         default : false
-     }
+     },
+     pages : {
+         type: [{type: String}],
+         default: []
+     },
+     markdownPages : {
+        type: [{type: String}],
+        default: []
+    }
 }, {collection: 'projectStorage'});
 module.exports = mongoose.model('projectStorage', projectSchema);

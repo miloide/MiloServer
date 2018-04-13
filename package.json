@@ -20,6 +20,7 @@
     "bcrypt": "^1.0.3",
     "bcrypt-nodejs": "0.0.3",
     "body-parser": "^1.17.1",
+    "clusters": "0.0.4",
     "compression": "^1.7.2",
     "connect-flash": "^0.1.1",
     "cookie-parser": "^1.4.3",
@@ -44,6 +45,7 @@
     "passport-local-mongoose": "^5.0.0",
     "pug": "^2.0.0-rc.4",
     "serve-index": "^1.0.0",
+    "simplemde": "^1.11.2",
     "sweetalert": "^2.1.0",
     "uniqid": "^4.1.1"
   },

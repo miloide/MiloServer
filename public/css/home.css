@@ -1,0 +1,51 @@
+/* Move down content because we have a fixed navbar that is 50px tall */
+body {
+    padding-top: 50px;
+}
+
+/*
+* Global add-ons
+*/
+
+.sub-header {
+padding-bottom: 10px;
+border-bottom: 1px solid #eee;
+}
+
+/*
+* Top navigation
+* Hide default border to remove 1px line.
+*/
+.navbar-fixed-top {
+    border: 0;
+}
+
+.black{
+    color: #666666;
+}
+
+.medium{
+    font-size: medium;
+}
+
+.long-text{
+    width: 60px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.long-text:hover{
+    overflow: visible;
+    white-space: normal;
+    width: auto;
+    position: absolute;
+    background-color:#FFF;
+}
+.long-text:hover+div {
+    margin-top:20px;
+}
+
+li > a {
+    font-size: 1.5em;
+}

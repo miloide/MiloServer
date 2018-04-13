@@ -1,0 +1,65 @@
+extends layout.pug
+block headers
+    link(rel="stylesheet", href="/css/home.css")
+block navigation
+    ul.nav.navbar-nav
+        li
+            a(href="/")
+                span Milo
+        li.active
+            a(href='/about') About
+    ul.nav.navbar-nav.navbar-right
+        if user
+            li
+                a(href='/users/projects' style="cursor:pointer; color: #3F51B5;")
+                    i.material-icons dashboard
+                    | &nbsp; My Projects
+        li
+            a(href='/editor/?new') Create
+        if !user
+            li
+                a(href='/users/register')
+                    | &nbsp; Sign Up
+            li
+                a(href='/users/login')
+                    i.material-icons account_box
+                    | &nbsp; Login
+        else
+            li.btn-group
+                li.dropdown
+                    a.dropdown-toggle(href='#', data-toggle='dropdown', role='button', aria-haspopup='true', aria-expanded='false')
+                        i.material-icons account_circle
+                        span.caret
+                    ul.dropdown-menu
+                        li
+                            h4 &nbsp; Hi #{user.name}
+                        if (user.role == 'faculty')
+                            li
+                                a(href='')
+                                    i.material-icons verified_user
+                                    | &nbsp; Faculty Account
+                        li
+                            a(href='/users/logout')
+                                i.material-icons input
+                                | &nbsp; Logout
+block content
+    .container
+      .row
+        .col-md-8
+            h3 The Milo IDE
+            p The Milo IDE is a web based platform targetted at students who wish to learn concepts of Machine Learning and Linear Algebra, with no prior programming experience. The IDE is designed to support introductory level Data Science, ML and Linear Algebra courses typically taught at undergraduate programs.
+            h4 Authors
+            ul
+                li
+                    a(href="https://arjun.fyi") Arjun Rao
+                li
+                    a(href="https://github.com/ayushbihani") Ayush Bihani
+            h4 License
+            p All code related to this project will eventually be released under the Apache 2.0 License
+            h4 Source
+            p Check out this &nbsp;
+                a(href="https://miloide.github.io/") GitHub IO
+                | &nbsp; age for details.
+            h4 Contact
+            p For any queries please send an email to &nbsp;
+                a(href="mailto:milo@msrit.net") milo@msrit.net
