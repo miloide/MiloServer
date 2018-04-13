@@ -215,7 +215,9 @@ Milo.renderContent = function() {
  * Initialize Blockly.  Called on page load.
  */
 Milo.init = function() {
-
+	if (anonymous){
+		MiloStorage.canModify = false;
+	}
 	// Setup loop trap
 	Blockly.JavaScript.INFINITE_LOOP_TRAP = '  checkTimeout();\n';
 
@@ -260,40 +262,47 @@ Milo.init = function() {
 	MiloStorage.backupOnUnload(Milo.workspace);
 
 	Milo.tabClick(Milo.selected);
-	Milo.bindClick('renameButton',Project.rename);
+	if (!anonymous){
+		var saveButton = document.getElementById('saveButton');
+		Milo.bindClick('renameButton',Project.rename);
+		Milo.bindClick(saveButton, function() {
+			MiloStorage.save(Milo.workspace);
+		});
+
+		$("#cloneButton").click(function(e){
+			window.history.replaceState(null, null, window.location.pathname);
+			var originalName = $("#projectName").html();
+			$("#projectName").html("Copy of "+ originalName);
+			MiloStorage.canModify = true;
+			delete MiloStorage.project;
+			delete MiloStorage.projectKey;
+			$("#renameButton").show();
+			$("#saveButton").show();
+			$("#downloadProjectButton").show();
+			MiloStorage.save(Milo.workspace);
+			Helpers.sidebarInit(MiloStorage.canModify, {pages:[],markdownPages:[]});
+		});
+	}
 	Milo.bindClick('trashButton',function() {
-				Milo.discard();
-				Milo.renderContent();
+		Milo.discard();
+		Milo.renderContent();
 	});
 	$(".runButton").click(Milo.runJS);
-	var saveButton = document.getElementById('saveButton');
-	Milo.bindClick(saveButton, function() {
-		MiloStorage.save(Milo.workspace);
-	});
-
-	$("#cloneButton").click(function(e){
-		window.history.replaceState(null, null, window.location.pathname);
-		var originalName = $("#projectName").html();
-		$("#projectName").html("Copy of "+ originalName);
-		MiloStorage.canModify = true;
-		delete MiloStorage.project;
-		delete MiloStorage.projectKey;
-		$("#renameButton").show();
-		$("#saveButton").show();
-        $("#downloadProjectButton").show();
-		MiloStorage.save(Milo.workspace);
-	});
 
 	for (var i = 0; i < Milo.TABS_.length; i++) {
 		var name = Milo.TABS_[i];
 		Milo.bindClick('tab_' + name,
-				function(name_) {return function() {Milo.tabClick(name_);};}(name));
+				function(name_) {
+					return function() {
+						Milo.tabClick(name_);
+					};
+		}(name));
 	}
 	var defaultDatasets = Object.keys(Datasets.loaded);
 	for (var index in defaultDatasets){
 		$("#menuDatasetImport").append('<li id="'+defaultDatasets[index]+
-			'MenuItem"><a style="cursor:pointer" onclick="Datasets.importHelper(\''+
-			defaultDatasets[index]+'\')">'+
+			'MenuItem"><a style="cursor:pointer; text-transform: capitalize" onclick="Datasets.importHelper(\''+
+			defaultDatasets[index]+'\')"> Import '+
 			defaultDatasets[index]+
 			'</a></li>'
 		);
@@ -316,7 +325,6 @@ Milo.init = function() {
 
 /**
  * Execute the user's Milo.
- * Just a quick and dirty eval.  Catch infinite loops.
  * TODO(arjun): Replace with JS Interpretter from
  *              https://developers.google.com/blockly/guides/app-integration/running-javascript
  */

@@ -228,7 +228,7 @@ Datasets.importHelper = function(name){
             '<li><button class="button-none" onclick="Datasets.show(\''+name+'\')">'+name+'</button></li>'
         );
         $("#"+name+"MenuItem").hide();
-        $("#menuDatasetImport").append('<li class="divider" role="separator"></li><li>&nbspImported '+ name +'</li>');
+        $("#menuDatasetImport").append('<li class="divider" role="separator"></li><li style="text-transform: capitalize;"><h6>&nbspImported '+ name +'</h6></li>');
         $("#"+name+"MenuItem").attr("disabled","disabled");
         Helpers.snackbar("Imported " + name + " dataset!");
     };

@@ -2,42 +2,71 @@ doctype html
 html
 	include head.pug
 	body
+		if !user
+			script.
+				var anonymous = true;
+		else
+			script.
+				var anonymous = false;
 		nav.navbar.navbar-default
 			.navbar-header
-				a.navbar-brand
+				button.navbar-toggle.collapsed(type='button', data-toggle='collapse', data-target='#navigation', aria-expanded='false')
+					span.sr-only Toggle navigation
+					span.icon-bar
+					span.icon-bar
+					span.icon-bar
+				a.navbar-brand(href="/", style="cursor: pointer;")
 					img(src='/media/icon.png')
 			#navigation.collapse.navbar-collapse
 				ul.nav.navbar-nav
 					li
-						a#projectName(style="cursor:default")
+						a#projectName(style="cursor: default;")
 							| Untitled Project
-						#editProjectName(style="margin-top: 8px;margin-left: 8px; display: none;")
-							.form-group(style="display: inline-flex;")
-								input#editProjectInput.form-control(
-									type="text",
-									placeholder="Untitled Project",
-									max-length="30",
-									value='Untitled Project')
-								button#editProjectSaveButton.btn.btn-xs.btn-success
-									i.material-icons save
+						if user
+							#editProjectName(style="margin-top: 8px;margin-left: 8px; display: none;")
+								.form-group(style="display: inline-flex;")
+									input#editProjectInput.form-control(
+										type="text",
+										placeholder="Untitled Project",
+										max-length="30",
+										value='Untitled Project')
+									button#editProjectSaveButton.btn.btn-xs.btn-success
+										i.material-icons save
 
 
 					li.btn-group
-						li.dropdown
-							a.dropdown-toggle(style="cursor:pointer", data-toggle='dropdown', role='button', aria-haspopup='true', aria-expanded='false')
-								| File
-								span.caret
-							ul.dropdown-menu
-								li
-									a#saveButton(style="cursor:pointer") Save Project
-								li
-									a#renameButton(style="cursor:pointer") Rename Project
-								li
-									a#cloneButton(style="cursor:pointer;") Make a copy
-								li
-									a#reloadButton(style="cursor:pointer" onclick="window.location.reload();") Reload Project
-								li
-									a#downloadProjectButton(style="cursor:pointer") Download Project
+						if user
+							li.dropdown
+								a.dropdown-toggle(style="cursor:pointer", data-toggle='dropdown', role='button', aria-haspopup='true', aria-expanded='false')
+									| File
+									span.caret
+								ul.dropdown-menu
+									li
+										a(href='/editor/?new')
+											i.material-icons add
+											| &nbsp; New Project
+									li.divider(role='separator')
+									li
+										a#saveButton(style="cursor:pointer")
+											i.material-icons save
+											| &nbsp; Save Project
+									li
+										a#renameButton(style="cursor:pointer")
+											i.material-icons create
+											| &nbsp; Rename Project
+									li
+										a#cloneButton(style="cursor:pointer;")
+											i.material-icons content_copy
+											| &nbsp; Make a copy
+									li.divider(role='separator')
+									li
+										a#reloadButton(style="cursor:pointer" onclick="window.location.reload();")
+											i.material-icons restore
+											| &nbsp; Reload Project
+									li
+										a#downloadProjectButton(style="cursor:pointer")
+											i.material-icons cloud_download
+											| &nbsp; Download project (coming soon)
 					li.btn-group
 						li.dropdown
 							a.dropdown-toggle(style="cursor:pointer", data-toggle='dropdown', role='button', aria-haspopup='true', aria-expanded='false')
@@ -45,10 +74,14 @@ html
 								span.caret
 							ul.dropdown-menu
 								li
-									a.runButton(style="cursor:pointer") Run
+									a.runButton(style="cursor:pointer")
+										i.material-icons play_arrow
+										| &nbsp; Run Project
 								li.divider(role='separator')
 								li
-									a#trashButton(style="cursor:pointer") Reset
+									a#trashButton(style="cursor:pointer")
+										i.material-icons delete
+										| &nbsp; Reset Workspace
 					li.btn-group
 						li.dropdown
 							a.dropdown-toggle(style="cursor:pointer", data-toggle='dropdown', role='button', aria-haspopup='true', aria-expanded='false')
@@ -56,27 +89,39 @@ html
 								span.caret
 							ul#menuDatasetImport.dropdown-menu
 								li
-									a(style="cursor:pointer" onclick='Datasets.triggerClick()') Upload
+									a(style="cursor:pointer" onclick='Datasets.triggerClick()')
+										i.material-icons file_upload
+										| &nbsp; Upload CSV Dataset
 								li.divider(role='separator')
 								li
-									span &nbsp Built In Datasets
+									h5
+										| &nbsp; Built In Datasets
 					li
-						a.runButton(style="cursor:pointer") Run
+						a.runButton(style="cursor:pointer; color: green;")
+							i.material-icons play_circle_filled
+							| Run
 
 
 				ul.nav.navbar-nav.navbar-right
 					li
 						h6#statusBar(style="margin-top: 20px;")
-							if newProj
+							if !user
+								| You cannot save this project. Please login to save.
+							else if newProj
 								| Your project not saved yet.
 								input(id="newProjInput" type="hidden", value="new")
 					li
 						img#loadingDiv(style="display: none;width:50px;",src="/media/loading.gif")
 					li
-						button#sidebarToggleButton.navbar-toggle.toggle-right(type='button', data-toggle='sidebar', data-target='.sidebar-right')
+						button#sidebarToggleButton.navbar-toggle.toggle-right(type='button', data-toggle='sidebar', data-target='#sidebar')
 							span.icon-bar
 							span.icon-bar
 							span.icon-bar
+					if user
+						li
+							a(href='/users/projects' style="cursor:pointer; color: #3F51B5;")
+								i.material-icons dashboard
+								| &nbsp; My Projects
 					li.btn-group
 						li.dropdown
 							a.dropdown-toggle(style="cursor:pointer", data-toggle='dropdown', role='button', aria-haspopup='true', aria-expanded='false')
@@ -85,30 +130,44 @@ html
 							ul.dropdown-menu
 								if user
 									li
-										span &nbsp Hi #{user.name}
-										br
-										span &nbsp Account Type:  #{user.role}
+										h4 &nbsp Hi #{user.name}
+									if (user.role == 'faculty')
+										li
+											a(href='')
+												i.material-icons verified_user
+												| &nbsp Faculty Account
 									li
-										a(href='/users/projects') Dashboard
-									li
-										a(href='/users/logout') Logout
+										a(href='/users/logout')
+											i.material-icons input
+											| &nbsp; Logout
 								else
 									li
-										a(href='/users/login') Login
+										a(href='/users/login')
+											i.material-icons account_box
+											| &nbsp; Login
 									li
-										a(href='/users/register') Register
+										a(href='/users/register')
+											i.material-icons assignment
+											| &nbsp; Sign Up
 
 
 			br
 			ul.nav.nav-tabs
 				li.active(role='presentation')
-					a#tab_blocks.tabon(style="cursor:pointer") Workspace
+					a#tab_blocks.tabon(style="cursor:pointer")
+						i.material-icons extension
+						| &nbsp; Workspace
 				li(role='presentation')
-					a#tab_data.taboff(style="cursor:pointer") Data Explorer
+					a#tab_data.taboff(style="cursor:pointer")
+						i.material-icons find_in_page
+						| &nbsp; Data Explorer
 				li(role='presentation')
-					a#tab_javascript.taboff(style="cursor:pointer") Code
+					a#tab_javascript.taboff(style="cursor:pointer")
+						i.material-icons code
+						| &nbsp; Code
 				li(role='presentation')
-					a#tab_xml.taboff(style="cursor:pointer") Debug
+					a#tab_xml.taboff(style="cursor:pointer")
+						i.material-icons bug_report
 		#content_blocks.content
 			.container-fluid.zero-margin
 				.row

@@ -3,9 +3,12 @@
  */
 var tf = require('@tensorflow/tfjs');
 var MobileNet = {};
-var mobileNet_classes = require('./imagenet');
+var mobileNetClasses = require('./imagenet');
+
 MobileNet.loaded = false;
-MobileNet.MODEL_PATH = 'https://storage.googleapis.com/tfjs-models/tfjs/mobilenet_v1_0.25_224/model.json';
+MobileNet.MODEL_PATH =
+        'https://storage.googleapis.com/tfjs-models/tfjs/mobilenet_v1_0.25_224/model.json';
+
 MobileNet.IMAGE_SIZE = 224;
 MobileNet.TOPK_PREDICTIONS = 10;
 
@@ -21,8 +24,16 @@ MobileNet.classify = function(imgTag){
         imgTag(MobileNet.classify);
         return;
     }
-    MobileNet.classify_(imgTag);
-    window.MobileNet = this;
+    function checkImageLoad(){
+      setTimeout(function(){
+        if (imgTag.complete && imgTag.naturalHeight != 0){
+          MobileNet.classify_(imgTag);
+        } else {
+          checkImageLoad();
+        }
+      },500);
+    }
+    checkImageLoad();
 };
 
 
@@ -33,12 +44,14 @@ MobileNet.classify = function(imgTag){
  */
 
 MobileNet.classify_ = async (imgElement) => {
-    //loads mobilenet model from google storage.
-    var mobilenet = await tf.loadModel(MobileNet.MODEL_PATH);
+    //loads mobilenet model from google storage and reuse for future calls.
+    if (window.mobilenetModel == undefined){
+      window.mobilenetModel = await tf.loadModel(MobileNet.MODEL_PATH);
+    }
     // Warmup the model. This isn't necessary, but makes the first prediction
     // faster. Call `dispose` to release the WebGL memory allocated for the return
     // value of `predict`.
-    //await mobilenet.predict(tf.zeros([1, this.IMAGE_SIZE, this.IMAGE_SIZE, 3])).dispose();
+
     const logits = await tf.tidy(() => {
         // tf.fromPixels() returns a Tensor from an image element.
         const img = tf.fromPixels(imgElement).toFloat();
@@ -48,7 +61,7 @@ MobileNet.classify_ = async (imgElement) => {
         // Reshape to a single-element batch so we can pass it to predict.
         const batched = normalized.reshape([1, 224, 224, 3]);
         // Make a prediction through mobilenet.
-        return mobilenet.predict(batched);
+        return window.mobilenetModel.predict(batched);
     });
     imgElement.setAttribute("class","videoframe");
     $(imgElement).show();
@@ -95,9 +108,9 @@ async function getTopKClasses(logits, topK) {
   const topClassesAndProbs = [];
   for (let i = 0; i < topkIndices.length; i++) {
     topClassesAndProbs.push({
-      className: mobileNet_classes[topkIndices[i]],
+      className: mobileNetClasses[topkIndices[i]],
       probability: topkValues[i]
-    })
+    });
   }
   return topClassesAndProbs;
 }

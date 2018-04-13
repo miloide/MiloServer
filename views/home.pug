@@ -1,0 +1,102 @@
+extends layout.pug
+block headers
+    link(rel="stylesheet", href="/css/home.css")
+block navigation
+    ul.nav.navbar-nav
+        li
+            a(href="/")
+                span Milo
+        li
+            a(href='/about') About
+    ul.nav.navbar-nav.navbar-right
+        if user
+            li
+                a(href='/users/projects' style="cursor:pointer; color: #3F51B5;")
+                    i.material-icons dashboard
+                    | &nbsp; My Projects
+        li
+            a(href='/editor/?new') Create
+        if !user
+            li
+                a(href='/users/register')
+                    | &nbsp; Sign Up
+            li
+                a(href='/users/login')
+                    i.material-icons account_box
+                    | &nbsp; Login
+        else
+            li.btn-group
+                li.dropdown
+                    a.dropdown-toggle(href='#', data-toggle='dropdown', role='button', aria-haspopup='true', aria-expanded='false')
+                        i.material-icons account_circle
+                        span.caret
+                    ul.dropdown-menu
+                        li
+                            h4 &nbsp; Hi #{user.name}
+                        if (user.role == 'faculty')
+                            li
+                                a(href='')
+                                    i.material-icons verified_user
+                                    | &nbsp; Faculty Account
+                        li
+                            a(href='/users/logout')
+                                i.material-icons input
+                                | &nbsp; Logout
+block content
+    .container
+      .row
+        .col-md-8
+          #screenCarousel.carousel.slide(data-ride='carousel')
+            // Indicators
+            ol.carousel-indicators
+                li.active(data-target='#screenCarousel', data-slide-to='0')
+                li(data-target='#screenCarousel', data-slide-to='1')
+                li(data-target='#screenCarousel', data-slide-to='2')
+            // Wrapper for slides
+            .carousel-inner
+                .item.active
+                    img.img-responsive(src='/media/UI1.png', alt='Interface', style='width:100%;')
+                .item
+                    img.img-responsive(src='/media/UI2.png', alt='KNN Theory', style='width:100%;')
+                .item
+                    img.img-responsive(src='/media/UI3.png', alt='KNN Run', style='width:100%;')
+                .item
+                    img.img-responsive(src='/media/UI4.png', alt='Logistic Regression', style='width:100%;')
+            // Left and right controls
+            a.left.carousel-control(href='#screenCarousel', data-slide='prev')
+                span.glyphicon.glyphicon-chevron-left
+                span.sr-only Previous
+            a.right.carousel-control(href='#screenCarousel', data-slide='next')
+                span.glyphicon.glyphicon-chevron-right
+                span.sr-only Next
+
+        .col-md-4
+          h1 Learn Data Science with Zero Code!
+          p.medium
+            | Milo is a Visual Environment for learning Data Science, Statistics, Linear Algebra, Machine Learning and more! All you need to do is connect a few blocks together and you will soon be on your way building the coolest ML Models in no time!
+          a.btn.btn-primary.btn-lg(style="cursor: pointer;" href='/editor/?new') Try it now!
+      hr
+      .row
+        .col-lg-12
+            h3.black Milo Tutorials
+        .col-md-4
+          .panel.panel-primary
+            .panel-body
+                h4 Getting Started
+                p
+                    | A quick tutorial that walks you through the core features of the Milo IDE. Covers the Milo Interface, Plotting a simple dataset, and Printing some text.
+                a.btn.btn-default(href='#') Coming Soon
+        .col-md-4
+          .panel.panel-primary
+            .panel-body
+                h4 Introduction to Statistics
+                p
+                    | Take this tutorial to learn about datasets, plotting histograms, bar charts, box plots, probability distributions, and more in this intro to statistics tutorial.
+                a.btn.btn-default(href='#') Coming Soon
+        .col-md-4
+          .panel.panel-primary
+            .panel-body
+                h4 Machine Learning Crash Course
+                p
+                    | A series of tutorials that cover various introductory concepts of Machine Learning.
+                a.btn.btn-default(href='#') Coming Soon
