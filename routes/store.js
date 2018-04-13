@@ -82,6 +82,22 @@ function loadHandler(content,req,res){
                 console.log("Load Failed!",err);
                 return res.send({status: 500,message:err});
             }
+            if (!req.isAuthenticated()){
+                // For anonymous users
+                if (result.public) {
+                    return res.send({
+                        status: 200,
+                        projectKey: result.projectKey,
+                        xml: result.blocks.xml,
+                        project: result,
+                        canModify: false,
+                        canRename: false,
+                        shared: true
+                    });
+                } else {
+                    return res.send({status: 403,message:"You are not authorized to view this!"});
+                }
+            }
             // Check if owner
             var canModify = req.user.email == result.owner;
             var canRename = canModify;
@@ -89,7 +105,7 @@ function loadHandler(content,req,res){
             if (req.user.email != result.owner){
                 var emailEscaped = req.user.email.replace(/\./g,'[dot]');
                 if (result.collaborators[emailEscaped] == undefined && !result.public){
-                    return res.send({status: 403,message:"You are not authorized!"});
+                    return res.send({status: 403,message:"You are not authorized to view this!"});
                 }
                 shared = true;
                 canModify = result.collaborators[emailEscaped] != undefined?result.collaborators[emailEscaped] != 'view':false;
