@@ -13,6 +13,8 @@ var regression = require('./ML/regression');
 var gaussian = require('./statistics/gaussian');
 var tf = require('@tensorflow/tfjs');
 var Knn = require('./ML/knn');
+var Kmeans = require('./ML/Kmeans');
+var VisualizeKmeans = require('./ML/visualizeKmeans');
 var visualizeKnn = require('./ML/visualizeKnn');
 var $ = window.$ = require('jquery');
 
@@ -48,6 +50,8 @@ function setupContext(context){
     context['Visualize'] = visualizeKnn;
     context['Knn'] = Knn;
     context['Math'] = Math;
+    context['Kmeans'] = Kmeans;
+    context['kMeans'] = VisualizeKmeans;
     // Add all from WebCam module to execution context
     context = addToContext(WebCam,context);
     // Add all from Pmf module to execution context

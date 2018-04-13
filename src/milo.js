@@ -13,7 +13,6 @@ var MiloStorage = require('./storage');
 var Datasets  = window.Datasets = require('./datasets');
 var Blockly = window.Blockly = require('milo-blocks');
 var Project = require('./project');
-
 for (var key in utils) {
   global[key] = utils[key];
 }
@@ -64,7 +63,6 @@ Milo.loadBlocks = function(defaultXml,override=false) {
 		window.setTimeout(MiloStorage.restoreBlocks, 0);
 	}
 };
-
 
 /**
  * Bind a function to a button's click event.
@@ -242,6 +240,7 @@ Milo.init = function() {
 		}
 	});
 
+
 	Blockly.JavaScript.addReservedWords(
 		'code,jscode,setup,graph,math,session,tf,Data,WebCam,MobileNet,timeouts,checkTimeout'
 	);
@@ -318,7 +317,6 @@ Milo.init = function() {
 	linkSidebarStorage();
 	// Lazy-load the syntax-highlighting.
 	window.setTimeout(Milo.importPrettify, 1);
-
 };
 
 

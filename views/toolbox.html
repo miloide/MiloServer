@@ -85,6 +85,7 @@
         </value>
       </block>
       <block type="math_random_float"></block>
+      <label text="..."></label>
     </category>
     <category name="Statistics" colour="%{BKY_HISTOGRAM_HUE}">
       <block type="lists_split_math">
@@ -117,6 +118,7 @@
       <block type="stats_cdf_insert"></block>
       <block type="stats_construct_cdf"></block>
       <block type="lists_sort"></block>
+      <label text="..."></label>
     </category>
     <category name="Plot"  colour="%{BKY_SCATTER_HUE}">
       <block type="plot_show"></block>
@@ -154,6 +156,7 @@
         <field name="range_max">0</field>
         <field name="increment">0</field>
       </block>
+      <label text="..."></label>
     </category>
     <category name="Datasets" colour="%{BKY_HISTOGRAM_HUE}" custom="DATASETS"></category>
     <category name="%{BKY_CATTEXT}" colour="%{BKY_TEXTS_HUE}">
@@ -240,6 +243,7 @@
           </shadow>
         </value>
       </block>
+      <label text="..."></label>
     </category>
     <category name="%{BKY_CATLISTS}" colour="%{BKY_LISTS_HUE}">
       <block type="lists_create_with">
@@ -298,6 +302,7 @@
         </value>
       </block>
       <block type="lists_sort"></block>
+      <label text="..."></label>
     </category>
     <category name="Image" colour="%{BKY_IMAGE_HUE}">
       <block type="img_from_webcam"></block>
@@ -310,6 +315,7 @@
               </shadow>
             </value>
       </block>
+      <label text="..."></label>
     </category>
     <!-- <category name="%{BKY_CATCOLOUR}" colour="%{BKY_COLOUR_HUE}">
       <block type="colour_picker"></block>
@@ -385,6 +391,7 @@
       <block type="logic_boolean"></block>
       <block type="logic_null"></block>
       <block type="logic_ternary"></block>
+      <label text="..."></label>
     </category>
     <category name="%{BKY_CATVARIABLES}" colour="%{BKY_VARIABLES_HUE}" custom="VARIABLE"></category>
     <category name="%{BKY_CATFUNCTIONS}" colour="%{BKY_PROCEDURES_HUE}" custom="PROCEDURE"></category>
@@ -418,8 +425,8 @@
             </shadow>
           </value>
         </block>
-        <block type="tf_print">
-        </block>
+        <block type="tf_print"></block>
+        <label text="..."></label>
       </category>
       <category name="Machine Learning" colour="%{BKY_HISTOGRAM_HUE}">
         <block type="regression">
@@ -427,10 +434,14 @@
         <block type="k_nearest_neighbor"></block>
         <block type="k_nearest_neighbor_predict"></block>
         <block type="visualize_knn"></block>
-        <block type="regression_train">
-        </block>
+        <block type="regression_train"></block>
         <block type="regression_test"></block>
         <block type="visualize_regressions"></block>
-    </category>
+        <block type="kmeans"></block>
+        <block type="kmeans_get_cluster"></block>
+        <block type="kmeans_predict"></block>
+        <block type="visualize_kmeans"></block>
+        <label text="..."></label>
+      </category>
   </category>
 </xml>
