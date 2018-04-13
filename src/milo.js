@@ -14,7 +14,7 @@ var Datasets  = window.Datasets = require('./datasets');
 var Blockly = window.Blockly = require('milo-blocks');
 var Project = require('./project');
 var sidebar = require('./sidebar').app;
-
+window.Kmeans = require('./ML/Kmeans');
 for (var key in utils) {
   global[key] = utils[key];
 }
