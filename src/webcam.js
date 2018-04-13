@@ -1,3 +1,5 @@
+var tf = require('@tensorflow/tfjs');
+var Blockly = require('milo-blocks');
 /**
  * Create a NameSpace for WebCam Operations
  */
@@ -12,10 +14,14 @@ WebCam.exists = true;
 /**
  * Setup Webcam HTML Div and define methods for handling video stream
  */
-WebCam.init = function(callback) {
+WebCam.init = function(callback,param=null) {
     if (WebCam.loaded){
         if (typeof (callback) == "function"){
-            callback(WebCam.capture_());
+            if (param){
+                callback(WebCam.capture_(),param);
+            } else {
+                callback(WebCam.capture_());
+            }
         }
        return;
     }
@@ -33,7 +39,7 @@ WebCam.init = function(callback) {
         var video = document.querySelector("video");
         if(video == undefined){
             video = document.createElement("video");
-            $("#misc_output").prepend(video);
+            $("#video_output").prepend(video);
         }
 
         video.setAttribute("id","videoElement");
@@ -56,7 +62,11 @@ WebCam.init = function(callback) {
             canvas.height = h;
             if (typeof(callback) == "function"){
                 setTimeout(function(){
-                    callback(WebCam.capture_());
+                    if (param){
+                        callback(WebCam.capture_(),param);
+                    } else {
+                        callback(WebCam.capture_());
+                    }
                 }, 800);
             }
         }, false);
@@ -77,7 +87,7 @@ WebCam.init = function(callback) {
  * Takes a picture from WebCam and loads it into an <img> tag
  * @returns {HTMLImageElement}
  */
-WebCam.image = function(callback){
+WebCam.image = function(callback,param=null){
     if (WebCam.exists == false) {
         // Gracefully fall back to image
         $(WebCam.video).hide();
@@ -85,15 +95,18 @@ WebCam.image = function(callback){
         return;
 
     }
-
     if (WebCam.loaded) {
         if (typeof (callback)=="function"){
-            callback(WebCam.capture_());
+            if (param){
+                callback(WebCam.capture_(),param);
+            } else {
+                callback(WebCam.capture_());
+            }
         } else {
             return WebCam.capture_();
         }
     } else {
-        WebCam.init(callback);
+        WebCam.init(callback,param);
     }
 
 };
@@ -142,10 +155,11 @@ function imgFromURL(url,isWebCam){
     img.onload = function() {
         $("#misc_output").append(img);
     };
-    if(isWebCam != true)
+    if (isWebCam != true){
         img.src = "https://cors-anywhere.herokuapp.com/"+url;
-    else
+    } else {
         img.src = url;
+    }
     return img;
 }
 
@@ -164,10 +178,38 @@ function imgShow(imgTag){
     $('#loadingDiv').hide();
 }
 
+/**
+ * Returns a tf.tensor with pixel data from the image.
+ * @param {HTMLImageElement} imgTag
+ */
+function pixelsFromImage(imgTag,outvar){
+    if (typeof (imgTag)=="function"){
+        imgTag(pixelsFromImage,outvar);
+        return;
+    }
+    $('#loadingDiv').show();
+    function assignResult(imgTag){
+        window[outvar] = tf.fromPixels(imgTag).toFloat();
+    }
+    imgTag.setAttribute("class","videoframe");
+    $(imgTag).show();
+    $('#loadingDiv').hide();
+    function checkImageLoad(){
+        setTimeout(function(){
+            if (imgTag.complete && imgTag.naturalHeight != 0){
+                assignResult(imgTag);
+            } else {
+                checkImageLoad();
+            }
+        },50);
+    }
+    checkImageLoad();
+}
 
 module.exports = {
     WebCam,
     imgFromURL,
     imgShow,
+    pixelsFromImage,
     getImageCanvas
 };
