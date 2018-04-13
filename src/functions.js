@@ -75,10 +75,7 @@ console.printTensor = function(tensor){
         console.webLog(tensor.toString().split("values:")[1].trim());
     }
 };
-<<<<<<< HEAD
 
-=======
->>>>>>> master
 
 /**
  * Console object to JSON Download
