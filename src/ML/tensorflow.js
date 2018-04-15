@@ -2,9 +2,9 @@ var tf = require("@tensorflow/tfjs");
 
 const tfOptimizers = {
     "sgd":tf.train.sgd(),
-    "adagrad":tf.train.adagrad();
-    "adam":tf.train.adam();
-    "adamax":tf.train.adamax();
+    "adagrad":tf.train.adagrad(),
+    "adam":tf.train.adam(),
+    "adamax":tf.train.adamax()
 };
 
 const tfConstants = {
@@ -33,7 +33,7 @@ const tfConstants = {
 function getOptimizer(optimizer, rate){
     var optimizer_ = (optimizer == undefined)? tfOptimizers["sgd"]:tfOptimizers[optimizer];
     var rate_ = (rate == undefined)?tfConstants["rate"]:rate;
-    optimizer_.rate = rate_;
+    optimizer_.learningRate = rate_;
     return optimizer_;
 }
 
@@ -68,14 +68,17 @@ function getMaxPooling2d(poolSize, poolStrides,type){
     return tf.layers.maxPooling2d(maxPoolingLayer);
 };
 
-function getDenseLayer(units, activation){
+function getDenseLayer(units, activation, config){
     var activation_ = (activation == undefined)? tfConstants["activation"]:activation;
-    var units_ = (unit == undefined)?tfConstants["units"]:units;
+    var units_ = (units == undefined)?tfConstants["units"]:units;
     var DenseLayer = {
         units : units_,
         kernelInitializer: 'VarianceScaling',
         activation : activation_
     };
+    if (config["count"] == 1){
+        DenseLayer.inputShape = config["shape"];
+    }
     return tf.layers.dense(DenseLayer);
 }
 
@@ -85,7 +88,7 @@ function flattenLayer(input){
         var flatten = flattenLayer.apply(input).shape;
         return flatten;
     }
-    else{
+    else {
         return tf.layers.flatten();
     }
 }
@@ -104,32 +107,48 @@ function compileModel(optimizer, rate, loss, metrics){
 
 function createModel(){
     this.model = tf.sequential();
+    this.layerCount = 0;
 }
 
-createModel.prototype.addLayers = function(layers){
-    for(var index in layers){
+createModel.prototype.addLayers = function(layers, xData){
+    var shape_ = xData.shape[0];
+    for (var index = 0;index < layers.length; index++){
         var layer = layers[index];
-
-        if(layer["type"] == "conv2d"){
+        console.log(layer);
+        this.layerCount++;
+        if (layer["type"] == "conv2d"){
             this.model.add(getConv2d(layer["inputSize"],layer["kernelSize"],
                           layer["filters"],layer["strides"],layer["activation"]));
         }
-        else if(layer["type"] == "maxPool2d"){
+        else if (layer["type"] == "maxPool2d"){
             this.model.add(getMaxPooling2d(layer["poolSize"],layer["strides"]));
         }
-        else if(layer["type"] == "dense"){
-            this.model.add(getDenseLayer(layer["units"], layer["activation"]));
+        else if (layer["type"] == "dense"){
+            this.model.add(getDenseLayer(layer["units"], layer["activation"], {"count": this.layerCount, "shape":shape_}));
         }
-        else if(layer["type"] == "flatten"){
+        else if (layer["type"] == "flatten"){
             this.model.add(flattenLayer(layer["input"]));
         }
-        else if(layer["type"] == "compile"){
+        else if (layer["type"] == "compile"){
             this.model.compile(compileModel(layer["optimizer"],layer["rate"],layer["loss"],layer["optimizer"]));
         }
     }
-}
+};
 
-createModel.prototype.train = function(){
+createModel.prototype.train = function(x, y){
+    var model = train(this.model, x, y);
+    return model;
+};
 
-}
-
+async function train(model,x,y){
+    var model = await model.fit(x,y);
+    return model;
+};
+module.exports = {
+    getOptimizer,
+    createModel,
+    tfOptimizers,
+    tfConstants,
+    createModel,
+    getDenseLayer
+};

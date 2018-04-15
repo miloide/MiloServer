@@ -16,6 +16,7 @@ var Knn = require('./ML/knn');
 var Kmeans = require('./ML/Kmeans');
 var VisualizeKmeans = require('./ML/visualizeKmeans');
 var visualizeKnn = require('./ML/visualizeKnn');
+var neuralNetwork = require('./ML/tensorflow');
 var $ = window.$ = require('jquery');
 
 /**
@@ -54,6 +55,7 @@ function setupContext(context){
     context['kMeans'] = VisualizeKmeans;
     // Add all from WebCam module to execution context
     context = addToContext(WebCam,context);
+    context = addToContext(neuralNetwork, context);
     // Add all from Pmf module to execution context
     context = addToContext(Pmf,context);
     // Add all from Cdf module to execution context

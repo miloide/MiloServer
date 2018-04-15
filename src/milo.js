@@ -13,6 +13,7 @@ var MiloStorage = require('./storage');
 var Datasets  = window.Datasets = require('./datasets');
 var Blockly = window.Blockly = require('milo-blocks');
 var Project = require('./project');
+window.nn  = require('./ML/tensorflow');
 window.tf = require("@tensorflow/tfjs");
 for (var key in utils) {
   global[key] = utils[key];
