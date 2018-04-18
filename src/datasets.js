@@ -304,7 +304,7 @@ Datasets.show = function(name){
         $("#datasetMetaBody").append(
             '<tr>' +
                 '<td>' + key + '</td>' +
-                '<td>' + Datasets[name].meta[key] + '</td>' +
+                '<td><b>' + Datasets[name].meta[key] + '</b></td>' +
             '</tr>'
         );
     }
