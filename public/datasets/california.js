@@ -12,6 +12,21 @@ Datasets.california.headers = [
     "median_income",
     "median_house_value"
 ];
+
+Datasets.california.columns = [
+    {id: 'rand_id', name: 'rand_id', field: 'rand_id', width: 120,  resizable: true,  selectable: false},
+    {id: 'longitude', name: 'longitude', field: 'longitude', width: 120,  resizable: true,  selectable: false},
+    {id: 'latitude', name: 'latitude', field: 'latitude', width: 120,  resizable: true,  selectable: false},
+    {id: 'housing_median_age', name: 'housing_median_age', field: 'housing_median_age', width: 120,  resizable: true,  selectable: false},
+    {id: 'total_rooms', name: 'total_rooms', field: 'total_rooms', width: 120,  resizable: true,  selectable: false},
+    {id: 'total_bedrooms', name: 'total_bedrooms', field: 'total_bedrooms', width: 120,  resizable: true,  selectable: false},
+    {id: 'population', name: 'population', field: 'population', width: 120,  resizable: true,  selectable: false},
+    {id: 'households', name: 'households', field: 'households', width: 120,  resizable: true,  selectable: false},
+    {id: 'median_income', name: 'median_income', field: 'median_income', width: 120,  resizable: true,  selectable: false},
+    {id: 'median_house_value', name: 'median_house_value', field: 'median_house_value', width: 120,  resizable: true,  selectable: false},
+
+];
+
 Datasets.california.rows =
 [
     [
