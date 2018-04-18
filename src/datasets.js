@@ -266,22 +266,6 @@ Datasets.show = function(name){
         }
         Datasets[name].columns = columns.slice(1);
     }
-
-    if (Datasets[name].columns != undefined){
-        columns = columns.concat(Datasets[name].columns);
-    } else {
-        for (var i = 0; i < Datasets[name].headers.length; i++){
-            columns.push({
-                id: Datasets.slugify(Datasets[name].headers[i]),
-                name: Datasets[name].headers[i],
-                field: Datasets.slugify(Datasets[name].headers[i]),
-                // width: 60,
-                resizeable: true,
-                selectable: false
-            });
-        }
-        Datasets[name].columns = columns.shift();
-    }
     if (Datasets[name].displayData == undefined){
         data = Datasets[name].displayData = Datasets.rowsToDisplay(Datasets[name].rows,Datasets[name].columns);
     } else {
