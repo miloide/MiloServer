@@ -308,6 +308,17 @@ Datasets.show = function(name){
             '</tr>'
         );
     }
+    $("#datasetMetaBody").append(
+        '<tr>' +
+            '<td>Raw Values</td>' +
+            '<td>\
+                <button class="btn btn-outline" \
+                    onclick="console.save(Datasets['+ "'" + name + "'" + '].rows,'+"'" + name  +".json'"+ ')">\
+                    JSON <i class="material-icons">cloud_download</i>\
+                </button>\
+            </td>'+
+        '</tr>'
+    );
     $("#datasetMeta").show();
 
     var options = {
