@@ -111,10 +111,13 @@ function createModel(){
 }
 
 createModel.prototype.addLayers = function(layers, xData){
-    var shape_ = xData.shape[0];
+    var rows = xData.length;
+    var columns = xData[0].length;
+
+    var shape_ = (xData.shape[1] == undefined)?1:xData.shape[1];
     for (var index = 0;index < layers.length; index++){
         var layer = layers[index];
-        console.log(layer);
+        
         this.layerCount++;
         if (layer["type"] == "conv2d"){
             this.model.add(getConv2d(layer["inputSize"],layer["kernelSize"],
@@ -125,6 +128,7 @@ createModel.prototype.addLayers = function(layers, xData){
         }
         else if (layer["type"] == "dense"){
             this.model.add(getDenseLayer(layer["units"], layer["activation"], {"count": this.layerCount, "shape":shape_}));
+            console.log(layer);
         }
         else if (layer["type"] == "flatten"){
             this.model.add(flattenLayer(layer["input"]));
@@ -133,6 +137,8 @@ createModel.prototype.addLayers = function(layers, xData){
             this.model.compile(compileModel(layer["optimizer"],layer["rate"],layer["loss"],layer["optimizer"]));
         }
     }
+    console.log(this.model);
+    return this;
 };
 
 createModel.prototype.train = function(x, y){
@@ -140,8 +146,17 @@ createModel.prototype.train = function(x, y){
     return model;
 };
 
-async function train(model,x,y){
-    var model = await model.fit(x,y);
+createModel.prototype.compileModel = function(options){
+    this.model.compile(options);
+};
+
+createModel.prototype.predict = function(test){
+    var predict = this.model.predict(tf.tensor(test),[1,test.length]);
+    return predict;
+};
+
+function train(model,x,y){
+    var model = model.fit(x,y);
     return model;
 };
 module.exports = {
