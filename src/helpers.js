@@ -12,6 +12,27 @@ Helpers.showAlert = function(header, body,type="info"){
     swal(header,body,type);
 };
 
+/**
+ * Converts text to title case.
+ */
+Helpers.toTitleCase = function (str) {
+    return str.replace(/\w\S*/g, function(txt){
+        return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+    });
+};
+
+/**
+ * Function to slugify a string
+ */
+Helpers.slugify = function(text){
+    return text.toString().toLowerCase()
+      .replace(/\s+/g, '-')           // Replace spaces with -
+      .replace(/[^\w\-]+/g, '')       // Remove all non-word chars
+      .replace(/\-\-+/g, '-')         // Replace multiple - with single -
+      .replace(/^-+/, '')             // Trim - from start of text
+      .replace(/-+$/, '');            // Trim - from end of text
+  };
+
 Helpers.generateHash = function(str){
     var hash = 0, i, chr;
     if (this.length === 0) {return hash;}

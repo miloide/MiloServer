@@ -18,6 +18,7 @@ function clearOutput(){
     document.getElementById("console_javascript").innerHTML="";
     document.getElementById("misc_output").innerHTML="";
     document.getElementById("graph_output").innerHTML="";
+    document.getElementById("kmeans").innerHTML="";
     document.getElementById("chart").innerHTML="";
     $("#console_holder").hide();
     $("#drawCanvasDiv").hide();
@@ -89,7 +90,7 @@ console.save = function(data, filename){
     }
 
     if (!filename) {
-        filename = 'console.json';
+        filename = 'data.json';
     }
 
     if (typeof data === "object"){

@@ -27,6 +27,7 @@ if (NODE_ENV  == 'development'){
     publicPath: "/"
   }));
   app.use(webpackHotMid(compiler));
+  app.locals.pretty = true;
 }
 
 
