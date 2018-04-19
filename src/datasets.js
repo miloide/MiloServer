@@ -5,7 +5,6 @@ var Helpers = require('./helpers');
  * Create a NameSpace for Datasets
  */
 var Datasets = {};
-//var Code = require('./code');
 Datasets.convert = {};
 Datasets.imported = {};
 
@@ -13,8 +12,9 @@ Datasets.imported = {};
  * Tracks built-in datasets that have been imported
  */
 Datasets.loaded = {
-    "iris":false,
-    "california":false
+    "iris": false,
+    "california": false,
+    "californiaLarge": false
 };
 
 
@@ -33,7 +33,9 @@ Datasets.flyoutCallback = function(workspace) {
     for (var index in datasetList){
         var name = datasetList[index];
         if (Datasets.loaded[name] == true && Datasets.imported[name]!=undefined) {
-               Datasets.generateBlock(name);
+            if (Blockly.JavaScript[name+"_get"] == undefined){
+                Datasets.generateBlock(name);
+            }
             var blockText = '<xml>' +
                 '<block type="'+name+'_get">' +
                 '</block>' +
@@ -95,7 +97,6 @@ Datasets.triggerClick = function(){
 
 Datasets.uploadDataset= function(event){
     var file = event.target.files[0];
-    var fileName = file.name.replace(".csv","");
     if (file.type == "text/csv" || file.type == "application/vnd.ms-excel"){
         // $("#confirmModalTrigger").click();
         Datasets.readUploadedFile(file);
@@ -141,17 +142,22 @@ Datasets.readUploadedFile = function(file){
         for (var i = 0 ;i < nrows-1; i++) {
             var rowElements = data[i].split(",");
             var rowToString = [];
-            for (var j = 0; j < noAttributes; j++)
-                {rowToString.push(String(rowElements[j]));}
+            for (var j = 0; j < noAttributes; j++){
+                rowToString.push(String(rowElements[j]));
+            }
             Datasets[fileName].rows.push(rowToString);
         }
         Datasets.loaded[fileName] = true;
         $("#dataset_list").append(
-            '<li><button class="button-none" onclick="Datasets.show(\''+fileName+'\')">'+fileName+'</button></li>'
+            '<button type="button" class="list-group-item"\
+                style="cursor:pointer;"\
+                onclick="Datasets.show(\''+fileName+'\')">'+
+                    '<span class="badge">' + Datasets[fileName].rows.length + '</span>'+
+                    fileName +
+            '</button>'
         );
         // console.log(Datasets[fileName]);
         Datasets.checkHeader(fileName);
-        Datasets.show(fileName);
         Helpers.snackbar("Uploaded " + fileName);
     };
 
@@ -205,27 +211,23 @@ Datasets.codegenTemplate = function (name) {
         return [code, Blockly.JavaScript.ORDER_ATOMIC];
     };
 };
-/**
- * Imports dataset given as parameter
- * @param {string} name
- */
 
-Datasets.importBuiltIn = function(){
-    var name = $("#builtInDropdown").val();
-    Datasets.importHelper(name);
-};
 
 Datasets.importHelper = function(name){
-    if (name == undefined) {return;}
-    if (Datasets.loaded[name]== undefined || Datasets.loaded[name]) {return;}
+    if (name == undefined) return;
+    if (Datasets.loaded[name]== undefined || Datasets.loaded[name]) return;
     var scriptElement = document.createElement("script");
-    scriptElement.setAttribute("id",name+"_dataset");
-    scriptElement.src = "/datasets/"+name+".js";
+    scriptElement.setAttribute("id",name + "_dataset");
+    scriptElement.src = "/datasets/" + name + ".js";
     scriptElement.onload = function () {
         Datasets.loaded[name] = true;
         Datasets.imported[name] = Datasets.convert.rowsToMap(Datasets[name]);
         $("#dataset_list").append(
-            '<li><button class="button-none" onclick="Datasets.show(\''+name+'\')">'+name+'</button></li>'
+            '<button type="button" class="list-group-item" onclick="Datasets.show(\''+name+'\')"\
+                style="cursor:pointer; text-transform: capitalize;">'+
+                '<span class="badge">' + Datasets[name].rows.length + '</span>'+
+                name +
+            '</button>'
         );
         $("#"+name+"MenuItem").hide();
         $("#menuDatasetImport").append('<li class="divider" role="separator"></li><li style="text-transform: capitalize;"><h6>&nbspImported '+ name +'</h6></li>');
@@ -235,40 +237,142 @@ Datasets.importHelper = function(name){
     document.head.appendChild(scriptElement);
 };
 
-Datasets.createJexcelHandler = function(name) {
-    return function(table){
-        // console.log(name);
-        var headerLength = Datasets[name].headers.length;
-        var newColumn = table.jexcel('getHeader',headerLength-1);
-        Datasets[name].headers.push(newColumn);
-        // console.log(newColumn);
-        Datasets.imported[name] = Datasets.convert.rowsToMap(Datasets[name]);
-        Milo.workspace.updateToolbox(document.getElementById('toolbox'));
-    };
-};
 
 /**
  * Shows the loaded dataset on screen
  * @param {string} name
  */
 Datasets.show = function(name){
+    var data;
     if (Datasets.loaded[name] == undefined || Datasets.loaded[name]==false) {
         return;
     }
-    var data = Datasets[name].rows;
-    var colWidths = [];
-    for (var i = 0; i < Datasets[name].headers.length; i++){
-        colWidths.push(100);
+    var columns = [
+        {id: 'num', name: '#', field: 'num',behavior: "select", cssClass: "cell-selection", width: 60,  resizable: true,  selectable: false}
+    ];
+
+    if (Datasets[name].columns != undefined){
+        columns = columns.concat(Datasets[name].columns);
+    } else {
+        for (var i = 0; i < Datasets[name].headers.length; i++){
+            columns.push({
+                id: Helpers.slugify(Datasets[name].headers[i]),
+                name: Datasets[name].headers[i],
+                field: Helpers.slugify(Datasets[name].headers[i]),
+                // width: 60,
+                resizeable: true,
+                selectable: false
+            });
+        }
+        Datasets[name].columns = columns.slice(1);
     }
-    var handler = Datasets.createJexcelHandler(name);
-    $('#dataset_output').jexcel({data:data, colWidths:colWidths, colHeaders:Datasets[name].headers, oninsertcolumn: handler});
-    $('#dataset_save').html('Save ' + name);
-    $('#dataset_save').show();
-    $('#dataset_save').on('click',function(){
-        Datasets[name].rows = $("#dataset_output").jexcel('getData');
-        Datasets.imported[name] = Datasets.convert.rowsToMap(Datasets[name]);
-    });
+    if (Datasets[name].displayData == undefined){
+        data = Datasets[name].displayData = Datasets.rowsToDisplay(Datasets[name].rows,Datasets[name].columns);
+    } else {
+        data = Datasets[name].displayData;
+    }
+    if (Datasets[name].meta == undefined){
+        Datasets[name].meta = {};
+        Datasets[name].meta['Name/File'] = Helpers.toTitleCase(name);
+        Datasets[name].meta['Number of examples'] = Datasets[name].rows.length;
+        Datasets[name].meta['Attributes'] = Datasets[name].columns.length;
+        var row = Datasets[name].rows[0];
+        for (var i in row){
+            var key = Datasets[name].columns[i].name;
+            var value = isNaN(row[i])? (isNaN(Date.parse(value)) ? "String" : "Date") : "Number";
+            Datasets[name].meta["Type of Attribute " + key] = value;
+        }
+    }
+    $("#datasetMetaBody").html('');
+    for (var key in Datasets[name].meta){
+        $("#datasetMetaBody").append(
+            '<tr>' +
+                '<td>' + key + '</td>' +
+                '<td><b>' + Datasets[name].meta[key] + '</b></td>' +
+            '</tr>'
+        );
+    }
+    $("#datasetMetaBody").append(
+        '<tr>' +
+            '<td>Raw Values</td>' +
+            '<td>\
+                <button class="btn btn-outline" \
+                    onclick="console.save(Datasets['+ "'" + name + "'" + '].rows,'+"'" + name  +".json'"+ ')">\
+                    JSON <i class="material-icons">cloud_download</i>\
+                </button>\
+            </td>'+
+        '</tr>'
+    );
+    $("#datasetMeta").show();
+
+    var options = {
+        editable: false,
+        enableAddRow: false,
+        enableColumnReorder: false,
+        enableCellNavigation: true
+    };
+    if (Datasets.grid == undefined){
+        Datasets.dataView = new Slick.Data.DataView();
+        Datasets.grid = new Slick.Grid("#dataGrid", Datasets.dataView, columns, options);
+        Datasets.pager = new Slick.Controls.Pager(Datasets.dataView, Datasets.grid, $("#dataPager"));
+         // wire up model events to drive the grid
+         Datasets.dataView.onRowCountChanged.subscribe(function (e, args) {
+            Datasets.grid.updateRowCount();
+            Datasets.grid.render();
+        });
+        Datasets.dataView.onRowsChanged.subscribe(function (e, args) {
+            Datasets.grid.invalidateRows(args.rows);
+            Datasets.grid.render();
+        });
+        Datasets.dataView.beginUpdate();
+        Datasets.dataView.setItems(data);
+        Datasets.dataView.endUpdate();
+    } else {
+        Datasets.grid.setColumns(columns);
+        Datasets.dataView.beginUpdate();
+        Datasets.dataView.setItems(data);
+        Datasets.dataView.endUpdate();
+        Datasets.grid.invalidate();
+        Datasets.grid.render();
+    }
 };
+
+
+
+/**
+ * Converts from
+ * @param {object} data = [
+ *           [3, 'A', 'Cheese', 1, '2017-01-12'],
+ *           [1, 'B', 'Apples', 1, '2017-01-12'],
+ *    ]
+ * @param {Array} columns = [
+ *  {id: 'num', name: '#', field: 'num', width: 40,  resizable: true,  selectable: false},
+ *   ...
+ * ]
+ * To format needed by SlickGrid
+ * @returns {object} = [
+ *      {num: 3, name: 'A', item: 'Cheese', qty: 1, soldOn: '2017-01-12'}
+ *  ]
+*/
+Datasets.rowsToDisplay = function(data,columns){
+    var result = [];
+    var colKeys = [];
+    for (var i in columns){
+        colKeys.push(columns[i].field);
+    }
+    for (var i in data){
+        var item = {};
+        item['num'] = parseInt(i)+1;
+        item['id'] = "id_" + i;
+        for (var j in data[i]){
+            item[colKeys[j]] = data[i][j];
+        }
+        result.push(item);
+    }
+    return result;
+};
+
+
 /**
  * Converts from
  * @param {object} data = {
