@@ -7,6 +7,15 @@ Datasets.iris.headers = [
   "Petal width",
   "Class"
 ];
+
+Datasets.iris.columns = [
+  {id: 'sepal_length', name: 'Sepal length', field: 'sepal_length', width: 120,  resizable: true,  selectable: false},
+  {id: 'sepal_width', name: 'Sepal width', field: 'sepal_width', width: 120,  resizable: true,  selectable: false},
+  {id: 'petal_length', name: 'Petal length', field: 'petal_length', width: 120,  resizable: true,  selectable: false},
+  {id: 'petal_width', name: 'Petal width', field: 'petal_width', width: 120,  resizable: true,  selectable: false},
+  {id: 'class', name: 'Class', field: 'class', width: 120,  resizable: true,  selectable: false},
+];
+
 Datasets.iris.rows = [
     [
       5.1,
@@ -1058,4 +1067,4 @@ Datasets.iris.rows = [
       1.8,
       "Iris-virginica"
     ]
-  ]
+  ];

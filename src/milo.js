@@ -10,7 +10,7 @@ var sandbox = require('./sandbox');
 var $ = window.$ = require('jquery');
 window.SimpleMDE = require('simplemde');
 var MiloStorage = require('./storage');
-var Datasets  = window.Datasets = require('./datasets');
+var Datasets =  window.Datasets = require('./datasets');
 var Blockly = window.Blockly = require('milo-blocks');
 var Project = require('./project');
 for (var key in utils) {
@@ -195,16 +195,16 @@ Milo.renderContent = function() {
 			sourceElement.innerHTML = code;
 		}
 	} else if (content.id == 'content_data') {
-			var defaultDatasets = Object.keys(Datasets.loaded);
-			$("#builtInDropdown").empty();
-			for (var index in defaultDatasets){
-				$("#builtInDropdown").append(
-					'<option value="' +
-					defaultDatasets[index] + '">' +
-					defaultDatasets[index] +
-					' Dataset </option>'
-				);
-			}
+			// var defaultDatasets = Object.keys(Datasets.loaded);
+			// $("#builtInDropdown").empty();
+			// for (var index in defaultDatasets){
+			// 	$("#builtInDropdown").append(
+			// 		'<option value="' +
+			// 		defaultDatasets[index] + '">' +
+			// 		defaultDatasets[index] +
+			// 		' Dataset </option>'
+			// 	);
+			// }
 	}
 };
 
@@ -298,12 +298,16 @@ Milo.init = function() {
 	}
 	var defaultDatasets = Object.keys(Datasets.loaded);
 	for (var index in defaultDatasets){
-		$("#menuDatasetImport").append('<li id="'+defaultDatasets[index]+
-			'MenuItem"><a style="cursor:pointer; text-transform: capitalize" onclick="Datasets.importHelper(\''+
-			defaultDatasets[index]+'\')"> Import '+
-			defaultDatasets[index]+
-			'</a></li>'
-		);
+		var datasetName = defaultDatasets[index];
+		var listElement = document.createElement('li');
+		listElement.setAttribute('id',datasetName+ 'MenuItem');
+		var anchorElement = document.createElement('a');
+		anchorElement.setAttribute('id',datasetName+ 'MenuButton');
+		anchorElement.setAttribute('style','cursor:pointer; text-transform: capitalize;');
+		anchorElement.setAttribute('onclick',"Datasets.importHelper('" + datasetName + "');");
+		anchorElement.innerHTML = 'Import '+ datasetName;
+		listElement.appendChild(anchorElement);
+		$("#menuDatasetImport").append(listElement);
 	}
 	function linkSidebarStorage(){
 		var elem = angular.element($("#sidebar"));

@@ -89,7 +89,7 @@ console.save = function(data, filename){
     }
 
     if (!filename) {
-        filename = 'console.json';
+        filename = 'data.json';
     }
 
     if (typeof data === "object"){
