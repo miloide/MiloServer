@@ -13,6 +13,8 @@ var MiloStorage = require('./storage');
 var Datasets =  window.Datasets = require('./datasets');
 var Blockly = window.Blockly = require('milo-blocks');
 var Project = require('./project');
+window.model = require('./ML/Mnist/model');
+window.data = require('./ML/Mnist/data');
 for (var key in utils) {
   global[key] = utils[key];
 }
