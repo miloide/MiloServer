@@ -108,7 +108,7 @@ html
 							if !user
 								| You cannot save this project. Please login to save.
 							else if newProj
-								| Your project not saved yet.
+								| Your project is not saved yet.
 								input(id="newProjInput" type="hidden", value="new")
 					li
 						img#loadingDiv(style="display: none;width:50px;",src="/media/loading.gif")
@@ -186,24 +186,30 @@ html
 							#console_javascript
 		#content_data.content
 			.container-fluid
-				.row
+				.row.scroll(style="height:70vh;")
 					.col-sm-4
-						h3 Data Explorer
-						p Select a dataset from the list below to view or import from the menu.
-						//- select#builtInDropdown
-						//- button(onclick="Datasets.importBuiltIn();") Import
-						//- button(onclick="Datasets.triggerClick();") Upload
+						.panel.panel-default
+							// Default panel contents
+							.panel-heading
+								h3 Data Explorer
+							.panel-body
+								h6 Import Datasets from the menubar and click on Dataset below.
+								// List group
+								#dataset_list.list-group
+						#datasetMeta.panel.panel-default(style="display:none;")
+							// Default panel contents
+							.panel-heading
+								h4 Dataset Properties
+							.panel-body
+								table#datasetMetaBody.table
+								p Note: Type information is inferred from data and is only representative.
+
+
 						input#fileLoader(type="file", name="files", onchange= "Datasets.uploadDataset(event)",style = "display : none")
-						br
-						button#dataset_save(style='display:none') Save
-						//- button#alertModalTrigger(data-toggle="modal", data-target="#alertModal", style="display:none")
-						//- button#confirmModalTrigger(data-toggle="modal", data-target="#confirmModal", style="display:none")
-						//- .col-lg-12
-						//- h4 Loaded Datasets (click to view)
-						ul#dataset_list
-					#explorer.col-sm-7
+					.col-sm-7
 						.col-sm-12
-							#dataset_output
+							#dataGrid(style='width:100%;height:500px;')
+							#dataPager(style='width:100%;height:20px;')
 		#content_javascript.content
 			.container-fluid
 				.row
@@ -238,11 +244,11 @@ html
 				#pagination-container(ng-if="!isEditing")
 					ul.pagination
 						li(data-page='-' ng-click="prevPage()")
-							a(style="cursor:pointer") <
+							a(style="cursor:pointer") &lt;
 						li(ng-repeat="page in pages track by $index" ng-click='selectPage($index)' class="{{selectedPage === $index?'active':''}}")
 							a(style="cursor:pointer") {{$index+1}}
 						li(data-page='+' ng-click="nextPage()")
-							a(style="cursor:pointer") >
+							a(style="cursor:pointer") &gt;
 					div(ng-repeat="page in pages track by $index" style="{{selectedPage === $index?'':'display:none'}}" id="{{'sidebar_page_'+($index+1)}}" data-page='{{$index+1}}', class="page-data")
 						div(id="{{'sidebar_content_' + ($index+1)}}" class="col-md-12" ng-bind-html="page  | trust")
 
