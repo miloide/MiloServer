@@ -1,0 +1,93 @@
+<xml xmlns="http://www.w3.org/1999/xhtml">
+  <variables>
+    <variable type="" id="%gX22-OsY*Q2xu|0@EMF">model</variable>
+  </variables>
+  <block type="variables_set" id="D:V/q?Ir98?ga$:(vWnE" x="-174" y="-223">
+    <field name="VAR" id="%gX22-OsY*Q2xu|0@EMF" variabletype="">model</field>
+    <value name="VALUE">
+      <block type="tf_model" id="qkf~kSiyXp)zX|kMhg}(">
+        <value name="data">
+          <block type="lists_split_math" id="=!.0lqZi=E2L]d@;0!)k">
+            <value name="INPUT">
+              <shadow type="text" id="4sL*Ok@[Oyi]QCWhqtdW">
+                <field name="TEXT">1,2,3,4</field>
+              </shadow>
+            </value>
+            <value name="DELIM">
+              <shadow type="text" id="rWQdZOB){pJMinEGuYYi">
+                <field name="TEXT">,</field>
+              </shadow>
+            </value>
+          </block>
+        </value>
+        <statement name="model">
+          <block type="tf_dense_layer" id="7q$-]2Qq^-214dm?;Ur3">
+            <field name="activation">relu</field>
+            <value name="NAME">
+              <block type="math_number" id="!+jz%lNVGVhr8AMx(Qep">
+                <field name="NUM">1</field>
+              </block>
+            </value>
+          </block>
+        </statement>
+      </block>
+    </value>
+    <next>
+      <block type="tf_model_compile" id="_Fc4kQg,Tv]P.lY6:Li=">
+        <field name="optimizer">sgd</field>
+        <field name="loss">meanSquaredError</field>
+        <value name="model">
+          <block type="variables_get" id="s(rF!o/b(uf`udfKr#P`">
+            <field name="VAR" id="%gX22-OsY*Q2xu|0@EMF" variabletype="">model</field>
+          </block>
+        </value>
+        <value name="rate">
+          <block type="math_number" id="0-O(7pk(ersrh6BF1fbf">
+            <field name="NUM">1</field>
+          </block>
+        </value>
+        <next>
+          <block type="tf_train_model" id="~1t#w+Y::m?;(_/Ui.I*">
+            <value name="model">
+              <block type="variables_get" id="`[hru.@Vz.EH3{*D)S5c">
+                <field name="VAR" id="%gX22-OsY*Q2xu|0@EMF" variabletype="">model</field>
+              </block>
+            </value>
+            <value name="y">
+              <block type="lists_split_math" id="GY$tPqn_?a-AA6G:Wq=h">
+                <value name="INPUT">
+                  <shadow type="text" id="Gk]M]}dX49EnzP,z3!Bm">
+                    <field name="TEXT">1,3,5,7</field>
+                  </shadow>
+                </value>
+                <value name="DELIM">
+                  <shadow type="text" id="/afTR{WP61w;KvXsez40">
+                    <field name="TEXT">,</field>
+                  </shadow>
+                </value>
+              </block>
+            </value>
+            <next>
+              <block type="tf_print" id="V7cMNE}~5%Dm-wZsqg4g">
+                <value name="tensor">
+                  <block type="tf_model_predict" id="}AokxYwgSH$j`(g1|DOY">
+                    <value name="model">
+                      <block type="variables_get" id=".vthrua.z`/0PJL=YQq7">
+                        <field name="VAR" id="%gX22-OsY*Q2xu|0@EMF" variabletype="">model</field>
+                      </block>
+                    </value>
+                    <value name="tensor">
+                      <block type="math_number" id="N/ia]m|cGuu@r:C!BzqE">
+                        <field name="NUM">5</field>
+                      </block>
+                    </value>
+                  </block>
+                </value>
+              </block>
+            </next>
+          </block>
+        </next>
+      </block>
+    </next>
+  </block>
+</xml>

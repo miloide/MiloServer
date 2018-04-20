@@ -111,13 +111,26 @@ function createModel(){
 }
 
 createModel.prototype.addLayers = function(layers, xData){
-    var rows = xData.length;
-    var columns = xData[0].length;
-
-    var shape_ = (xData.shape[1] == undefined)?1:xData.shape[1];
+    var shape = [];
+    if (xData instanceof Array){
+        var rows = xData.length;
+        var shape = [];
+        console.log(xData,xData[0]);
+        if (xData[0].length == undefined){
+            shape.push(rows);
+            shape.push(1);
+        } else {
+            shape.push(rows);
+            shape.push(xData[0].length);
+        }
+        this.xData = tf.tensor(xData,shape);
+    } else {
+        var tfShape = xData.shape;
+        shape.push(tfShape[0]);
+        (tfShape[1] == undefined)? shape.push(1):shape.push(tfShape[1]);
+    }
     for (var index = 0;index < layers.length; index++){
         var layer = layers[index];
-        
         this.layerCount++;
         if (layer["type"] == "conv2d"){
             this.model.add(getConv2d(layer["inputSize"],layer["kernelSize"],
@@ -127,7 +140,7 @@ createModel.prototype.addLayers = function(layers, xData){
             this.model.add(getMaxPooling2d(layer["poolSize"],layer["strides"]));
         }
         else if (layer["type"] == "dense"){
-            this.model.add(getDenseLayer(layer["units"], layer["activation"], {"count": this.layerCount, "shape":shape_}));
+            this.model.add(getDenseLayer(layer["units"], layer["activation"], {"count": this.layerCount, "shape":shape[1]}));
             console.log(layer);
         }
         else if (layer["type"] == "flatten"){
@@ -141,8 +154,9 @@ createModel.prototype.addLayers = function(layers, xData){
     return this;
 };
 
-createModel.prototype.train = function(x, y){
-    var model = train(this.model, x, y);
+createModel.prototype.train = function(y){
+    this.y = tf.tensor(y);
+    var model = train(this.model, this.xData, this.y);
     return model;
 };
 
@@ -151,7 +165,7 @@ createModel.prototype.compileModel = function(options){
 };
 
 createModel.prototype.predict = function(test){
-    var predict = this.model.predict(tf.tensor(test),[1,test.length]);
+    var predict = this.model.predict(tf.tensor([test],[1,[test].length]));
     return predict;
 };
 
