@@ -400,7 +400,6 @@
       <category name="Vector Math" colour="%{BKY_COLOUR_HUE}">
         <block type="tf_number"></block>
         <block type="tf_tensor"></block>
-        <block type="test"></block>
         <block type="tf_arithmetic">
           <value name="A">
             <shadow type="tf_number">
@@ -446,10 +445,12 @@
       </category>
     <category name="Neural Network">
       <block type="tf_dense_layer"></block>
-      <block type="tf_model_compile"></block>
-      <block type="tf_model"></block>
-      <block type="tf_train_model"></block>
-      <block type="tf_model_predict"></block>
+      <block type="tf_neural_network"></block>
+      <block type="tf_neural_network_train"></block>
+      <block type="tf_neural_network_predict"></block>
+      <block type="tf_neural_network_optimizer"></block>
+      <block type="tf_neural_network_loss"></block>
+      <block type="tf_neural_network_metrics"></block>
     </category>
     </category>
 </xml>

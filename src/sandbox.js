@@ -16,7 +16,7 @@ var Knn = require('./ML/knn');
 var Kmeans = require('./ML/Kmeans');
 var VisualizeKmeans = require('./ML/visualizeKmeans');
 var visualizeKnn = require('./ML/visualizeKnn');
-var neuralNetwork = require('./ML/tensorflow');
+var neuralNetwork = require('./ML/neuralnet');
 var $ = window.$ = require('jquery');
 
 /**
