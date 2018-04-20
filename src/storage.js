@@ -9,6 +9,7 @@ var MiloStorage = {};
 
 var Blockly = require('milo-blocks');
 var Helpers = require('./helpers');
+var Datasets = require('./datasets');
 var sidebarScope = require('./sidebar').getScope;
 var $ = require('jquery');
 
@@ -183,8 +184,7 @@ MiloStorage.loadXml_ = function(xml, workspace) {
   }
   // Clear the workspace to avoid merge.
   workspace.clear();
-  xml = MiloStorage.pruneUndefined(xml);
-  Blockly.Xml.domToWorkspace(xml, workspace);
+  xml = MiloStorage.pruneAndLoad(xml,workspace);
 };
 
 /**
@@ -198,20 +198,41 @@ MiloStorage.alert = function(message) {
 
 /**
  * Removes blocks which aren't currently defined
+ * and loads the rest to the workspace
  * @param {XMLDomElement} xml
  */
-MiloStorage.pruneUndefined = function(xml){
+MiloStorage.pruneAndLoad = function(xml,workspace){
   var jqueryXml = $(xml);
-  var toRemove = [];
+  var toRemove = [], toImport = [];
   jqueryXml.find("block[type$='_get']").each(function(i,e) {
     if (Blockly.JavaScript[e.getAttribute("type")] == undefined){
-      toRemove.push(e.getAttribute("type"));
+      var datasetName = e.getAttribute("type").split('_get')[0];
+      if (Datasets.loaded[datasetName]!=undefined){
+        toImport.push(datasetName);
+      } else {
+        toRemove.push(e.getAttribute("type"));
+      }
     }
   });
   toRemove.forEach(function(val,i){
     jqueryXml.find("block[type='"+val+"']").remove();
   });
-  return jqueryXml[0];
+  xml = jqueryXml[0];
+  // Per https://stackoverflow.com/a/24985483
+  MiloStorage.importAndLoad(toImport,xml,workspace);
 };
+
+// Imports missing Datasets and loads the workspace
+MiloStorage.importAndLoad = async function(datasetNames,xml,workspace){
+  for (var i in datasetNames){
+       await Datasets.importHelper(datasetNames[i]);
+   }
+    // console.log("Imported ",datasetNames.length, " Dataset(s)");
+    // Make sure we generate all the block definitions
+    Datasets.flyoutCallback(workspace);
+    Blockly.Xml.domToWorkspace(xml, workspace);
+};
+
+
 
 module.exports = MiloStorage;
