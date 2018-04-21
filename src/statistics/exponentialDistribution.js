@@ -3,7 +3,7 @@ function ExponentialDistribution(lambda){
         throw "Invalid lambda:"+lambda;
     }
     this.lambda = lambda;
-    this.calculateConstants;
+    this.calculateConstants();
 };
 
 ExponentialDistribution.prototype.fromData = function(data){
@@ -29,7 +29,7 @@ ExponentialDistribution.prototype.calculateConstants = function(){
     this.mean = 1/this.lambda;
     this.variance = 1/(Math.pow(self.lambda,2));
     this.sd = 1/this.lambda;
-    this.entropy = 1 - Math.log(self.lambda); 
+    this.entropy = 1 - Math.log(self.lambda);
 };
 
 ExponentialDistribution.prototype.getLambda = function(){
@@ -49,31 +49,81 @@ ExponentialDistribution.prototype.getEntropy = function(){
 };
 
 ExponentialDistribution.prototype.p = function(x){
-    if (x < 0){
-        return 0;
+    var self = this;
+    if (x instanceof Array){
+        var probabilities = [];
+        x.forEach(function(item){
+            probabilities.push(value(item));
+        });
+        return probabilities;
     } else {
-        return this.lambda * Math.exp(-this.lambda*x);
+        return value(x);
+    }
+    function value(x){
+        if (x < 0){
+            return 0;
+        } else {
+            return self.lambda * Math.exp(-(self.lambda*x));
+        }
     }
 };
 
 ExponentialDistribution.prototype.logp = function(x){
-    if (x < 0){
-        return 0;
+    var self = this;
+    if (x instanceof Array){
+        var logProbailities = [];
+        x.forEach(function(item){
+            logProbailities.push(value(item));
+        });
+        return logProbailities;
     } else {
-        return Math.log(this.lambda) - this.lambda*x;
+        return value(x);
+    }
+    function value(x){
+        if (x < 0){
+            return 0;
+        } else {
+            return Math.log(self.lambda) - self.lambda*x;
+        }
     }
 };
 
 ExponentialDistribution.prototype.cdf = function(x){
-    if (x < 0){
-        return 0;
+    var self = this;
+    if (x instanceof Array){
+        var cdfs = [];
+        x.forEach(function(item){
+            cdfs.push(value(item));
+        });
+        return cdfs;
     } else {
-        return 1 - Math.exp(-this.lambda*x);
+        return value(x);
+    }
+    function value(x){
+        if (x < 0){
+            return 0;
+        } else {
+            return (1 - Math.exp(-(self.lambda*x)));
+        }
     }
 };
 
-ExponentialDistribution.prototype.render = function(type,points){
-    
+ExponentialDistribution.prototype.render = function(label,color){
+    var maxRange = this.mean + 5;
+    var minRange = this.mean - 5;
+    var x_ = [], y_ = [];
+    for (var itr = minRange; itr < maxRange; itr +=0.1){
+        x_.push(itr);
+        y_.push(this.cdf(itr));
+    }
+    var plotOptions = {
+      'type': 'scatter',
+      'name': label,
+      'x': x_,
+      'y':y_,
+      'marker':{'color':color}
+    };
+    return plotOptions;
 };
 
 ExponentialDistribution.prototype.quantile = function(p){
@@ -84,6 +134,4 @@ ExponentialDistribution.prototype.quantile = function(p){
     }
 };
 
-
-
-
+module.exports = ExponentialDistribution;
