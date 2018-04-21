@@ -1,6 +1,7 @@
 var tf = require("@tensorflow/tfjs");
 var Pmf = require('../statistics/pmf');
 var Plot = require('../plot');
+var $ = require('jquery');
 
 const tfOptimizers = {
     "sgd":tf.train.sgd(),
@@ -70,15 +71,18 @@ function getMaxPooling2d(poolSize, poolStrides,type){
     return tf.layers.maxPooling2d(maxPoolingLayer);
 };
 
-function getDenseLayer(units, activation, shape){
+function getDenseLayer(units,bias, activation, shape){
     var units_ = (units == undefined)?tfConstants["units"]:units;
     var DenseLayer = {
         units : units_,
+        useBias : bias,
         kernelInitializer: 'VarianceScaling',
-        activation : activation
     };
     if (shape!=0){
         DenseLayer.inputShape = shape;
+    }
+    if (activation != ""){
+        DenseLayer.activation = activation;
     }
     return tf.layers.dense(DenseLayer);
 }
@@ -106,8 +110,7 @@ function NeuralNetwork(numberFeature, layers, options){
     //Default options to compile neural network
     this.options = {
         optimizer : getOptimizer(tfConstants["optimizer"], tfConstants["rate"]),
-        loss : 'meanSquaredError',
-        metrics : ['accuracy']
+        loss : 'meanSquaredError'
     };
     if (options!=undefined){
         this.setOptions(options);
@@ -127,7 +130,7 @@ NeuralNetwork.prototype.addLayers = function(){
             this.model.add(getMaxPooling2d(layer["poolSize"],layer["strides"]));
         }
         else if (layer["type"] == "dense"){
-            this.model.add(getDenseLayer(layer["units"], layer["activation"],layer["inputShape"]));
+            this.model.add(getDenseLayer(layer["units"],layer["bias"], layer["activation"],layer["inputShape"]));
         }
         else if (layer["type"] == "flatten"){
             this.model.add(flattenLayer(layer["input"]));
@@ -146,7 +149,8 @@ NeuralNetwork.prototype.setLoss = function(lossFunction){
 };
 
 NeuralNetwork.prototype.setMetrics = function(metrics){
-    this.options.metrics = [metrics];
+    if (this.options.loss != 'meanSquaredError')
+        this.options.metrics = [metrics];
 };
 
 NeuralNetwork.prototype.setOptions = function(options){
@@ -205,6 +209,7 @@ NeuralNetwork.prototype.toOneHot = function(labels,x){
 };
 
 NeuralNetwork.prototype.train = function(epochs, x, y){
+    $("#loadingDiv").show();
     var data = this.prepareData(x,y);
     x = data[0];
     y = (this.options.loss == 'categoricalCrossentropy')?this.toOneHot(data[2],data[1]) : y;
@@ -228,17 +233,21 @@ NeuralNetwork.prototype.train = function(epochs, x, y){
         //validationData: [xTest, yTest],
         callbacks: {
           onEpochEnd:(epoch, logs) => {
+            console.log(logs);
             this.lossValues.push(logs.loss);
             this.accuracyValues.push(logs.acc);
           },
         }
     });
-    var xPlotPoints = epochs.map(function(item, index){
-        return index+1;
-    });
+    var xPlotPoints = [];
+    for (var i = 0; i < epochs; i++){
+        xPlotPoints.push(i+1);
+    }
+    $("#loadingDiv").hide();
 
-    this.plot("scatter","Loss Plot", xPlotPoints,this.lossValues,"X","Loss");
-    this.plot("scatter","Accuracy Plot", xPlotPoints,this.accuracyValues,"X","Accuracy");
+    this.plot("scatter","Loss Plot","Training Loss" ,xPlotPoints,this.lossValues,"X","Loss");
+    if (this.options.loss == 'categoricalCrossentropy')
+        this.plot("scatter","Accuracy Plot","Training accuracy", xPlotPoints,this.accuracyValues,"X","Accuracy");
     //console.log(this.lossValues, this.accuracyValues);
     return this.model;
 };
@@ -251,12 +260,12 @@ NeuralNetwork.prototype.predict = function(test){
     return [label,predictArray];
 };
 
-NeuralNetwork.prototype.plot = function(type, name,x ,y,xTitle, yTitle){
+NeuralNetwork.prototype.plot = function(type,name, legend,x ,y,xTitle, yTitle){
     var plot = new Plot();
     plot.setData([
         {
         "type":type,
-        "name":"",
+        "name":legend,
         "x": x,
         "y": y,
         "marker": {"color":"#ffffff"},

@@ -1,92 +1,96 @@
 <xml xmlns="http://www.w3.org/1999/xhtml">
   <variables>
-    <variable type="" id="%gX22-OsY*Q2xu|0@EMF">model</variable>
+    <variable type="" id="@3HWnc3hS6QWvBazWlub">model</variable>
   </variables>
-  <block type="variables_set" id="D:V/q?Ir98?ga$:(vWnE" x="-174" y="-223">
-    <field name="VAR" id="%gX22-OsY*Q2xu|0@EMF" variabletype="">model</field>
+  <block type="variables_set" id="GV}I^/(Mr+G|E}?oV(8z" x="2" y="123">
+    <field name="VAR" id="@3HWnc3hS6QWvBazWlub" variabletype="">model</field>
     <value name="VALUE">
-      <block type="tf_model" id="qkf~kSiyXp)zX|kMhg}(">
-        <value name="data">
-          <block type="lists_split_math" id="=!.0lqZi=E2L]d@;0!)k">
-            <value name="INPUT">
-              <shadow type="text" id="4sL*Ok@[Oyi]QCWhqtdW">
-                <field name="TEXT">1,2,3,4</field>
-              </shadow>
-            </value>
-            <value name="DELIM">
-              <shadow type="text" id="rWQdZOB){pJMinEGuYYi">
-                <field name="TEXT">,</field>
-              </shadow>
-            </value>
-          </block>
-        </value>
+      <block type="tf_neural_network" id="B1w?`5,Dbs_s*jVrh(S$">
+        <field name="features">4</field>
         <statement name="model">
-          <block type="tf_dense_layer" id="7q$-]2Qq^-214dm?;Ur3">
-            <field name="activation">relu</field>
+          <block type="tf_dense_layer" id="wkd!w[fAB,rWh]`xJ*pW">
+            <field name="activation">sigmoid</field>
             <value name="NAME">
-              <block type="math_number" id="!+jz%lNVGVhr8AMx(Qep">
-                <field name="NUM">1</field>
-              </block>
-            </value>
-          </block>
-        </statement>
-      </block>
-    </value>
-    <next>
-      <block type="tf_model_compile" id="_Fc4kQg,Tv]P.lY6:Li=">
-        <field name="optimizer">sgd</field>
-        <field name="loss">meanSquaredError</field>
-        <value name="model">
-          <block type="variables_get" id="s(rF!o/b(uf`udfKr#P`">
-            <field name="VAR" id="%gX22-OsY*Q2xu|0@EMF" variabletype="">model</field>
-          </block>
-        </value>
-        <value name="rate">
-          <block type="math_number" id="0-O(7pk(ersrh6BF1fbf">
-            <field name="NUM">1</field>
-          </block>
-        </value>
-        <next>
-          <block type="tf_train_model" id="~1t#w+Y::m?;(_/Ui.I*">
-            <value name="model">
-              <block type="variables_get" id="`[hru.@Vz.EH3{*D)S5c">
-                <field name="VAR" id="%gX22-OsY*Q2xu|0@EMF" variabletype="">model</field>
-              </block>
-            </value>
-            <value name="y">
-              <block type="lists_split_math" id="GY$tPqn_?a-AA6G:Wq=h">
-                <value name="INPUT">
-                  <shadow type="text" id="Gk]M]}dX49EnzP,z3!Bm">
-                    <field name="TEXT">1,3,5,7</field>
-                  </shadow>
-                </value>
-                <value name="DELIM">
-                  <shadow type="text" id="/afTR{WP61w;KvXsez40">
-                    <field name="TEXT">,</field>
-                  </shadow>
-                </value>
+              <block type="math_number" id="ARigSOFqN:IC~mk1qw8l">
+                <field name="NUM">10</field>
               </block>
             </value>
             <next>
-              <block type="tf_print" id="V7cMNE}~5%Dm-wZsqg4g">
-                <value name="tensor">
-                  <block type="tf_model_predict" id="}AokxYwgSH$j`(g1|DOY">
-                    <value name="model">
-                      <block type="variables_get" id=".vthrua.z`/0PJL=YQq7">
-                        <field name="VAR" id="%gX22-OsY*Q2xu|0@EMF" variabletype="">model</field>
-                      </block>
-                    </value>
-                    <value name="tensor">
-                      <block type="math_number" id="N/ia]m|cGuu@r:C!BzqE">
-                        <field name="NUM">5</field>
-                      </block>
-                    </value>
+              <block type="tf_dense_layer" id="E`sY*?Se~T41RznVxJ1v">
+                <field name="activation">softmax</field>
+                <value name="NAME">
+                  <block type="math_number" id="@!?Xnl:umtdAWP_i=r{x">
+                    <field name="NUM">3</field>
                   </block>
                 </value>
               </block>
             </next>
           </block>
-        </next>
+        </statement>
+        <statement name="NAME">
+          <block type="tf_neural_network_optimizer" id="$5LmE^2P`N)IgoT?LZQD">
+            <field name="optimizer">adam</field>
+            <value name="rate">
+              <block type="math_number" id="jFl/Fcsn{QGSY%++oUTP">
+                <field name="NUM">0.01</field>
+              </block>
+            </value>
+            <next>
+              <block type="tf_neural_network_loss" id="OWBjMIWg8XU+D%xTz4mu">
+                <field name="loss">categoricalCrossentropy</field>
+                <next>
+                  <block type="tf_neural_network_metrics" id="L-Zp?R%B;Om1ly#/4Ikr">
+                    <field name="metrics">accuracy</field>
+                  </block>
+                </next>
+              </block>
+            </next>
+          </block>
+        </statement>
+      </block>
+    </value>
+    <next>
+      <block type="tf_neural_network_train" id="MNK44Sd6aT~PsG07pgcx">
+        <value name="model">
+          <block type="variables_get" id="n(`*Rtu%;V1F%I*!e9*T">
+            <field name="VAR" id="@3HWnc3hS6QWvBazWlub" variabletype="">model</field>
+          </block>
+        </value>
+        <value name="epochs">
+          <block type="math_number" id="fmggCREFaoe@H[K1p9`|">
+            <field name="NUM">40</field>
+          </block>
+        </value>
+        <value name="x">
+          <block type="lists_zip_with" id="cwK4%}dy^n}CJlSvSRDn">
+            <mutation items="4"></mutation>
+            <value name="ADD0">
+              <block type="iris_get" id="R24b)+P6ic6gGDYyAO6O">
+                <field name="index">Sepal length</field>
+              </block>
+            </value>
+            <value name="ADD1">
+              <block type="iris_get" id="k85Jr%6=l;9u03wbvQbz">
+                <field name="index">Sepal width</field>
+              </block>
+            </value>
+            <value name="ADD2">
+              <block type="iris_get" id="qDIrQIW;XUogIT/{x!;)">
+                <field name="index">Petal length</field>
+              </block>
+            </value>
+            <value name="ADD3">
+              <block type="iris_get" id="aBN|hcc7QnAqGlMk/vW;">
+                <field name="index">Petal width</field>
+              </block>
+            </value>
+          </block>
+        </value>
+        <value name="y">
+          <block type="iris_get" id="b7DRokZERmPsb})?QWJS">
+            <field name="index">Class</field>
+          </block>
+        </value>
       </block>
     </next>
   </block>
