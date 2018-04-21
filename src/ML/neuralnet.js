@@ -1,5 +1,7 @@
 var tf = require("@tensorflow/tfjs");
 var Pmf = require('../statistics/pmf');
+var Plot = require('../plot');
+
 const tfOptimizers = {
     "sgd":tf.train.sgd(),
     "adagrad":tf.train.adagrad(),
@@ -202,10 +204,10 @@ NeuralNetwork.prototype.toOneHot = function(labels,x){
     return oneHotVectors;
 };
 
-NeuralNetwork.prototype.train = function(x, y){
+NeuralNetwork.prototype.train = function(epochs, x, y){
     var data = this.prepareData(x,y);
     x = data[0];
-    y = this.toOneHot(data[2],data[1]);
+    y = (this.options.loss == 'categoricalCrossentropy')?this.toOneHot(data[2],data[1]) : y;
     this.labels = data[2];
     var shapeX = [], shapeY = [];
     if (x[0].length!=undefined){
@@ -222,7 +224,7 @@ NeuralNetwork.prototype.train = function(x, y){
     this.y = tf.tensor(y, shapeY);
     this.model.compile(this.options);
     this.model.fit(this.x, this.y ,{
-        epochs: 40,
+        epochs: epochs,
         //validationData: [xTest, yTest],
         callbacks: {
           onEpochEnd:(epoch, logs) => {
@@ -231,16 +233,51 @@ NeuralNetwork.prototype.train = function(x, y){
           },
         }
     });
+    var xPlotPoints = epochs.map(function(item, index){
+        return index+1;
+    });
+
+    this.plot("scatter","Loss Plot", xPlotPoints,this.lossValues,"X","Loss");
+    this.plot("scatter","Accuracy Plot", xPlotPoints,this.accuracyValues,"X","Accuracy");
     //console.log(this.lossValues, this.accuracyValues);
     return this.model;
 };
 
 NeuralNetwork.prototype.predict = function(test){
     var predict = this.model.predict(tf.tensor(test,[1,test.length]));
-    var predict_array = Array.from(predict.dataSync());
-    var indexOfMaxValue = predict_array.reduce((iMax, x, i, arr) => x > arr[iMax] ? i : iMax, 0);
+    var predictArray = Array.from(predict.dataSync());
+    var indexOfMaxValue = predictArray.reduce((max, x, i, arr) => x > arr[max] ? i : max, 0);
     var label = this.labels[indexOfMaxValue];
-    return [label,predict_array];
+    return [label,predictArray];
+};
+
+NeuralNetwork.prototype.plot = function(type, name,x ,y,xTitle, yTitle){
+    var plot = new Plot();
+    plot.setData([
+        {
+        "type":type,
+        "name":"",
+        "x": x,
+        "y": y,
+        "marker": {"color":"#ffffff"},
+        "isLine":true
+        },
+      ]);
+      plot.setOptions([
+        {
+            "type":"plot_title",
+            "value":name
+        },
+        {
+            "type":"plot_xlabel",
+            "value":xTitle
+        },
+        {
+            "type":"plot_ylabel",
+            "value":yTitle
+        }
+      ]);
+      plot.show();
 };
 
 module.exports = {
