@@ -222,6 +222,16 @@ Datasets.importHelper = function(name){
         scriptElement.setAttribute("id",name + "_dataset");
         scriptElement.src = "/datasets/" + name + ".js";
         scriptElement.onload = function () {
+            for (var i in Datasets[name].rows){
+                var row = Datasets[name].rows[i];
+                for (var j in row){
+                    var instanceType = isNaN(row[j])? (isNaN(Date.parse(row[j])) ? "String" : "Date") : "Number";
+                    if (instanceType == "Number"){
+                        row[j] = parseFloat(row[j]);
+                    }
+                }
+                Datasets[name].rows[i] = row;
+            }
             Datasets.loaded[name] = true;
             Datasets.imported[name] = Datasets.convert.rowsToMap(Datasets[name]);
             $("#dataset_list").append(
@@ -283,7 +293,7 @@ Datasets.show = function(name){
         var row = Datasets[name].rows[0];
         for (var i in row){
             var key = Datasets[name].columns[i].name;
-            var value = isNaN(row[i])? (isNaN(Date.parse(value)) ? "String" : "Date") : "Number";
+            var value = isNaN(row[i])? (isNaN(Date.parse(row[i])) ? "String" : "Date") : "Number";
             Datasets[name].meta["Type of Attribute " + key] = value;
         }
     }
