@@ -688,3 +688,14 @@ canvas{
   stroke: #ccc;
   shape-rendering: crispEdges;
 }
+
+.node:hover {
+  stroke: #999;
+  stroke-opacity: .6;
+  stroke-width: 4px;
+}
+
+.link {
+  stroke: #999;
+  stroke-opacity: .6;
+}

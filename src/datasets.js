@@ -214,27 +214,41 @@ Datasets.codegenTemplate = function (name) {
 
 
 Datasets.importHelper = function(name){
-    if (name == undefined) return;
-    if (Datasets.loaded[name]== undefined || Datasets.loaded[name]) return;
-    var scriptElement = document.createElement("script");
-    scriptElement.setAttribute("id",name + "_dataset");
-    scriptElement.src = "/datasets/" + name + ".js";
-    scriptElement.onload = function () {
-        Datasets.loaded[name] = true;
-        Datasets.imported[name] = Datasets.convert.rowsToMap(Datasets[name]);
-        $("#dataset_list").append(
-            '<button type="button" class="list-group-item" onclick="Datasets.show(\''+name+'\')"\
-                style="cursor:pointer; text-transform: capitalize;">'+
-                '<span class="badge">' + Datasets[name].rows.length + '</span>'+
-                name +
-            '</button>'
-        );
-        $("#"+name+"MenuItem").hide();
-        $("#menuDatasetImport").append('<li class="divider" role="separator"></li><li style="text-transform: capitalize;"><h6>&nbspImported '+ name +'</h6></li>');
-        $("#"+name+"MenuItem").attr("disabled","disabled");
-        Helpers.snackbar("Imported " + name + " dataset!");
-    };
-    document.head.appendChild(scriptElement);
+    if (name == undefined) return null;
+    return new Promise((resolve, reject) => {
+
+        if (Datasets.loaded[name]== undefined || Datasets.loaded[name]) return;
+        var scriptElement = document.createElement("script");
+        scriptElement.setAttribute("id",name + "_dataset");
+        scriptElement.src = "/datasets/" + name + ".js";
+        scriptElement.onload = function () {
+            for (var i in Datasets[name].rows){
+                var row = Datasets[name].rows[i];
+                for (var j in row){
+                    var instanceType = isNaN(row[j])? (isNaN(Date.parse(row[j])) ? "String" : "Date") : "Number";
+                    if (instanceType == "Number"){
+                        row[j] = parseFloat(row[j]);
+                    }
+                }
+                Datasets[name].rows[i] = row;
+            }
+            Datasets.loaded[name] = true;
+            Datasets.imported[name] = Datasets.convert.rowsToMap(Datasets[name]);
+            $("#dataset_list").append(
+                '<button type="button" class="list-group-item" onclick="Datasets.show(\''+name+'\')"\
+                    style="cursor:pointer; text-transform: capitalize;">'+
+                    '<span class="badge">' + Datasets[name].rows.length + '</span>'+
+                    name +
+                '</button>'
+            );
+            $("#"+name+"MenuItem").hide();
+            $("#menuDatasetImport").append('<li class="divider" role="separator"></li><li style="text-transform: capitalize;"><h6>&nbspImported '+ name +'</h6></li>');
+            $("#"+name+"MenuItem").attr("disabled","disabled");
+            Helpers.snackbar("Imported " + name + " dataset!");
+            resolve(name);
+        };
+        document.head.appendChild(scriptElement);
+    });
 };
 
 
@@ -279,7 +293,7 @@ Datasets.show = function(name){
         var row = Datasets[name].rows[0];
         for (var i in row){
             var key = Datasets[name].columns[i].name;
-            var value = isNaN(row[i])? (isNaN(Date.parse(value)) ? "String" : "Date") : "Number";
+            var value = isNaN(row[i])? (isNaN(Date.parse(row[i])) ? "String" : "Date") : "Number";
             Datasets[name].meta["Type of Attribute " + key] = value;
         }
     }

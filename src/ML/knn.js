@@ -109,6 +109,8 @@ Knn.prototype.getPrediction = function(test){
     return predictedVal;
 };
 
+/**
+ * TODO: Ayush */
 Knn.prototype.visualize = function(){
 
 };

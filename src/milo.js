@@ -57,6 +57,9 @@ Milo.loadBlocks = function(defaultXml,override=false) {
 		Blockly.Xml.domToWorkspace(xml, Milo.workspace);
 		if ($("#newProjInput").length!=0){
 			window.history.replaceState(null, null, window.location.pathname);
+			if (!MiloStorage.anonymous){
+				MiloStorage.canModify = true;
+			}
 		}
 		return;
 	} else {
@@ -214,7 +217,8 @@ Milo.renderContent = function() {
  * Initialize Blockly.  Called on page load.
  */
 Milo.init = function() {
-	if (anonymous){
+	MiloStorage.anonymous = anonymous;
+	if (MiloStorage.anonymous){
 		MiloStorage.canModify = false;
 	}
 	// Setup loop trap
@@ -262,13 +266,19 @@ Milo.init = function() {
 	MiloStorage.backupOnUnload(Milo.workspace);
 
 	Milo.tabClick(Milo.selected);
-	if (!anonymous){
+	if (!MiloStorage.anonymous){
 		var saveButton = document.getElementById('saveButton');
 		Milo.bindClick('renameButton',Project.rename);
 		Milo.bindClick(saveButton, function() {
 			MiloStorage.save(Milo.workspace);
 		});
-
+		if ($("#newProjInput").length!=0){
+			MiloStorage.canModify = true;
+			Helpers.sidebarInit(MiloStorage.canModify, {
+				pages:["<h4>Edit or add New pages</h4>"],
+				markdownPages:["#### Edit or add New pages"]
+			});
+		}
 		$("#cloneButton").click(function(e){
 			window.history.replaceState(null, null, window.location.pathname);
 			var originalName = $("#projectName").html();
