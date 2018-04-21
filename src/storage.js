@@ -203,12 +203,12 @@ MiloStorage.alert = function(message) {
  */
 MiloStorage.pruneAndLoad = function(xml,workspace){
   var jqueryXml = $(xml);
-  var toRemove = [], toImport = [];
+  var toRemove = [], toImport = {};
   jqueryXml.find("block[type$='_get']").each(function(i,e) {
     if (Blockly.JavaScript[e.getAttribute("type")] == undefined){
       var datasetName = e.getAttribute("type").split('_get')[0];
       if (Datasets.loaded[datasetName]!=undefined){
-        toImport.push(datasetName);
+        toImport[datasetName] = true;
       } else {
         toRemove.push(e.getAttribute("type"));
       }
@@ -219,18 +219,23 @@ MiloStorage.pruneAndLoad = function(xml,workspace){
   });
   xml = jqueryXml[0];
   // Per https://stackoverflow.com/a/24985483
-  MiloStorage.importAndLoad(toImport,xml,workspace);
+  MiloStorage.importAndLoad(Object.keys(toImport),xml,workspace);
 };
 
 // Imports missing Datasets and loads the workspace
 MiloStorage.importAndLoad = async function(datasetNames,xml,workspace){
   for (var i in datasetNames){
-       await Datasets.importHelper(datasetNames[i]);
+      await Datasets.importHelper(datasetNames[i]);
+      checkComplete(i);
    }
-    // console.log("Imported ",datasetNames.length, " Dataset(s)");
-    // Make sure we generate all the block definitions
+
+  function checkComplete(n){
+    if (n != datasetNames.length-1) return;
     Datasets.flyoutCallback(workspace);
     Blockly.Xml.domToWorkspace(xml, workspace);
+  }
+    // console.log("Imported ",datasetNames.length, " Dataset(s)");
+    // Make sure we generate all the block definitions
 };
 
 
