@@ -35,13 +35,12 @@ const MNIST_LABELS_PATH =
  * NOTE: This will get much easier. For now, we do data fetching and
  * manipulation manually.
  */
-export class MnistData {
-  constructor() {
+function MnistData(){
     this.shuffledTrainIndex = 0;
     this.shuffledTestIndex = 0;
-  }
+};
 
-  async load() {
+MnistData.prototype.load = async function(){
     // Make a request for the MNIST sprited image.
     const img = new Image();
     const canvas = document.createElement('canvas');
@@ -103,7 +102,7 @@ export class MnistData {
         this.datasetLabels.slice(NUM_CLASSES * NUM_TRAIN_ELEMENTS);
   }
 
-  nextTrainBatch(batchSize) {
+  MnistData.prototype.nextTrainBatch = function(batchSize) {
     return this.nextBatch(
         batchSize, [this.trainImages, this.trainLabels], () => {
           this.shuffledTrainIndex =
@@ -112,7 +111,7 @@ export class MnistData {
         });
   }
 
-  nextTestBatch(batchSize) {
+ MnistData.prototype.nextTestBatch = function(batchSize) {
     return this.nextBatch(batchSize, [this.testImages, this.testLabels], () => {
       this.shuffledTestIndex =
           (this.shuffledTestIndex + 1) % this.testIndices.length;
@@ -120,7 +119,7 @@ export class MnistData {
     });
   }
 
-  nextBatch(batchSize, data, index) {
+  MnistData.prototype.nextBatch = function(batchSize, data, index) {
     const batchImagesArray = new Float32Array(batchSize * IMAGE_SIZE);
     const batchLabelsArray = new Uint8Array(batchSize * NUM_CLASSES);
 
@@ -140,5 +139,6 @@ export class MnistData {
     const labels = tf.tensor2d(batchLabelsArray, [batchSize, NUM_CLASSES]);
 
     return {xs, labels};
-  }
-}
+  };
+
+  module.exports = MnistData;

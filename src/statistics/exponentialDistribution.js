@@ -41,7 +41,7 @@ ExponentialDistribution.prototype.getMean = function(){
 };
 
 ExponentialDistribution.prototype.getVariance = function(){
-    return this.variance;    
+    return this.variance;
 };
 
 ExponentialDistribution.prototype.getEntropy = function(){
@@ -70,6 +70,10 @@ ExponentialDistribution.prototype.cdf = function(x){
     } else {
         return 1 - Math.exp(-this.lambda*x);
     }
+};
+
+ExponentialDistribution.prototype.render = function(type,points){
+    
 };
 
 ExponentialDistribution.prototype.quantile = function(p){

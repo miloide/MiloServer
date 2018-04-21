@@ -1,8 +1,16 @@
 var tf = require('@tensorflow/tfjs');
 var data = require('./data');
 
+var BATCH_SIZE = 64;
+var TRAIN_BATCHES = 150;
+var mnistData, model;
+// Every few batches, test accuracy over many examples. Ideally, we'd compute
+// accuracy over the whole test set, but for performance we'll use a subset.
+var TEST_BATCH_SIZE = 1000;
+var TEST_ITERATION_FREQUENCY = 5;
+
 function defineModel(){
-    var model = tf.sequential();
+    model = tf.sequential();
     model.add(tf.layers.conv2d({
     inputShape: [28, 28, 1],
     kernelSize: 5,
@@ -31,13 +39,6 @@ function defineModel(){
     loss: 'categoricalCrossentropy',
     metrics: ['accuracy'],
     });
-    var BATCH_SIZE = 64;
-    var TRAIN_BATCHES = 150;
-
-// Every few batches, test accuracy over many examples. Ideally, we'd compute
-// accuracy over the whole test set, but for performance we'll use a subset.
-    var TEST_BATCH_SIZE = 1000;
-    var TEST_ITERATION_FREQUENCY = 5;
 };
 
 async function train(){
@@ -46,13 +47,13 @@ async function train(){
   const accuracyValues = [];
 
   for (let i = 0; i < TRAIN_BATCHES; i++) {
-    const batch = data.nextTrainBatch(BATCH_SIZE);
+    const batch = mnistData.nextTrainBatch(BATCH_SIZE);
 
     let testBatch;
     let validationData;
     // Every few batches test the accuracy of the mode.
     if (i % TEST_ITERATION_FREQUENCY === 0) {
-      testBatch = data.nextTestBatch(TEST_BATCH_SIZE);
+      testBatch = mnistData.nextTestBatch(TEST_BATCH_SIZE);
       validationData = [
         testBatch.xs.reshape([TEST_BATCH_SIZE, 28, 28, 1]), testBatch.labels
       ];
@@ -87,14 +88,15 @@ async function train(){
   }
 };
 
-var mnistData;
-
 async function load(){
-    mnistData = new data.MnistData();
+    mnistData = new data();
     await mnistData.load();
 };
 
 async function mnist(){
+    if (window.model == null){
+        $("#loadingDiv").show();
+    }
     await load();
     await train();
 };
