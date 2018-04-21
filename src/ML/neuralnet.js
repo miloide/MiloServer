@@ -225,6 +225,7 @@ NeuralNetwork.prototype.train = function(epochs, x, y){
     } else {
         shapeY.push(y.length, 1);
     }
+    console.log(shapeX, shapeY);
     this.x = tf.tensor(x, shapeX);
     this.y = tf.tensor(y, shapeY);
     this.model.compile(this.options);
@@ -255,9 +256,12 @@ NeuralNetwork.prototype.train = function(epochs, x, y){
 NeuralNetwork.prototype.predict = function(test){
     var predict = this.model.predict(tf.tensor(test,[1,test.length]));
     var predictArray = Array.from(predict.dataSync());
-    var indexOfMaxValue = predictArray.reduce((max, x, i, arr) => x > arr[max] ? i : max, 0);
-    var label = this.labels[indexOfMaxValue];
-    return [label,predictArray];
+    if (this.options.loss == "categoricalCrossentropy"){
+        var indexOfMaxValue = predictArray.reduce((max, x, i, arr) => x > arr[max] ? i : max, 0);
+        var label = this.labels[indexOfMaxValue];
+        return [label,predictArray];
+    }
+    return predictArray;
 };
 
 NeuralNetwork.prototype.plot = function(type,name, legend,x ,y,xTitle, yTitle){
