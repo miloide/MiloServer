@@ -225,7 +225,6 @@ NeuralNetwork.prototype.train = function(epochs, x, y){
     } else {
         shapeY.push(y.length, 1);
     }
-    console.log(shapeX, shapeY);
     this.x = tf.tensor(x, shapeX);
     this.y = tf.tensor(y, shapeY);
     this.model.compile(this.options);
@@ -234,7 +233,6 @@ NeuralNetwork.prototype.train = function(epochs, x, y){
         //validationData: [xTest, yTest],
         callbacks: {
           onEpochEnd:(epoch, logs) => {
-            console.log(logs);
             this.lossValues.push(logs.loss);
             this.accuracyValues.push(logs.acc);
           },
@@ -249,7 +247,6 @@ NeuralNetwork.prototype.train = function(epochs, x, y){
     this.plot("scatter","Loss Plot","Training Loss" ,xPlotPoints,this.lossValues,"X","Loss");
     if (this.options.loss == 'categoricalCrossentropy')
         this.plot("scatter","Accuracy Plot","Training accuracy", xPlotPoints,this.accuracyValues,"X","Accuracy");
-    //console.log(this.lossValues, this.accuracyValues);
     return this.model;
 };
 
