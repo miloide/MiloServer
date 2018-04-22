@@ -1,4 +1,5 @@
 
+var maxWidth = maxHeight = 28;
  function Canvas(){
     $("#drawCanvasDiv").show();
     this.canvas = document.getElementById("drawCanvas");
@@ -67,7 +68,6 @@
     }
     var self = this;
     $("#clear").click(function(){
-        //resizeImage(self.canvas, context);
         context.fillStyle="#fff";
         context.fillRect(0,0,self.canvas.width, self.canvas.height);
         context.strokeStyle="black";
@@ -75,24 +75,30 @@
     });
 };
 
-function resizeImage(canvas, context){
-    // var imgPixels = context.getImageData(0,0,280,560);
-    // for(var y = 0; y < 560; y++){
-    //     for(var x = 0; x < 280; x++){
-    //     var i = (y * 4) * 280 + x * 4;
-    //     var avg = (imgPixels.data[i] + imgPixels.data[i + 1] + imgPixels.data[i + 2]) / 3;
-    //     imgPixels.data[i] = avg;
-    //     imgPixels.data[i + 1] = avg;
-    //     imgPixels.data[i + 2] = avg;
-    //     }
-    // }
-    // var resizedImage = document.createElement('canvas');
+function resizeImage(canvas){
+    var ctx = canvas.getContext("2d");
+    var newCanvas = document.createElement("canvas");
+    var newContext = newCanvas.getContext("2d");
+    var ratio = 1;
+    if (canvas.width > maxWidth){
+        ratio = maxWidth / canvas.width;
+    } else if (canvas.height > maxHeight){
+        ratio = maxHeight / canvas.height;
+    }
+    newCanvas.width = canvas.width * ratio;
+    newCanvas.height = canvas.height * ratio;
+    newContext.drawImage(canvas, 0, 0, canvas.width, canvas.height, 0, 0, newCanvas.width, newCanvas.height);
+    var imgPixels = newContext.getImageData(0,0, maxWidth, maxHeight);
     var image = new Image();
-    image.src = canvas.toDataURL();
-    image.width = 28;
-    image.height = 28;
-    //console.log(image);
-    //console.log(tf.fromPixels(image,2).toFloat());
+    console.log(imgPixels);
+    for (var y = 0; y < imgPixels.height; y++){
+     for (var x = 0; x < imgPixels.width; x++){
+          var i = (y * 4) * imgPixels.width + x * 4;
+          var avg = (imgPixels.data[i] + imgPixels.data[i + 1] + imgPixels.data[i + 2]) / 3;
+          imgPixels.data[i] = avg;
+        }
+    }
+    console.log(imgPixels);
 }
 
 module.exports = Canvas;

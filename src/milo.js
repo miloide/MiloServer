@@ -12,6 +12,7 @@ window.SimpleMDE = require('simplemde');
 var MiloStorage = require('./storage');
 var Datasets =  window.Datasets = require('./datasets');
 var Blockly = window.Blockly = require('milo-blocks');
+window.mnist = require('./ML/Mnist/model');
 var Project = require('./project');
 for (var key in utils) {
   global[key] = utils[key];
