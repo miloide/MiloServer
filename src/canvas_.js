@@ -1,6 +1,8 @@
 
+var Mnist = require('./ML/Mnist/model');
 var maxWidth = maxHeight = 28;
  function Canvas(){
+    this.loadMnist();
     $("#drawCanvasDiv").show();
     this.canvas = document.getElementById("drawCanvas");
     var context = this.context = this.canvas.getContext("2d");
@@ -72,33 +74,50 @@ var maxWidth = maxHeight = 28;
         context.fillRect(0,0,self.canvas.width, self.canvas.height);
         context.strokeStyle="black";
         context.fillStyle="black";
+        context.beginPath();
     });
 };
 
-function resizeImage(canvas){
-    var ctx = canvas.getContext("2d");
+Canvas.prototype.loadMnist = async function(){
+    this.mnist = new Mnist();
+    await this.mnist.fit();
+    var self = this;
+    $("#predict").show();
+    $("#predict").click(async function(){
+        if (self.mnist != undefined){
+            var imgData = self.resizeImage();
+            var prediction = await self.mnist.predict(imgData);
+            var indexOfMaxValue = prediction.reduce((iMax, x, i, arr) => x > arr[iMax] ? i : iMax, 0);
+            var output = document.createElement('div');
+            output.innerHTML = '<span class="msg">'+"Predicted :"+ indexOfMaxValue+ '</span>';
+            $("#console_javascript").append(output);
+        }
+    });
+};
+
+Canvas.prototype.resizeImage = function(){
     var newCanvas = document.createElement("canvas");
+    var ctx = this.canvas.getContext("2d");
     var newContext = newCanvas.getContext("2d");
     var ratio = 1;
-    if (canvas.width > maxWidth){
-        ratio = maxWidth / canvas.width;
-    } else if (canvas.height > maxHeight){
-        ratio = maxHeight / canvas.height;
+    if (this.canvas.width > maxWidth){
+        ratio = maxWidth / this.canvas.width;
+    } else if (this.canvas.height > maxHeight){
+        ratio = maxHeight / this.canvas.height;
     }
-    newCanvas.width = canvas.width * ratio;
-    newCanvas.height = canvas.height * ratio;
-    newContext.drawImage(canvas, 0, 0, canvas.width, canvas.height, 0, 0, newCanvas.width, newCanvas.height);
+    newCanvas.width = this.canvas.width * ratio;
+    newCanvas.height = this.canvas.height * ratio;
+    newContext.drawImage(this.canvas, 0, 0, this.canvas.width, this.canvas.height, 0, 0, newCanvas.width, newCanvas.height);
     var imgPixels = newContext.getImageData(0,0, maxWidth, maxHeight);
-    var image = new Image();
-    console.log(imgPixels);
-    for (var y = 0; y < imgPixels.height; y++){
-     for (var x = 0; x < imgPixels.width; x++){
-          var i = (y * 4) * imgPixels.width + x * 4;
-          var avg = (imgPixels.data[i] + imgPixels.data[i + 1] + imgPixels.data[i + 2]) / 3;
-          imgPixels.data[i] = avg;
-        }
+    var pixelData = imgPixels.data;
+    var singleChannelData = [];
+    for (var i = 0;i < pixelData.length; i+=4){
+        var avg = (pixelData[i] + pixelData[i + 1] + pixelData[i + 2]) / 3;
+        console.log(avg);
+        singleChannelData.push(avg);
     }
-    console.log(imgPixels);
-}
+    console.log(singleChannelData);
+    return singleChannelData;
+};
 
 module.exports = Canvas;

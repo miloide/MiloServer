@@ -73,6 +73,12 @@ mnist.prototype.train  = async function(){
   window.model = this.model;
 };
 
+mnist.prototype.predict = function(data){
+    var image = tf.tensor(data).reshape([1,28,28,1]);
+    console.log(image,image.shape);
+    return Array.from(this.model.predict(image).dataSync());
+};
+
 mnist.prototype.load = async function(){
     this.mnistData = new Data();
     await this.mnistData.load();

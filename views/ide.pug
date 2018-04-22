@@ -179,7 +179,8 @@ html
 						#kmeans.kmeans-chart(style='display:none')
 						#drawCanvasDiv(style="display:none")
 							canvas#drawCanvas(width='500', height='300')
-							a#clear(href='#') Clear
+							a#clear.btn.btn-primary.btn-sm(style="cursor: pointer;", href="#") Clear
+							a#predict.btn.btn-primary.btn-sm(style="cursor: pointer;display:none", href="#") Predict
 						#misc_output
 						#console_holder(style="display: none")
 							h3 Console Output
