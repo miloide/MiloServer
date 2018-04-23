@@ -9,12 +9,8 @@ app.filter("trust", ['$sce', function($sce) {
 app.controller('SidebarController',[
     '$scope','$rootScope','$http',
     function($scope,$rootScope,$http) {
-        $rootScope.pages = ["<h4>Edit or add New pages</h4>"];
-        $rootScope.markdownPages = ["#### Edit or add New pages"];
-        if (anonymous){
-            $rootScope.pages = ["<h4>You need to login to see this section</h4>"];
-            $rootScope.markdownPages = ["#### You need to login to see this section"];
-        }
+        $rootScope.pages = ["<h4>You need to login to see this section</h4>"];
+        $rootScope.markdownPages = ["#### You need to login to see this section"];
         $rootScope.selectedPage = 0;
         $rootScope.isEditing = false;
         $rootScope.canModify = false;

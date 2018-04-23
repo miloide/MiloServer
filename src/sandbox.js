@@ -11,11 +11,13 @@ var Pmf = require('./statistics/pmf');
 var Cdf = require('./statistics/cdf');
 var regression = require('./ML/regression');
 var gaussian = require('./statistics/gaussian');
+var exponentialDistribution = require('./statistics/exponentialDistribution');
 var tf = require('@tensorflow/tfjs');
 var Knn = require('./ML/knn');
 var Kmeans = require('./ML/Kmeans');
 var VisualizeKmeans = require('./ML/visualizeKmeans');
 var visualizeKnn = require('./ML/visualizeKnn');
+var neuralNetwork = require('./ML/neuralnet');
 var $ = window.$ = require('jquery');
 
 /**
@@ -49,11 +51,13 @@ function setupContext(context){
     context['Canvas'] = Canvas;
     context['Visualize'] = visualizeKnn;
     context['Knn'] = Knn;
+    context['ExponentialDistribution'] = exponentialDistribution;
     context['Math'] = Math;
     context['Kmeans'] = Kmeans;
     context['kMeans'] = VisualizeKmeans;
     // Add all from WebCam module to execution context
     context = addToContext(WebCam,context);
+    context = addToContext(neuralNetwork, context);
     // Add all from Pmf module to execution context
     context = addToContext(Pmf,context);
     // Add all from Cdf module to execution context

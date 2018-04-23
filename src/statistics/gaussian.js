@@ -110,7 +110,9 @@
       'name': label,
       'x': x_,
       'y':y_,
-      'marker':{'color':color}
+      'line':{'color':color},
+      'mode': 'lines',
+      'lineOnly': true
     };
     return plotOptions;
   };
@@ -130,7 +132,7 @@
       output = this.generate_list(opcode, list_var);
     } else
       {output = this[opcode](list_var);}
-     
+
     return output;
   };
   var gaussian = function(mean, variance) {
