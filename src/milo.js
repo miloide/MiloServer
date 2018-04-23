@@ -63,7 +63,7 @@ Milo.loadBlocks = function(defaultXml,override=false) {
 	} else {
 		// Restore saved blocks in a separate thread so that subsequent
 		// initialization is not affected from a failed load.
-		window.setTimeout(MiloStorage.restoreBlocks, 0);
+		window.setTimeout(MiloStorage.restoreBlocks, 100);
 	}
 };
 

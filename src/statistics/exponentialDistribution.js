@@ -48,18 +48,18 @@ ExponentialDistribution.prototype.getEntropy = function(){
     return this.entropy;
 };
 
-ExponentialDistribution.prototype.p = function(x){
+ExponentialDistribution.prototype.pdf = function(x){
     var self = this;
     if (x instanceof Array){
         var probabilities = [];
         x.forEach(function(item){
-            probabilities.push(value(item));
+            probabilities.push(computePDF(item));
         });
         return probabilities;
     } else {
-        return value(x);
+        return computePDF(x);
     }
-    function value(x){
+    function computePDF(x){
         if (x < 0){
             return 0;
         } else {
@@ -68,18 +68,18 @@ ExponentialDistribution.prototype.p = function(x){
     }
 };
 
-ExponentialDistribution.prototype.logp = function(x){
+ExponentialDistribution.prototype.logProbability = function(x){
     var self = this;
     if (x instanceof Array){
         var logProbailities = [];
         x.forEach(function(item){
-            logProbailities.push(value(item));
+            logProbailities.push(computeLogP(item));
         });
         return logProbailities;
     } else {
-        return value(x);
+        return computeLogP(x);
     }
-    function value(x){
+    function computeLogP(x){
         if (x < 0){
             return 0;
         } else {
@@ -88,18 +88,20 @@ ExponentialDistribution.prototype.logp = function(x){
     }
 };
 
+
+
 ExponentialDistribution.prototype.cdf = function(x){
     var self = this;
     if (x instanceof Array){
         var cdfs = [];
         x.forEach(function(item){
-            cdfs.push(value(item));
+            cdfs.push(computeCDF(item));
         });
         return cdfs;
     } else {
-        return value(x);
+        return computeCDF(x);
     }
-    function value(x){
+    function computeCDF(x){
         if (x < 0){
             return 0;
         } else {
@@ -110,18 +112,21 @@ ExponentialDistribution.prototype.cdf = function(x){
 
 ExponentialDistribution.prototype.render = function(label,color){
     var maxRange = this.mean + 5;
-    var minRange = this.mean - 5;
+    // As PDF(x)  = 0 for x < 0
+    var minRange = 0;
     var x_ = [], y_ = [];
     for (var itr = minRange; itr < maxRange; itr +=0.1){
         x_.push(itr);
-        y_.push(this.cdf(itr));
+        y_.push(this.pdf(itr));
     }
     var plotOptions = {
       'type': 'scatter',
       'name': label,
       'x': x_,
       'y':y_,
-      'marker':{'color':color}
+      'line':{'color':color},
+      'mode': 'lines',
+      'lineOnly': true
     };
     return plotOptions;
 };
