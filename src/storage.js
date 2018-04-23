@@ -47,8 +47,7 @@ MiloStorage.restoreBlocks = function(optWorkspace) {
   if ('localStorage' in window && window.localStorage[url]) {
     var workspace = optWorkspace || Blockly.getMainWorkspace();
     var xml = Blockly.Xml.textToDom(window.localStorage[url]);
-    xml = MiloStorage.pruneUndefined(xml);
-    Blockly.Xml.domToWorkspace(xml, workspace);
+    MiloStorage.pruneAndLoad(xml,workspace);
   }
 };
 
@@ -184,7 +183,7 @@ MiloStorage.loadXml_ = function(xml, workspace) {
   }
   // Clear the workspace to avoid merge.
   workspace.clear();
-  xml = MiloStorage.pruneAndLoad(xml,workspace);
+  MiloStorage.pruneAndLoad(xml,workspace);
 };
 
 /**
@@ -224,6 +223,10 @@ MiloStorage.pruneAndLoad = function(xml,workspace){
 
 // Imports missing Datasets and loads the workspace
 MiloStorage.importAndLoad = async function(datasetNames,xml,workspace){
+  if (!datasetNames.length) {
+    Blockly.Xml.domToWorkspace(xml, workspace);
+    return;
+  }
   for (var i in datasetNames){
       await Datasets.importHelper(datasetNames[i]);
       checkComplete(i);

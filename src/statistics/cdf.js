@@ -164,7 +164,8 @@ Cdf.prototype.render = function(label, colour){
         '"name":"'+ label +'"'+
         ',\n"x":'+ xs +
         ',\n"y":'+ ps +
-        ',\n"marker": {"color":"'+ colour +'"}'+
+        ',\n"line": {"color":"'+ colour +'"}'+
+        ',\n"lineOnly": true,' +
         '\n},\n'
     ;
     return code;

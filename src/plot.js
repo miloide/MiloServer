@@ -83,8 +83,14 @@ Plot.prototype.addDataItem = function(data) {
           return;
         }
     }
-    data.marker["symbol"] = "circle";
-    if (data.marker["color"] == "#ffffff") data.marker["color"] = undefined;
+    if (data.lineOnly == undefined || !data.lineOnly){
+        data.marker["symbol"] = "circle";
+        if (data.marker["color"] == "#ffffff") data.marker["color"] = undefined;
+        if (data.type == "scatter") data.mode = data.isLine? "markers+lines" : "markers";
+    } else {
+        if (data.line["color"] == "#ffffff") data.line["color"] = undefined;
+        if (data.type == "scatter") data.mode = "lines";
+    }
     if (data.group != undefined && data.group.length){
         var hist = Pmf.makeHistFromList(data.group);
         var keys = hist.dictwrapper.values();
@@ -95,7 +101,6 @@ Plot.prototype.addDataItem = function(data) {
         data.marker["color"] = color;
         data.text = data.group;
     }
-    if(data.type == "scatter") data.mode = data.isLine?"markers+lines":"markers";
     this.data_.push(data);
     return true;
 };

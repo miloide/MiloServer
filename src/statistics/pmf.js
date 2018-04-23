@@ -33,7 +33,8 @@ DictWrapper.prototype.render = function(label, colour){
       '"name":"'+ label +'"'+
       ',\n"x":'+ this.values() +
       ',\n"y":'+ this.items() +
-      ',\n"marker": {"color":"'+ colour +'"}'+
+      ',\n"line": {"color":"'+ colour +'"}'+
+      ',\n"lineOnly": true,' +
       '\n},\n'
     ;
     return code;
