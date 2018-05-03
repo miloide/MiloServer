@@ -23,6 +23,11 @@ Helpers.toTitleCase = function (str) {
 
 /**
  * Function to slugify a string
+ * @param text string to slugify
+ * @return {string} slug from text -
+ * converts to lowercase,
+ * remove leading and trailing spaces and non-alnum characters
+ * converts spaces to -
  */
 Helpers.slugify = function(text){
     return text.toString().toLowerCase()
