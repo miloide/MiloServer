@@ -93,16 +93,22 @@ Kmeans.prototype.normalizeData = function(){
         });
     }
     x = this.scaleBetween(x, 0,500);
-    y = this.scaleBetween(y, 0,500);
+    y = this.scaleBetween(y, 0,500,true);
     xCentroids = this.scaleBetween(xCentroids, 0, 500);
-    yCentroids = this.scaleBetween(yCentroids, 0, 500);
+    yCentroids = this.scaleBetween(yCentroids, 0, 500,true);
     return [zip(x,y),zip(xCentroids,yCentroids)];
 };
 
-Kmeans.prototype.scaleBetween = function(arr, scaledMin, scaledMax){
-    var max = Math.max.apply(Math, arr);
-    var min = Math.min.apply(Math, arr);
-    return arr.map(num => (scaledMax-scaledMin)*(num-min)/(max-min)+scaledMin);
+Kmeans.prototype.scaleBetween = function(arr, scaledMin, scaledMax,flip=false){
+    var maxDataPoint = Plotly.d3.max(arr);
+    var minDataPoint = Plotly.d3.min(arr);
+    var linearScale =  Plotly.d3.scale.linear()
+                            .domain([minDataPoint,maxDataPoint])
+                            .range([scaledMin,scaledMax]);
+    if(flip){
+        return arr.map(num => scaledMax - linearScale(num));
+    }
+    return arr.map(num => linearScale(num));
 };
 
 Kmeans.prototype.predict = function(test){
