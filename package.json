@@ -6,7 +6,8 @@
   "scripts": {
     "preinstall": "npm link milo-blocks",
     "babel": "babel --presets es2015 js/main.js -o build/main.bundle.js",
-    "test": "webpack -w --config webpack.config-test.js",
+    "test:build": "webpack --config webpack.config-test.js",
+    "test": "npm run test:build && mocha --colors test.bundle.js",
     "start": "node app.js",
     "startProd": "NODE_ENV=production node app.js",
     "startDB": "mongod --fork --dbpath ../milo-data/ --logpath ../milo-data/mongo.log",

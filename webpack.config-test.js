@@ -27,9 +27,9 @@ var config = {
   },
 
   plugins: [
-    new WebpackShellPlugin({
-      onBuildExit: "mocha --colors test.bundle.js"
-    })
+    // new WebpackShellPlugin({
+    //   onBuildExit: "mocha --colors test.bundle.js"
+    // })
   ]
 };
 
