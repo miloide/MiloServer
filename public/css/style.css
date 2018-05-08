@@ -596,7 +596,7 @@ However, delay the fade out process for 2.5 seconds */
 }
 .page-data {
   overflow: auto;
-  max-height: 600px;
+  max-height: 400px;
 }
 
 .material-icons {
