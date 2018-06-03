@@ -273,5 +273,4 @@ function kMeans(w, h, numPoints, numClusters, maxIter,kmeans) {
     initialize();
 }
 
-window.km = kMeans;
 module.exports = kMeans;
