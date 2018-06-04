@@ -13,6 +13,9 @@ Datasets.imported = {};
  */
 Datasets.loaded = {
     "iris": false,
+    "boston": false,
+    "cancer": false,
+    "wine": false,
     "california": false,
     "californiaLarge": false
 };
