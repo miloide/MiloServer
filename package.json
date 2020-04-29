@@ -35,7 +35,7 @@
     "formidable": "^1.0.17",
     "fs-extra": "^5.0.0",
     "glob": "^7.1.2",
-    "jquery": "^3.3.1",
+    "jquery": "^3.5.0",
     "js-regression": "^1.0.10",
     "milo-blocks": "file:../milo-blocks/",
     "mongoose": "^4.9.1",
